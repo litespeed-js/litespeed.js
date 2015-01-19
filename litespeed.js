@@ -2,20 +2,35 @@
 
 /*
 
+API
+---
+
 controller (action)
     - init
     - shutdown
 
 models
+
+services
     - HTTP
-    -
+    - 
 
 components
-    - data-binding (using component?)
-    
+    - data-ls-bind
+    - data-ls-bind-reverse
+    - data-ls-show
+    - data-ls-hide
+
 router
 
 ioc
+
+Example
+---
+    var example = new App();
+    
+    example
+        .state('/sample-page/index.html', function() {});
 
  */
 
@@ -24,10 +39,7 @@ ioc
     "use strict";
 
 
-    var App = window.App = window.App || {}, init, shutdown, example = new App();
-
-    example
-        .state('/sample-page/index.html', function() {});
+    var App = window.App = window.App || {}, init, shutdown;
 
     App.router = function() {
 
