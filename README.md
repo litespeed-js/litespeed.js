@@ -2,15 +2,11 @@
 
 # Litespeed.js
 
-[Features](#features)
-
-[Documentation](#documentation)
-
-[Getting Started](#getting-started)
-
-[Testing](#testing)
-
-[Building](#building)
+- [Features](#features)
+- [Documentation](#documentation)
+- [Getting Started](#getting-started)
+- [Testing](#testing)
+- [Building](#building)
 
 ## Features
 
