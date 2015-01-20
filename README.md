@@ -2,6 +2,9 @@
 
 # Litespeed.js
 
+[Features](#features)
+[Documentation](#documentation)
+
 ## Features
 
 * MVC
