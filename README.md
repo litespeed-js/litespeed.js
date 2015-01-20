@@ -5,7 +5,7 @@
 ## Features
 
 * MVC
-* One & two way binding
+* Binding
 * States
 * Services
 * Models
