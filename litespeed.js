@@ -21,6 +21,8 @@ components
     - data-ls-bind-reverse
     - data-ls-show
     - data-ls-hide
+    - data-ls-scope
+    - data-ls-loop
 
 router
 
