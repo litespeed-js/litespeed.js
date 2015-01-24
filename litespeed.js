@@ -6,22 +6,19 @@ API
 ---
 
 controller (action)
-    - init
-    - shutdown
 
 models
 
 services
-    - HTTP
+    - HTTP *
     - 
 
 components
-    - data-ls-state
     - data-ls-bind
     - data-ls-bind-reverse
     - data-ls-show
     - data-ls-hide
-    - data-ls-scope
+    - data-ls-scope *
     - data-ls-loop
 
 router
@@ -35,15 +32,7 @@ init
 match
 render -> load scope comp -> load sub scopes
 
-Example
----
-    var example = new App();
-    
-    example
-        .state('/sample-page/index.html', function() {});
-
  */
-
 
 (function() {
     "use strict";
@@ -78,11 +67,17 @@ Example
         };
 
         return {
-            get: function(url) {
+            'get': function(url) {
                 return request('GET', url, {})
             },
-            post: function(url, headers) {
+            'post': function(url, headers) {
                 return request('POST', url, headers)
+            },
+            'put': function(url) {
+                return request('PUT', url, {})
+            },
+            'delete': function(url) {
+                return request('DELETE', url, {})
             }
         }
     }();
@@ -105,7 +100,7 @@ Example
                  * Adds a new comp definition to application comp stack.
                  *
                  * @param object
-                 * @returns {this.view}
+                 * @returns this.view
                  */
                 comp: function(object) {
 
@@ -124,33 +119,37 @@ Example
                  * Render all view components in a given scope.
                  *
                  * @param scope
-                 * @returns {this.view}
+                 * @returns this.view
                  */
                 render: function(scope) {
+
+                    var view = this;
+
+                    console.log(scope);
                     comps.forEach(function(value) {
                         var elements = scope.querySelectorAll(value.selector);
 
                         for (var i = 0; i < elements.length; i++) {
                             var element = elements[i];
 
-                            element.style.background    = 'red';
+                            element.style.background    = '#'+Math.floor(Math.random()*16777215).toString(16);
                             element.style.opacity       = '.8';
 
                             http
                                 .get(value.template)
                                 .then(
-                                    function(data){ element.innerHTML = data; },
+                                    function(data){
+                                        element.innerHTML = data;
+
+                                        // execute controller (IOC) TODO: use IOC instead of direct execution
+                                        value.controller(element);
+
+                                        // re-render specific scope
+                                        view.render(element);
+                                    },
+
                                     function(error){ console.error("Failed!", error); }
                                 );
-
-                            // load template (HTTP Service)
-
-                            // execute controller (IOC)
-
-                            // re-render
-
-                            // remove selector
-                            // element.removeAttribute(value.selector);
                         }
                     });
 
@@ -177,7 +176,7 @@ Example
                  * @param path string
                  * @param template string
                  * @param controller function
-                 * @returns {this.router}
+                 * @returns this.router
                  */
                 state: function(path, template, controller) {
 
@@ -242,6 +241,15 @@ Example
         .match()
     ;
 
+    /*
+
+    example.service
+        .register(name, singelton)
+        .get(name, singelton)
+    ;
+
+    */
+
     example.view
         .comp({
             name: 'Scope',
@@ -251,7 +259,26 @@ Example
                 // Some code here
             }
         })
+        .comp({
+            name: 'Demo Comp',
+            selector: '[data-ls-comp]',
+            template: 'templates/comp.html',
+            controller: function(element) {
+                // Some code here
+            }
+        })
         .render(document)
     ;
+
+    document.addEventListener('click', function(event) {
+
+
+        if(event.target.href ) {
+            console.log(event.target.href);
+            window.history.pushState({}, 'Unknown', event.target.href);
+            event.preventDefault();
+        }
+
+    });
 
 }());
