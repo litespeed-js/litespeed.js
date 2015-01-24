@@ -78,7 +78,7 @@ Example
         };
 
         return {
-            get: function(url, success, failure) {
+            get: function(url) {
                 return request('GET', url, {})
             },
             post: function(url, headers) {
