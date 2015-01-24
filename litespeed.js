@@ -16,6 +16,7 @@ services
     - 
 
 components
+    - data-ls-state
     - data-ls-bind
     - data-ls-bind-reverse
     - data-ls-show
@@ -24,6 +25,13 @@ components
 router
 
 ioc
+
+Flow
+---
+
+init
+match
+render -> load scope comp -> load sub scopes
 
 Example
 ---
@@ -35,84 +43,170 @@ Example
  */
 
 
-(function(window) {
+(function() {
     "use strict";
 
+    var http = function() {
 
-    var App = window.App = window.App || {}, init, shutdown;
+        var request = function(method, url, headers) {
+            return new Promise(
+                function(resolve, reject) {
 
-    App.router = function() {
+                    var xmlhttp = new XMLHttpRequest();
 
-        var routes = {};
+                    xmlhttp.open(method, url, true);
+                    //xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+
+                    xmlhttp.onload = function() {
+                        if (4 == xmlhttp.readyState && 200 == xmlhttp.status) {
+                            resolve(xmlhttp.response);
+                        }
+
+                        reject(Error(xmlhttp.statusText));
+                    };
+
+                    // Handle network errors
+                    xmlhttp.onerror = function() {
+                        reject(Error("Network Error"));
+                    };
+
+                    xmlhttp.send();
+                }
+            )
+        };
 
         return {
-            init: init,
-            shutdown: shutdown,
-            addRoute: function(path, action) {
-                routes[path] = action;
-
-                return this;
+            get: function(url, success, failure) {
+                return request('GET', url, {})
+            },
+            post: function(url, headers) {
+                return request('POST', url, headers)
             }
+        }
+    }();
+
+    var App = function() {
+
+        this.view = function() {
+            var comps = [];
+
+            return {
+                comp: function(object) {
+
+                    if(typeof object !== 'object') {
+                        throw new Error('var object must be of type object');
+                    }
+
+                    comps[comps.length++] = object;
+
+                    return this;
+                },
+
+                render: function(scope) {
+                    comps.forEach(function(value) {
+                        var elements = scope.querySelectorAll(value.selector);
+
+                        for (var i = 0; i < elements.length; i++) {
+                            var element = elements[i];
+
+                            element.style.background    = 'red';
+                            element.style.opacity       = '.8';
+
+                            http
+                                .get(value.template)
+                                .then(
+                                    function(data){ element.innerHTML = data; },
+                                    function(error){ console.error("Failed!", error); }
+                                );
+
+                            // load template (HTTP Service)
+
+                            // execute controller (IOC)
+
+                            // re-render
+
+                            // remove selector
+                            // element.removeAttribute(value.selector);
+                        }
+                    });
+
+                    return this;
+                }
+            }
+        }();
+
+        this.router = function() {
+            var states = [];
+
+            return {
+                state: function(/* string */ path, /* string */ template, /* function */ controller) {
+
+                    /**
+                     * Validation
+                     */
+                    if(typeof path !== 'string') {
+                        throw new Error('var path must be of type string');
+                    }
+
+                    if(typeof template !== 'string') {
+                        throw new Error('var template must be of type string');
+                    }
+
+                    if(typeof controller !== 'function') {
+                        throw new Error('var controller must be of type function');
+                    }
+
+                    states[states.length++] = {/* string */ path: path, /* string */ template: template, /* function */ controller: controller};
+
+                    return this;
+                },
+
+                match: function() {
+                    return states.forEach(function(value) {
+
+                        //var route = "/users/:uid/pictures/:eldad";
+                        var match   = new RegExp(window.location.origin + value.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
+                        var url     = window.location.href;
+
+                        console.log(url.match(match));
+
+                        if(url.match(match)) {
+                            return value;
+                        }
+
+                        return (states.firstChild) ? states.firstChild : null;
+                    });
+                }
+            }
+
+        }();
+
+        return {
+            view: this.view,
+            router: this.router
         };
     };
 
-    return {
-        init: init,
-        shutdown: shutdown,
-    };
+    var example = new App();
 
+    example.router
+        .state('/litespeed.js/example/index.html', 'templates/article.html', function() {})
+        .state('/index.html', 'templates/article.html', function() {})
+        .state('/article/:id.html', 'templates/article.html', function() {})
+        .state('/category/:id.html', 'templates/article.html', function() {})
+        .match()
+    ;
 
-}(window));
-
-
-var routes = {};
-// The route registering function:
-function route (path, templateId, controller) {
-    // Allow route(path, controller) for template less routes:
-    if (typeof templateId === 'function') {
-        controller = templateId;
-        templateId = null;
-    }
-    routes[path] = {templateId: templateId, controller: controller};
-}
-var el = null, current = null;
-function router () {
-    // Current route url (getting rid of '#' in hash as well):
-    var url = location.hash.slice(1) || '/';
-    // Get route by url:
-    var route = routes[url];
-    // Is it a route without template?
-    if (route && !route.templateId) {
-        // Just initiate controller:
-        return route.controller ? new route.controller : null;
-    }
-    // Lazy load view element:
-    el = el || document.getElementById('view');
-    // Clear existing observer:
-    if (current) {
-        Object.unobserve(current.controller, current.render);
-        current = null;
-    }
-    // Do we have both a view and a route?
-    if (el && route && route.controller) {
-        // Set current route information:
-        current = {
-            controller: new route.controller,
-            template: tmpl(route.templateId),
-            render: function () {
-                // Render route template with John Resig's template engine:
-                el.innerHTML = this.template(this.controller);
+    example.view
+        .comp({
+            name: 'Scope',
+            selector: '[data-ls-scope]',
+            template: 'templates/default.html',
+            controller: function(element) {
+                // Some code here
             }
-        };
-        // Render directly:
-        current.render();
-        // And observe for changes:
-        Object.observe(current.controller, current.render.bind(current));
-    }
-}
-// Listen on hash change:
-this.addEventListener('hashchange', router);
-// Listen on page load:
-this.addEventListener('load', router);
-// Expose the route register function:
-this.route = route;
+        })
+        .render(document)
+    ;
+
+}());
