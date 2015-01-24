@@ -89,10 +89,24 @@ Example
 
     var App = function() {
 
+        /**
+         * View
+         *
+         * Manage application scopes and different views
+         */
         this.view = function() {
             var comps = [];
 
             return {
+
+                /**
+                 * Comp
+                 *
+                 * Adds a new comp definition to application comp stack.
+                 *
+                 * @param object
+                 * @returns {this.view}
+                 */
                 comp: function(object) {
 
                     if(typeof object !== 'object') {
@@ -104,6 +118,14 @@ Example
                     return this;
                 },
 
+                /**
+                 * Render
+                 *
+                 * Render all view components in a given scope.
+                 *
+                 * @param scope
+                 * @returns {this.view}
+                 */
                 render: function(scope) {
                     comps.forEach(function(value) {
                         var elements = scope.querySelectorAll(value.selector);
@@ -137,11 +159,27 @@ Example
             }
         }();
 
+        /**
+         * Router
+         *
+         * Holds application states and match logic
+         */
         this.router = function() {
             var states = [];
 
             return {
-                state: function(/* string */ path, /* string */ template, /* function */ controller) {
+
+                /**
+                 * State
+                 *
+                 * Adds a new application state.
+                 *
+                 * @param path string
+                 * @param template string
+                 * @param controller function
+                 * @returns {this.router}
+                 */
+                state: function(path, template, controller) {
 
                     /**
                      * Validation
@@ -163,6 +201,11 @@ Example
                     return this;
                 },
 
+                /**
+                 * Match
+                 *
+                 * Compare current location and application states to find a match.
+                 */
                 match: function() {
                     return states.forEach(function(value) {
 
