@@ -12,12 +12,11 @@
 * Binding
 * States
 * Services
-* Models
 * Components
 
-## Documentation
-
 ## Getting Started
+
+[For full documentatiotion go over to our WIKI]()
 
 ## Testing
 
