@@ -21,3 +21,7 @@
 ## Testing
 
 ## Building
+
+## Versioning
+
+## Contributing
