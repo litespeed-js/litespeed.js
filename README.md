@@ -16,8 +16,6 @@
 * Services
 * Components
 
-## Supported Browsers
-
 ## Getting Started
 
 [For full documentation go over to our WIKI]()
