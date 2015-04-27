@@ -32,6 +32,15 @@ init
 match
 render -> load scope comp -> load sub scopes
 
+
+Concepts to think about
+---
+
+SimplicityX100
+Templates Engine (Based on HTML only?)
+Relay on native API as much as possible
+Works on both back and front?
+
  */
 
 (function() {
@@ -271,7 +280,6 @@ render -> load scope comp -> load sub scopes
     ;
 
     document.addEventListener('click', function(event) {
-
 
         if(event.target.href ) {
             console.log(event.target.href);
