@@ -76,8 +76,8 @@ view.js
     /*
 
     example.service
-        .register(name, singelton)
-        .get(name, singelton)
+        .register(name, callback, singelton)
+        .get(name)
     ;
 
     */
