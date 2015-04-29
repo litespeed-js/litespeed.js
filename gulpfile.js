@@ -7,15 +7,15 @@ var uglify  = require('gulp-uglify');
 /**
  * Minify JS
  */
-gulp.task('scripts', function() {
-    return gulp.src('src/**/*.js',{base:'src/dist/scripts'})
-        .pipe(uglify().on('error', function (err) {
-            console.log(err);
+gulp.task('uglify',function() {
+    return gulp.src('src/**/*.js',{base:'src/dist'})
+        .pipe(uglify().on('error', function (error) {
+            console.log(error);
         }))
-        .pipe(gulp.dest('public_html/dist/scripts').on('error', function (err) {
-            console.log(err);
+        .pipe(gulp.dest('./src/dist').on('error', function (error) {
+            console.log(error);
         }));
 });
 
 // Default Task
-gulp.task('build', ['scripts']);
+gulp.task('build', ['uglify']);

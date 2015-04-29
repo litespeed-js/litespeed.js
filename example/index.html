@@ -1,21 +1,80 @@
 <!doctype html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Litespeed.js Example</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
+    <head>
+        <meta charset="utf-8">
+        <title>Litespeed.js Example</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
 
-<!-- Add your site or application content here -->
-<p>Hello world! This is HTML5 Boilerplate.</p>
+        <!-- Add your site or application content here -->
+        <p>Hello world! This is HTML5 Boilerplate.</p>
 
-<div data-ls-scope="example">
-    This is my App scope
-</div>
+        <div data-ls-scope="example">
+            This is my App scope
+        </div>
 
 
-<script src="../src/litespeed.js" async="async"></script>
-</body>
+        <script src="../src/litespeed.js"></script>
+
+        <script>
+
+            (function() {
+                "use strict";
+
+                var example = new App();
+
+                example.router
+                        .state('/litespeed.js/example/index.html', 'templates/article.html', function() {})
+                        .state('/index.html', 'templates/article.html', function() {})
+                        .state('/article/:id.html', 'templates/article.html', function() {})
+                        .state('/category/:id.html', 'templates/article.html', function() {})
+                        .match()
+                ;
+
+
+
+                /*
+
+                 example.service
+                 .register(name, callback, singelton)
+                 .get(name)
+                 ;
+
+                 */
+
+                example.view
+                        .comp({
+                            name: 'Scope',
+                            selector: '[data-ls-scope]',
+                            template: 'templates/default.html',
+                            controller: function(element) {
+                                // Some code here
+                            }
+                        })
+                        .comp({
+                            name: 'Demo Comp',
+                            selector: '[data-ls-comp]',
+                            template: 'templates/comp.html',
+                            controller: function(element) {
+                                // Some code here
+                            }
+                        })
+                        .render(document)
+                ;
+
+                document.addEventListener('click', function(event) {
+
+                    if(event.target.href ) {
+                        console.log(event.target.href);
+                        window.history.pushState({}, 'Unknown', event.target.href);
+                        event.preventDefault();
+                    }
+
+                });
+            }());
+
+        </script>
+    </body>
 </html>
