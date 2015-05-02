@@ -1,4 +1,4 @@
-# ![Litespeed.js Logo](img/litespeed.png "Litespeed.js Logo")
+# ![Litespeed.js Logo](example/images/litespeed.png "Litespeed.js Logo")
 
 - [Features](#features)
 - [Documentation](#documentation)

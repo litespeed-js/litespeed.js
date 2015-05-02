@@ -1,22 +1,45 @@
 <!doctype html>
+<!--suppress HtmlUnknownTarget -->
 <html>
     <head>
         <meta charset="utf-8">
         <title>Litespeed.js Example</title>
-        <meta name="description" content="">
+        <link href="styles/default.css" rel="stylesheet" />
+        <meta name="description" content="Sample Litespeed.js application">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
+        <header class="header">
+            <img src="/images/litespeed.png" alt="Litespeed.js" title="Litespeed.js" class="logo" />
 
-        <!-- Add your site or application content here -->
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+        </header>
 
-        <div data-ls-scope="example">
+        <section class="top">
+            <h1>Hello world!</h1>
+
+            <p>This is a demo Litespeed.js application.</p>
+
+            <nav>
+                <ul>
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="pages/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="pages/article.html">Article</a>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+
+        <section class="section" data-ls-scope="">
             This is my App scope
-        </div>
+            <div class="loader"></div>
+        </section>
 
-
-        <script src="../dist/litespeed.js"></script>
+        <script src="scripts/litespeed.js"></script>
 
         <script>
 
@@ -26,43 +49,29 @@
                 var example = new App();
 
                 example.router
-                        .state('/litespeed.js/example/index.html', 'templates/article.html', function() {})
-                        .state('/index.html', 'templates/article.html', function() {})
-                        .state('/article/:id.html', 'templates/article.html', function() {})
-                        .state('/category/:id.html', 'templates/article.html', function() {})
-                        .match()
+                    .state('index.html', 'pages/home.html', function() {})
+                    .state('pages/about.html', 'pages/about.html', function() {})
+                    .state('pages/article.html', 'pages/article.html', function() {})
                 ;
-
-
 
                 /*
 
                  example.service
-                 .register(name, callback, singelton)
-                 .get(name)
+                    .register(name, callback, singelton)
+                    .get(name)
                  ;
 
                  */
 
-                example.view
-                        .comp({
-                            name: 'Scope',
-                            selector: '[data-ls-scope]',
-                            template: 'templates/default.html',
-                            controller: function(element) {
-                                // Some code here
-                            }
-                        })
-                        .comp({
-                            name: 'Demo Comp',
-                            selector: '[data-ls-comp]',
-                            template: 'templates/comp.html',
-                            controller: function(element) {
-                                // Some code here
-                            }
-                        })
-                        .render(document)
-                ;
+                example.view.comp({
+                    name: 'Demo Comp',
+                    selector: '[data-ls-comp]',
+                    isomorphic: false,
+                    template: 'templates/comp.html',
+                    controller: function(element) {}
+                });
+
+                example.run();
 
                 document.addEventListener('click', function(event) {
 
@@ -70,6 +79,8 @@
                         console.log(event.target.href);
                         window.history.pushState({}, 'Unknown', event.target.href);
                         event.preventDefault();
+
+                        example.run();
                     }
 
                 });
