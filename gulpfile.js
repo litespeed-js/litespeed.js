@@ -6,6 +6,7 @@ var gulp    = require('gulp'),
     concat  = require('gulp-concat'),
     rename  = require('gulp-rename'),
     watch   = require('gulp-watch'),
+    copy    = require('gulp-copy'),
 
     // Config
     config  = {
