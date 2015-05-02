@@ -22,13 +22,13 @@
             <nav>
                 <ul>
                     <li>
-                        <a href="index.html">Home</a>
+                        <a href="/index.html">Home</a>
                     </li>
                     <li>
-                        <a href="pages/about.html">About</a>
+                        <a href="/pages/docs.html">Docs</a>
                     </li>
                     <li>
-                        <a href="pages/article.html">Article</a>
+                        <a href="/pages/article.html">Article</a>
                     </li>
                 </ul>
             </nav>
@@ -49,9 +49,9 @@
                 var example = new App();
 
                 example.router
-                    .state('index.html', 'pages/home.html', function() {})
-                    .state('pages/about.html', 'pages/about.html', function() {})
-                    .state('pages/article.html', 'pages/article.html', function() {})
+                    .state('/index.html', '/pages/home.html', function() {})
+                    .state('/pages/about.html', '/pages/about.html', function() {})
+                    .state('/pages/article.html', '/pages/article.html', function() {})
                 ;
 
                 /*
