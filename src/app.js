@@ -5,6 +5,24 @@ var //request     = env.require("request"),
     App = function() {
         return {
             view:view,
-            router:router
+            router:router,
+            run: function() {
+                try{
+                    var route = router.match();
+
+                    this.view
+                        .comp({
+                            name: 'Scope',
+                            selector: '[data-ls-scope]',
+                            template: route.template,
+                            controller: route.controller
+                        })
+                        .render(document)
+                    ;
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
         }
     };

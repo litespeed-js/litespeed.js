@@ -46,8 +46,9 @@ var view = function() {
                 for (var i = 0; i < elements.length; i++) {
                     var element = elements[i];
 
-                    element.style.background    = '#'+Math.floor(Math.random()*16777215).toString(16);
-                    element.style.opacity       = '.8';
+                    window.requestAnimationFrame(function() {
+                        element.style.display = 'none';
+                    });
 
                     http
                         .get(value.template)
@@ -60,6 +61,10 @@ var view = function() {
 
                             // re-render specific scope
                             view.render(element);
+
+                            window.requestAnimationFrame(function() {
+                                element.style.display = 'block';
+                            });
                         },
 
                         function(error){ console.error("Failed!", error); }

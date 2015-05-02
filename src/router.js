@@ -3,8 +3,12 @@
  *
  * Holds application states and match logic
  */
-this.router = function() {
-    var states = [];
+var router = function() {
+
+    var states  = [],
+        before  = function() {},
+        after   = function() {}
+    ;
 
     return {
 
@@ -16,9 +20,9 @@ this.router = function() {
          * @param path string
          * @param template string
          * @param controller function
-         * @returns this.router
+         * @returns router
          */
-        state: function(path, template, controller) {
+        state: function(path, template, controller) { // TODO add support for different request methods
 
             /**
              * Validation
@@ -46,20 +50,19 @@ this.router = function() {
          * Compare current location and application states to find a match.
          */
         match: function() {
-            return states.forEach(function(value) {
 
-                //var route = "/users/:uid/pictures/:eldad";
-                var match   = new RegExp(window.location.origin + value.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
-                var url     = window.location.href;
-
-                console.log(url.match(match));
+            console.log(window.location);
+            for (var i = 0; i < states.length; i++) {
+                var value   = states[i],
+                    match   = new RegExp(window.location.origin + value.path.replace(/:[^\s/]+/g, '([\\w-]+)')),  //FIXME get this from response, relative to relevant environment
+                    url     = window.location.href; //FIXME get this from request, relative to relevant environment
 
                 if(url.match(match)) {
                     return value;
                 }
+            }
 
-                return (states.firstChild) ? states.firstChild : null;
-            });
+            return null
         }
     }
 
