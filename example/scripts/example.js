@@ -77,10 +77,17 @@
 
     window.document.addEventListener('click', function(event) {
         if(event.target.href) {
-            window.history.pushState({}, 'Unknown', event.target.href);
             event.preventDefault();
 
+            if(window.location == event.target.href) {
+                return false;
+            }
+
+            window.history.pushState({}, 'Unknown', event.target.href);
+
             example.run();
+
+            return true;
         }
     });
 

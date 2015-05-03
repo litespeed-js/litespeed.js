@@ -4,19 +4,13 @@
         <meta charset="utf-8">
         <title>Litespeed.js Example</title>
         <link href="styles/default.css" rel="stylesheet" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <meta name="description" content="Sample Litespeed.js application">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
+
         <header class="header">
-            <img src="/images/litespeed.png" alt="Litespeed.js" title="Litespeed.js" class="logo" />
-        </header>
-
-        <section class="top">
-            <h1>Hello world!</h1>
-
-            <p>This is a demo Litespeed.js application.</p>
-
             <nav>
                 <ul>
                     <li>
@@ -26,19 +20,18 @@
                         <a href="/pages/">Docs</a>
                     </li>
                     <li>
-                        <a href="/pages/article.html">Article</a>
+                        <a href="/pages/article.html">Blog</a>
                     </li>
                 </ul>
             </nav>
-        </section>
+
+            <img src="/images/litespeed.png" alt="Litespeed.js" title="Litespeed.js" class="logo" />
+        </header>
 
         <section class="section" data-ls-scope="">
             This is my App scope
             <div class="loader"></div>
         </section>
-
-        <input type="text" value="demo" data-ls-bind="tasks.title">
-        <span data-ls-bind="tasks.title">simple span</span>
 
         <script src="scripts/litespeed.js"></script>
         <script src="scripts/example.js"></script>
