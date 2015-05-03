@@ -17,7 +17,7 @@ var gulp    = require('gulp'),
 gulp.task('concat', function() {
     return gulp.src('src/**/*.js')
         .pipe(concat(config.mainFile))
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest('./example/scripts'));
 });
 
 gulp.task('uglify', function() {
@@ -26,7 +26,7 @@ gulp.task('uglify', function() {
         .pipe(rename({
             extname: '.min.js'
         }))
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest('./example/scripts'));
 });
 
 gulp.task('watch', function() {

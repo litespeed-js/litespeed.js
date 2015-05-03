@@ -4,7 +4,8 @@
  * Manage application scopes and different views
  */
 var view = function() {
-    var comps = [];
+
+    var stock = [];
 
     return {
 
@@ -14,7 +15,7 @@ var view = function() {
          * Adds a new comp definition to application comp stack.
          *
          * @param object
-         * @returns this.view
+         * @returns view
          */
         comp: function(object) {
 
@@ -22,7 +23,7 @@ var view = function() {
                 throw new Error('var object must be of type object');
             }
 
-            comps[comps.length++] = object;
+            stock[stock.length++] = object;
 
             return this;
         },
@@ -33,22 +34,22 @@ var view = function() {
          * Render all view components in a given scope.
          *
          * @param scope
-         * @returns this.view
+         * @returns view
          */
         render: function(scope) {
 
             var view = this;
 
-            console.log(scope);
             comps.forEach(function(value) {
                 var elements = scope.querySelectorAll(value.selector);
 
                 for (var i = 0; i < elements.length; i++) {
                     var element = elements[i];
 
-                    window.requestAnimationFrame(function() {
-                        element.style.display = 'none';
-                    });
+                    if(!value.template) {
+                        value.controller(element);
+                        continue;
+                    }
 
                     http
                         .get(value.template)
@@ -61,10 +62,6 @@ var view = function() {
 
                             // re-render specific scope
                             view.render(element);
-
-                            window.requestAnimationFrame(function() {
-                                element.style.display = 'block';
-                            });
                         },
 
                         function(error){ console.error("Failed!", error); }

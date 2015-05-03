@@ -1,8 +1,14 @@
-var //request     = env.require("request"),
-    //response    = env.require("response"),
-    //router      = env.require("router"),
-    //view        = env.require("view"),
-    App = function() {
+window['require']     = function(path) {
+    return path;
+};
+
+
+var request     = require("request"),
+    response    = require("response"),
+    router      = require("router"),
+    view        = require("view"),
+
+    app = function() {
         return {
             view:view,
             router:router,
@@ -21,7 +27,7 @@ var //request     = env.require("request"),
                     ;
                 }
                 catch (error) {
-                    console.log(error);
+                    console.error(error);
                 }
             }
         }

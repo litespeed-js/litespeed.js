@@ -1,7 +1,6 @@
 # ![Litespeed.js Logo](example/images/litespeed.png "Litespeed.js Logo")
 
 - [Features](#features)
-- [Documentation](#documentation)
 - [Getting Started](#getting-started)
 - [Testing](#testing)
 - [Building](#building)

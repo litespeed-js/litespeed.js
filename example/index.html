@@ -1,5 +1,4 @@
-<!doctype html>
-<!--suppress HtmlUnknownTarget -->
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -11,7 +10,6 @@
     <body>
         <header class="header">
             <img src="/images/litespeed.png" alt="Litespeed.js" title="Litespeed.js" class="logo" />
-
         </header>
 
         <section class="top">
@@ -25,7 +23,7 @@
                         <a href="/index.html">Home</a>
                     </li>
                     <li>
-                        <a href="/pages/docs.html">Docs</a>
+                        <a href="/pages/">Docs</a>
                     </li>
                     <li>
                         <a href="/pages/article.html">Article</a>
@@ -39,53 +37,11 @@
             <div class="loader"></div>
         </section>
 
+        <input type="text" value="demo" data-ls-bind="tasks.title">
+        <span data-ls-bind="tasks.title">simple span</span>
+
         <script src="scripts/litespeed.js"></script>
+        <script src="scripts/example.js"></script>
 
-        <script>
-
-            (function() {
-                "use strict";
-
-                var example = new App();
-
-                example.router
-                    .state('/index.html', '/pages/home.html', function() {})
-                    .state('/pages/about.html', '/pages/about.html', function() {})
-                    .state('/pages/article.html', '/pages/article.html', function() {})
-                ;
-
-                /*
-
-                 example.service
-                    .register(name, callback, singelton)
-                    .get(name)
-                 ;
-
-                 */
-
-                example.view.comp({
-                    name: 'Demo Comp',
-                    selector: '[data-ls-comp]',
-                    isomorphic: false,
-                    template: 'templates/comp.html',
-                    controller: function(element) {}
-                });
-
-                example.run();
-
-                document.addEventListener('click', function(event) {
-
-                    if(event.target.href ) {
-                        console.log(event.target.href);
-                        window.history.pushState({}, 'Unknown', event.target.href);
-                        event.preventDefault();
-
-                        example.run();
-                    }
-
-                });
-            }());
-
-        </script>
     </body>
 </html>

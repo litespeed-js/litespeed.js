@@ -50,8 +50,6 @@ var router = function() {
          * Compare current location and application states to find a match.
          */
         match: function() {
-
-            console.log(window.location);
             for (var i = 0; i < states.length; i++) {
                 var value   = states[i],
                     match   = new RegExp(window.location.origin + value.path.replace(/:[^\s/]+/g, '([\\w-]+)')),  //FIXME get this from response, relative to relevant environment

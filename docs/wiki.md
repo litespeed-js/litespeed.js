@@ -43,7 +43,7 @@ Works on both back and front?
 
 Features to modules:
 
- * MVC - app.js + request.js + response.js
+ * MVC - example.js + request.js + response.js
  * Binding - view.js + native observer
  * States - router.js
  * Services - service.js
@@ -51,7 +51,7 @@ Features to modules:
 
 Modules:
 
-app.js
+example.js
 request.js
 response.js
 router.js

@@ -1,8 +1,14 @@
-var //request     = env.require("request"),
-    //response    = env.require("response"),
-    //router      = env.require("router"),
-    //view        = env.require("view"),
-    App = function() {
+window['require']     = function(path) {
+    return path;
+};
+
+
+var request     = require("request"),
+    response    = require("response"),
+    router      = require("router"),
+    view        = require("view"),
+
+    app = function() {
         return {
             view:view,
             router:router,
@@ -21,7 +27,7 @@ var //request     = env.require("request"),
                     ;
                 }
                 catch (error) {
-                    console.log(error);
+                    console.error(error);
                 }
             }
         }
@@ -127,8 +133,6 @@ var router = function() {
          * Compare current location and application states to find a match.
          */
         match: function() {
-
-            console.log(window.location);
             for (var i = 0; i < states.length; i++) {
                 var value   = states[i],
                     match   = new RegExp(window.location.origin + value.path.replace(/:[^\s/]+/g, '([\\w-]+)')),  //FIXME get this from response, relative to relevant environment
@@ -149,8 +153,40 @@ var router = function() {
  *
  * Manage application scopes and different views
  */
+var services = function() {
+
+    var stock = [];
+
+    return {
+
+        /**
+         * Register
+         *
+         * Adds a new service definition to application services stack.
+         *
+         * @param object
+         * @returns services
+         */
+        register: function(object) {
+
+            if(typeof object !== 'object') {
+                throw new Error('var object must be of type object');
+            }
+
+            stock[stock.length++] = object;
+
+            return this;
+        }
+    }
+}();
+/**
+ * View
+ *
+ * Manage application scopes and different views
+ */
 var view = function() {
-    var comps = [];
+
+    var stock = [];
 
     return {
 
@@ -160,7 +196,7 @@ var view = function() {
          * Adds a new comp definition to application comp stack.
          *
          * @param object
-         * @returns this.view
+         * @returns view
          */
         comp: function(object) {
 
@@ -168,7 +204,7 @@ var view = function() {
                 throw new Error('var object must be of type object');
             }
 
-            comps[comps.length++] = object;
+            stock[stock.length++] = object;
 
             return this;
         },
@@ -179,22 +215,22 @@ var view = function() {
          * Render all view components in a given scope.
          *
          * @param scope
-         * @returns this.view
+         * @returns view
          */
         render: function(scope) {
 
             var view = this;
 
-            console.log(scope);
             comps.forEach(function(value) {
                 var elements = scope.querySelectorAll(value.selector);
 
                 for (var i = 0; i < elements.length; i++) {
                     var element = elements[i];
 
-                    window.requestAnimationFrame(function() {
-                        element.style.display = 'none';
-                    });
+                    if(!value.template) {
+                        value.controller(element);
+                        continue;
+                    }
 
                     http
                         .get(value.template)
@@ -207,10 +243,6 @@ var view = function() {
 
                             // re-render specific scope
                             view.render(element);
-
-                            window.requestAnimationFrame(function() {
-                                element.style.display = 'block';
-                            });
                         },
 
                         function(error){ console.error("Failed!", error); }
@@ -233,6 +265,10 @@ var http = function() {
      * @returns Promise
      */
     var request = function(method, url, headers, body) {
+
+        var method  = 'GET';
+
+        var host    = '';
 
         if(-1 == ['GET', 'POST', 'PUT', 'DELETE', 'TRACE', 'HEAD', 'OPTIONS', 'CONNECT', 'PATCH'].indexOf(method)) {
             throw new Error('var method must contain a valid HTTP method name');
