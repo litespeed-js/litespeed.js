@@ -10,8 +10,6 @@ var http = function() {
      */
     var request = function(method, url, headers, body) {
 
-        var method  = 'GET';
-
         var host    = '';
 
         if(-1 == ['GET', 'POST', 'PUT', 'DELETE', 'TRACE', 'HEAD', 'OPTIONS', 'CONNECT', 'PATCH'].indexOf(method)) {

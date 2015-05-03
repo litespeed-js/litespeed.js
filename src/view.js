@@ -40,7 +40,7 @@ var view = function() {
 
             var view = this;
 
-            comps.forEach(function(value) {
+            stock.forEach(function(value) {
                 var elements = scope.querySelectorAll(value.selector);
 
                 for (var i = 0; i < elements.length; i++) {

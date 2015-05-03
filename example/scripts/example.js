@@ -15,19 +15,17 @@
             selector: '[data-ls-bind]',
             isomorphic: false,
             template: false,
-            controller: function(element) {
+            controller: function(element, services) {
                 // TODO make sure used only on input elements or span for regular text
                 var reference = element.dataset['lsBind'];
 
-                var tasks = {
-                    title: 'default title',
-                    list: []
-                };
+                var tasks = example.services.get('tasks');
+
+                console.log(tasks);
 
                 element.addEventListener('input', function(){
-                    console.log(element.value, reference, tasks);
-
                     tasks.title = element.value;
+                    console.log(element.value, reference, tasks);
                 });
             }
         })
@@ -40,22 +38,18 @@
         })
     ;
 
-    /*
-
-     example.service
-        .register(name, callback, singelton)
-        .get(name)
+     example.services
+        .register('tasks', function() {
+             return {
+                 title: 'Task Title',
+                 list: [
+                    'Task #1',
+                    'Task #2',
+                    'Task #3'
+                 ]
+             }
+         }, true)
      ;
-
-     */
-
-    example.view.comp({
-        name: 'Demo Comp',
-        selector: '[data-ls-comp]',
-        isomorphic: false,
-        template: 'templates/comp.html',
-        controller: function(element) {}
-    });
 
     example.run();
 

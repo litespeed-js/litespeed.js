@@ -7,11 +7,13 @@ var request     = require("request"),
     response    = require("response"),
     router      = require("router"),
     view        = require("view"),
+    services    = require("services"),
 
     app = function() {
         return {
-            view:view,
-            router:router,
+            view: view,
+            router: router,
+            services: services,
             run: function() {
                 try{
                     var route = router.match();
