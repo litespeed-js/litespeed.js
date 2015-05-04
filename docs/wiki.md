@@ -55,7 +55,7 @@ example.js
 request.js
 response.js
 router.js
-service.js
+services.js
 view.js
 
 Expose: (example from sizzle)

@@ -1,7 +1,6 @@
-window['require']     = function(path) {
+window['require'] = function(path) {
     return path;
 };
-
 
 var request     = require("request"),
     response    = require("response"),
@@ -14,19 +13,18 @@ var request     = require("request"),
             view: view,
             router: router,
             services: services,
-            run: function() {
-                try{
-                    var route = router.match();
-
+            run: function(window) { // window or alternative scope (index.html)
+                try {
+                    var route = this.router.match();
                     this.view
                         .comp({
-                            name: 'Scope',
+                            name: 'ls-scope',
+                            singelton: true,
                             selector: '[data-ls-scope]',
                             template: route.template,
                             controller: route.controller
                         })
-                        .render(document)
-                    ;
+                        .render(window.document);
                 }
                 catch (error) {
                     console.error(error);

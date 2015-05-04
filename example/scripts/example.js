@@ -11,9 +11,8 @@
 
     example.view
         .comp({
-            name: 'Bind',
+            name: 'ls-bind',
             selector: '[data-ls-bind]',
-            isomorphic: false,
             template: false,
             controller: function(element, services) {
                 // TODO make sure used only on input elements or span for regular text
@@ -30,7 +29,7 @@
             }
         })
         .comp({
-            name: 'Loop',
+            name: 'ls-loop',
             selector: '[data-ls-loop]',
             isomorphic: true,
             template: false,
@@ -51,7 +50,7 @@
          }, true)
      ;
 
-    example.run();
+    example.run(window);
 
 
 
@@ -85,14 +84,14 @@
 
             window.history.pushState({}, 'Unknown', event.target.href);
 
-            example.run();
+            example.run(window);
 
             return true;
         }
     });
 
     window.addEventListener('popstate', function(e) {
-        example.run();
+        example.run(window);
     });
 
 }());

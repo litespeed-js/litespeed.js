@@ -1,7 +1,6 @@
-window['require']     = function(path) {
+window['require'] = function(path) {
     return path;
 };
-
 
 var request     = require("request"),
     response    = require("response"),
@@ -14,19 +13,18 @@ var request     = require("request"),
             view: view,
             router: router,
             services: services,
-            run: function() {
-                try{
-                    var route = router.match();
-
+            run: function(window) { // window or alternative scope (index.html)
+                try {
+                    var route = this.router.match();
                     this.view
                         .comp({
-                            name: 'Scope',
+                            name: 'ls-scope',
+                            singelton: true,
                             selector: '[data-ls-scope]',
                             template: route.template,
                             controller: route.controller
                         })
-                        .render(document)
-                    ;
+                        .render(window.document);
                 }
                 catch (error) {
                     console.error(error);
@@ -231,7 +229,8 @@ var services = function() {
  */
 var view = function() {
 
-    var stock = [];
+    var stock = {},
+        i = 0;
 
     return {
 
@@ -249,7 +248,9 @@ var view = function() {
                 throw new Error('var object must be of type object');
             }
 
-            stock[stock.length++] = object;
+            var key = (object.singelton) ? object.name : object.name + '-' + i++;
+
+            stock[key] = object;
 
             return this;
         },
@@ -266,34 +267,37 @@ var view = function() {
 
             var view = this;
 
-            stock.forEach(function(value) {
-                var elements = scope.querySelectorAll(value.selector);
+            for (var key in stock) {
+                if (stock.hasOwnProperty(key)) {
+                    var value       = stock[key],
+                        elements    = scope.querySelectorAll(value.selector);
 
-                for (var i = 0; i < elements.length; i++) {
-                    var element = elements[i];
+                    for (var i = 0; i < elements.length; i++) {
+                        var element = elements[i];
 
-                    if(!value.template) {
-                        value.controller(element);
-                        continue;
-                    }
-
-                    http
-                        .get(value.template)
-                        .then(
-                        function(data){
-                            element.innerHTML = data;
-
-                            // execute controller (IOC) TODO: use IOC instead of direct execution
+                        if(!value.template) {
                             value.controller(element);
+                            continue;
+                        }
 
-                            // re-render specific scope
-                            view.render(element);
-                        },
+                        http
+                            .get(value.template)
+                            .then(
+                            function(data){
+                                element.innerHTML = data;
 
-                        function(error){ console.error("Failed!", error); }
-                    );
+                                // execute controller (IOC) TODO: use IOC instead of direct execution
+                                value.controller(element);
+
+                                // re-render specific scope
+                                view.render(element);
+                            },
+
+                            function(error){ console.error("Failed!", error); }
+                        );
+                    }
                 }
-            });
+            }
 
             return this;
         }
