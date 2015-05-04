@@ -3,17 +3,23 @@ body {
 	margin: 0;
 }
 
+ul, li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
 h1, h2, h3, h4, h5, h6 {
 	color: #3d3d3d;
 	margin: 0 0 20px 0;
 }
 
 h1 {
-	font-size: 22px;
+	font-size: 26px;
 }
 
 h2 {
-	font-size: 20px;
+	font-size: 22px;
 }
 
 a {
@@ -23,6 +29,11 @@ a {
 
 a:hover {
 	text-decoration: underline;
+}
+
+hr {
+	height: 1px;
+	border: none;
 }
 
 .header {

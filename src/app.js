@@ -9,13 +9,20 @@ var request     = require("request"),
     services    = require("services"),
 
     app = function() {
+
         return {
             view: view,
             router: router,
             services: services,
             run: function(window) { // window or alternative scope (index.html)
                 try {
+
+                    //this.services.register('window', function(window) {
+                    //    return window // FIXME pass object not callback
+                    //}(window), true);
+
                     var route = this.router.match();
+
                     this.view
                         .comp({
                             name: 'ls-scope',
