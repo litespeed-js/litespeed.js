@@ -10,6 +10,32 @@ var request     = require("request"),
 
     app = function() {
 
+        view.comp({
+            name: 'ls-bind',
+            selector: '[data-ls-bind]',
+            template: false,
+            controller: function(element, services) {
+                // TODO make sure used only on input elements or span for regular text
+
+                var reference   = element.dataset['lsBind'],
+                    array       = reference.split('.'),
+                    last        = array.pop(),
+                    first       = array.shift(),
+                    object      = example.services.get(first)
+                    ;
+
+                element.addEventListener('input', function(){
+                    if(array.length) {
+                        Object.byString(object, array.join('.'))[last] = element.value;
+                    }
+                    else {
+                        object[last] = element.value;
+                    }
+                    console.log(object);
+                });
+            }
+        });
+
         return {
             view: view,
             router: router,
@@ -31,10 +57,11 @@ var request     = require("request"),
                             template: route.template,
                             controller: route.controller
                         })
+
                         .render(window.document);
                 }
                 catch (error) {
-                    console.error(error);
+                    console.error(error.message, error.stack, error.toString());
                 }
             }
         }

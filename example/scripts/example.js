@@ -7,6 +7,7 @@
         .state('/index.html', '/pages/home.html', function() {})
         .state('/pages/about.html', '/pages/about.html', function() {})
         .state('/pages/article.html', '/pages/article.html', function() {})
+        .state('/pages/example.html', '/pages/example.html', function() {})
     ;
 
     example.view
@@ -16,15 +17,22 @@
             template: false,
             controller: function(element, services) {
                 // TODO make sure used only on input elements or span for regular text
-                var reference = element.dataset['lsBind'];
 
-                var tasks = example.services.get('tasks');
-
-                console.log(tasks);
+                var reference   = element.dataset['lsBind'],
+                    array       = reference.split('.'),
+                    last        = array.pop(),
+                    first       = array.shift(),
+                    object      = example.services.get(first)
+                ;
 
                 element.addEventListener('input', function(){
-                    tasks.title = element.value;
-                    console.log(element.value, reference, tasks);
+                    if(array.length) {
+                        Object.byString(object, array.join('.'))[last] = element.value;
+                    }
+                    else {
+                        object[last] = element.value;
+                    }
+                    console.log(object);
                 });
             }
         })
@@ -41,6 +49,12 @@
         .register('tasks', function() {
              return {
                  title: 'Task Title',
+                 test: {
+                     new: 'title',
+                     nested: {
+                         value: 'empty'
+                     }
+                 },
                  list: [
                     'Task #1',
                     'Task #2',

@@ -71,13 +71,13 @@ hr {
 
 .home h1, p {
 	margin: 10px auto;
-	width: 900px;
+	width: 700px;
 }
 
 .section {
 	display: block;
 	margin: 0 auto;
-	width: 900px;
+	width: 700px;
 }
 
 .info {
@@ -122,6 +122,21 @@ hr {
 .box.github {
 	background: #e7e7e7;
 	color: #808080;
+}
+
+.features li b {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.features li {
+	display: block;
+	background: #f9f9f9;
+	padding: 10px;
+	width: 100%;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	color: #3d3d3d;
 }
 
 .fade-in {
