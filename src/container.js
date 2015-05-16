@@ -17,7 +17,7 @@ var container = function() {
          * @param name string
          * @param callback function
          * @param singelton bool
-         * @returns services
+         * @returns container
          */
         register: function(name, callback, singelton) {
 
