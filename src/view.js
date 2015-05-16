@@ -11,14 +11,14 @@ var view = function() {
     return {
 
         /**
-         * Comp
+         * Add View
          *
          * Adds a new comp definition to application comp stack.
          *
          * @param object
          * @returns view
          */
-        comp: function(object) {
+        add: function(object) {
 
             if(typeof object !== 'object') {
                 throw new Error('var object must be of type object');
@@ -37,10 +37,10 @@ var view = function() {
          * Render all view components in a given scope.
          *
          * @param scope
+         * @param services
          * @returns view
          */
-        render: function(scope) {
-
+        render: function(scope, services) {
             var view = this;
 
             for (var key in stock) {
@@ -52,24 +52,26 @@ var view = function() {
                         var element = elements[i];
 
                         if(!value.template) {
-                            value.controller(element);
+                            value.controller(element, services);
                             continue;
                         }
 
                         http
                             .get(value.template)
-                            .then(
-                            function(data){
-                                element.innerHTML = data;
+                            .then(function(element, value) {
+                                return function(data){
+                                    element.innerHTML = data;
 
-                                // execute controller (IOC) TODO: use IOC instead of direct execution
-                                value.controller(element);
+                                    // execute controller (IOC) TODO: use IOC instead of direct execution
+                                    value.controller(element, services);
 
-                                // re-render specific scope
-                                view.render(element);
-                            },
-
-                            function(error){ console.error("Failed!", error); }
+                                    // re-render specific scope
+                                    view.render(element, services);
+                                }
+                            }(element, value),
+                            function(error) {
+                                console.error("Failed!", error);
+                            }
                         );
                     }
                 }

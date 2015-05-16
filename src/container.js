@@ -1,9 +1,9 @@
 /**
- * Services
+ * Container
  *
  * Uses as container for application services
  */
-var services = function() {
+var container = function() {
 
     var stock = [];
 

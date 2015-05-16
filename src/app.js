@@ -6,62 +6,54 @@ var request     = require("request"),
     response    = require("response"),
     router      = require("router"),
     view        = require("view"),
-    services    = require("services"),
+    container   = require("container"),
 
     app = function() {
-
-        view.comp({
-            name: 'ls-bind',
-            selector: '[data-ls-bind]',
-            template: false,
-            controller: function(element, services) {
-                // TODO make sure used only on input elements or span for regular text
-
-                var reference   = element.dataset['lsBind'],
-                    array       = reference.split('.'),
-                    last        = array.pop(),
-                    first       = array.shift(),
-                    object      = example.services.get(first)
-                    ;
-
-                element.addEventListener('input', function(){
-                    if(array.length) {
-                        Object.byString(object, array.join('.'))[last] = element.value;
-                    }
-                    else {
-                        object[last] = element.value;
-                    }
-                    console.log(object);
-                });
-            }
-        });
-
         return {
             view: view,
             router: router,
-            services: services,
-            run: function(window) { // window or alternative scope (index.html)
+            container: container,
+            run: function(window) {
+                var scope = this;
                 try {
+                    window.document.addEventListener('click', function(event) {
+                        if(event.target.href) {
+                            event.preventDefault();
 
-                    //this.services.register('window', function(window) {
-                    //    return window // FIXME pass object not callback
-                    //}(window), true);
+                            console.log('state', window.location, event.target.href);
+
+                            if(window.location == event.target.href) {
+                                return false;
+                            }
+
+                            window.history.pushState({}, 'Unknown', event.target.href);
+
+                            scope.run(window);
+                        }
+
+                        return true;
+                    });
+
+                    window.addEventListener('popstate', function(e) {
+                        scope.run(window);
+                    });
+
+                    this.container.register('window', function() {return window;}, true);
 
                     var route = this.router.match();
 
                     this.view
-                        .comp({
+                        .add({
                             name: 'ls-scope',
                             singelton: true,
                             selector: '[data-ls-scope]',
                             template: route.template,
                             controller: route.controller
                         })
-
-                        .render(window.document);
+                        .render(window.document, this.container);
                 }
                 catch (error) {
-                    console.error(error.message, error.stack, error.toString());
+                    console.error('error', error.message, error.stack, error.toString());
                 }
             }
         }
