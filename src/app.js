@@ -1,5 +1,5 @@
 window['require'] = function(path) {
-    return path;
+    return window[path];
 };
 
 var request     = require("request"),
