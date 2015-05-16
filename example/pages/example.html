@@ -1,5 +1,22 @@
+<!--
+<span data-ls-bind data-service="tasks" data-path="test.nested.value">simple span</span>
+<input type="text" value="demo1" data-ls-bind="tasks.test.nested.value">
+<input type="text" value="demo1" data-ls-bind="tasks">
+-->
 
-<input type="text" value="tasks.test.nested.value" data-ls-bind="tasks.test.nested.value">
-<input type="text" value="tasks.title" data-ls-bind="tasks.title">
-<input type="text" value="tasks" data-ls-bind="tasks">
-<span data-ls-bind="tasks.test.nested.value">simple span</span>
+<h2>Data Binding</h2>
+<input type="text" value="demo1" data-ls-bind="tasks['title']">
+<input type="text" value="title" data-ls-bind="window.document.title">
+
+<hr>
+
+<h2>Tasks</h2>
+<ul data-ls-loop="tasks.list" data-ls-as="task">
+    <li>#{{ key }} - {{ value }}</li>
+</ul>
+
+<hr>
+
+<form data-ls-submit="task.list.push(task)">
+    <input type="text" name="task" value="" placeholder="Add a new task...">
+</form>
