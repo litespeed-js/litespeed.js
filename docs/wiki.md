@@ -14,12 +14,13 @@ services
     -
 
 components
-    - data-ls-bind
-    - data-ls-bind-reverse
+    - data-ls-bind *
     - data-ls-show
     - data-ls-hide
     - data-ls-scope *
     - data-ls-loop
+    - data-ls-on-submit
+    - data-ls-on-click
 
 router
 
@@ -32,6 +33,12 @@ init
 match
 render -> load scope comp -> load sub scopes
 
+Performance
+---
+Cache
+Single observation point
+Memory monitor
+Garbage collector
 
 Concepts to think about
 ---
@@ -55,7 +62,7 @@ example.js
 request.js
 response.js
 router.js
-services.js
+container.js
 view.js
 
 Expose: (example from sizzle)
