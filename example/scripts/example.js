@@ -7,45 +7,14 @@
         .state('/index.html', '/pages/home.html', function() {})
         .state('/pages/about.html', '/pages/about.html', function() {})
         .state('/pages/article.html', '/pages/article.html', function() {})
-        .state('/pages/example.html', '/pages/example.html', function() {})
-    ;
+        .state('/pages/example.html', '/pages/example.html', function(element, container) {
+            var service = container.get('tasks');
 
-    example.view
-        .comp({
-            name: 'ls-bind',
-            selector: '[data-ls-bind]',
-            template: false,
-            controller: function(element, services) {
-                // TODO make sure used only on input elements or span for regular text
-
-                var reference   = element.dataset['lsBind'],
-                    array       = reference.split('.'),
-                    last        = array.pop(),
-                    first       = array.shift(),
-                    object      = example.services.get(first)
-                ;
-
-                element.addEventListener('input', function(){
-                    if(array.length) {
-                        Object.byString(object, array.join('.'))[last] = element.value;
-                    }
-                    else {
-                        object[last] = element.value;
-                    }
-                    console.log(object);
-                });
-            }
-        })
-        .comp({
-            name: 'ls-loop',
-            selector: '[data-ls-loop]',
-            isomorphic: true,
-            template: false,
-            controller: function(element) {}
+            setInterval(function() {Object.path(service, 'title', '3s Interval Overtake');}, 3000);
         })
     ;
 
-     example.services
+     example.container
         .register('tasks', function() {
              return {
                  title: 'Task Title',
@@ -56,56 +25,16 @@
                      }
                  },
                  list: [
-                    'Task #1',
-                    'Task #2',
-                    'Task #3'
-                 ]
+                    'This is just my first task',
+                    'This is just another test adding a second task',
+                    'What do you think about this test'
+                 ],
+                 add: function(task) {
+                     this.list.push(task);
+                 }
              }
          }, true)
      ;
 
     example.run(window);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if ( typeof module !== "undefined" && module.exports ) {
-        module.exports = example;
-    } else {
-        window.example = example;
-    }
-
-    window.document.addEventListener('click', function(event) {
-        if(event.target.href) {
-            event.preventDefault();
-
-            if(window.location == event.target.href) {
-                return false;
-            }
-
-            window.history.pushState({}, 'Unknown', event.target.href);
-
-            example.run(window);
-
-            return true;
-        }
-    });
-
-    window.addEventListener('popstate', function(e) {
-        example.run(window);
-    });
-
 }());
