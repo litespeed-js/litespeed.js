@@ -1,5 +1,6 @@
 body {
 	font-family: sans-serif;
+	font-size: 16px;
 	margin: 0;
 }
 
@@ -11,7 +12,7 @@ ul, li {
 
 h1, h2, h3, h4, h5, h6 {
 	color: #3d3d3d;
-	margin: 0 0 20px 0;
+	margin: 20px 0;
 }
 
 h1 {
@@ -34,6 +35,16 @@ a:hover {
 hr {
 	height: 1px;
 	border: none;
+	margin: 20px 0;
+	background: #f9f9f9;
+}
+
+input {
+	line-height: 26px;
+	padding: 5px;
+	border: 1px solid #e7e7e7;
+	border-radius: 5px;
+	font-size: 16px;
 }
 
 .header {
