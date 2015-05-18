@@ -9,8 +9,8 @@
         .state('/pages/article.html', '/pages/article.html', function() {})
         .state('/pages/example.html', '/pages/example.html', function(element, container) {
             var service = container.get('tasks');
-
-            setInterval(function() {Object.path(service, 'title', '3s Interval Overtake');}, 3000);
+            var x = 0;
+            setInterval(function() {Object.path(service, 'title', '3s Interval Overtake. (' + (x++) + ')'); service.list.push('Added task');}, 10000);
         })
     ;
 

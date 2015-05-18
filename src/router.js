@@ -18,11 +18,10 @@ var router = function() {
          * Adds a new application state.
          *
          * @param path string
-         * @param template string
-         * @param controller function
+         * @param view object
          * @returns router
          */
-        state: function(path, template, controller) { // TODO add support for different request methods
+        state: function(path, view) { // TODO add support for different request methods
 
             /**
              * Validation
@@ -31,15 +30,11 @@ var router = function() {
                 throw new Error('var path must be of type string');
             }
 
-            if(typeof template !== 'string') {
-                throw new Error('var template must be of type string');
+            if(typeof view !== 'object') {
+                throw new Error('var view must be of type object');
             }
 
-            if(typeof controller !== 'function') {
-                throw new Error('var controller must be of type function');
-            }
-
-            states[states.length++] = {/* string */ path: path, /* string */ template: template, /* function */ controller: controller};
+            states[states.length++] = {/* string */ path: path, /* object */ view: view};
 
             return this;
         },

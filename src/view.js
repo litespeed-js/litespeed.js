@@ -46,7 +46,7 @@ var view = function() {
             for (var key in stock) {
                 if (stock.hasOwnProperty(key)) {
                     var value       = stock[key],
-                        elements    = scope.querySelectorAll(value.selector);
+                        elements    = scope.querySelectorAll('[' + value.selector + ']');
 
                     for (var i = 0; i < elements.length; i++) {
                         var element = elements[i];
@@ -67,6 +67,9 @@ var view = function() {
 
                                     // re-render specific scope
                                     view.render(element, services);
+
+                                    element.removeAttribute(value.selector);
+                                    console.log('removed-view', element);
                                 }
                             }(element, value),
                             function(error) {

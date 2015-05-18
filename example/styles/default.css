@@ -165,3 +165,8 @@ input {
 	-moz-animation-duration:1s;
 	animation-duration:1s;
 }
+
+.total {
+	font-size: 12px;
+	margin: 20px 0;
+}

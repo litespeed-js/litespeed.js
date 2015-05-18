@@ -5,7 +5,11 @@
 -->
 
 <h2>Data Binding</h2>
+
+<label>Auto: </label>
 <input type="text" value="demo1" data-ls-bind="tasks['title']">
+
+<label>Title: </label>
 <input type="text" value="title" data-ls-bind="window.document.title">
 
 <hr>
@@ -20,3 +24,9 @@
 <form data-ls-submit="task.list.push">
     <input type="text" name="task" value="" placeholder="Add a new task..." data-arg="1">
 </form>
+
+<section class="total">
+    <span data-ls-placeholder="tasks.list.length"></span> tasks in total
+</section>
+
+<div data-ls-eval="alert(1);">alert</div>

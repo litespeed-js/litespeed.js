@@ -19,8 +19,9 @@ components
     - data-ls-hide
     - data-ls-scope *
     - data-ls-loop
-    - data-ls-on-submit
-    - data-ls-on-click
+    - data-ls-submit
+    - data-ls-click
+    - data-ls-switch
 
 router
 

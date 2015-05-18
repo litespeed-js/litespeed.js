@@ -1,267 +1,38 @@
 window['require'] = function(path) {
-    return path;
+    return window[path];
 };
 
 var request     = require("request"),
     response    = require("response"),
     router      = require("router"),
     view        = require("view"),
-    services    = require("services"),
+    container   = require("container"),
 
     app = function() {
-
-        view.comp({
-            name: 'ls-bind',
-            selector: '[data-ls-bind]',
-            template: false,
-            controller: function(element, services) {
-                // TODO make sure used only on input elements or span for regular text
-
-                var reference   = element.dataset['lsBind'],
-                    array       = reference.split('.'),
-                    last        = array.pop(),
-                    first       = array.shift(),
-                    object      = example.services.get(first)
-                    ;
-
-                element.addEventListener('input', function(){
-                    if(array.length) {
-                        Object.byString(object, array.join('.'))[last] = element.value;
-                    }
-                    else {
-                        object[last] = element.value;
-                    }
-                    console.log(object);
-                });
-            }
-        });
-
         return {
             view: view,
             router: router,
-            services: services,
-            run: function(window) { // window or alternative scope (index.html)
+            container: container,
+            run: function(window) {
+                var scope = this;
                 try {
-
-                    //this.services.register('window', function(window) {
-                    //    return window // FIXME pass object not callback
-                    //}(window), true);
-
-                    var route = this.router.match();
-
-                    this.view
-                        .comp({
-                            name: 'ls-scope',
-                            singelton: true,
-                            selector: '[data-ls-scope]',
-                            template: route.template,
-                            controller: route.controller
-                        })
-
-                        .render(window.document);
+                    this.container
+                        .register('window', function() {return window;}, true)
+                        .register('router', function() {return this.router;}, true)
+                    ;
                 }
                 catch (error) {
-                    console.error(error.message, error.stack, error.toString());
+                    console.error('error', error.message, error.stack, error.toString());
                 }
             }
         }
     };
-var environment;
-Object.byString = function(object, string) {
-    string = string.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    string = string.replace(/^\./, '');           // strip a leading dot
-
-    var array = string.split('.');
-
-    for (var i = 0, n = array.length; i < n; ++i) {
-        var key = array[i];
-        if (key in object) {
-            object = object[key];
-        } else {
-            return null;
-        }
-    }
-
-    return object;
-};
-
-function DataBinder( object_id ) {
-    // Create a simple PubSub object
-    var pubSub = {
-            callbacks: {},
-
-            on: function( msg, callback ) {
-                this.callbacks[ msg ] = this.callbacks[ msg ] || [];
-                this.callbacks[ msg ].push( callback );
-            },
-
-            publish: function( msg ) {
-                this.callbacks[ msg ] = this.callbacks[ msg ] || []
-                for ( var i = 0, len = this.callbacks[ msg ].length; i < len; i++ ) {
-                    this.callbacks[ msg ][ i ].apply( this, arguments );
-                }
-            }
-        },
-
-        data_attr = "data-bind-" + object_id,
-        message = object_id + ":change",
-
-        changeHandler = function( evt ) {
-            var target = evt.target || evt.srcElement, // IE8 compatibility
-                prop_name = target.getAttribute( data_attr );
-
-            if ( prop_name && prop_name !== "" ) {
-                pubSub.publish( message, prop_name, target.value );
-            }
-        };
-
-    // Listen to change events and proxy to PubSub
-    if ( document.addEventListener ) {
-        document.addEventListener( "change", changeHandler, false );
-    } else {
-        // IE8 uses attachEvent instead of addEventListener
-        document.attachEvent( "onchange", changeHandler );
-    }
-
-    // PubSub propagates changes to all bound elements
-    pubSub.on( message, function( evt, prop_name, new_val ) {
-        var elements = document.querySelectorAll("[" + data_attr + "=" + prop_name + "]"),
-            tag_name;
-
-        for ( var i = 0, len = elements.length; i < len; i++ ) {
-            tag_name = elements[ i ].tagName.toLowerCase();
-
-            if ( tag_name === "input" || tag_name === "textarea" || tag_name === "select" ) {
-                elements[ i ].value = new_val;
-            } else {
-                elements[ i ].innerHTML = new_val;
-            }
-        }
-    });
-
-    return pubSub;
-}
-var request = function() {
-
-    var call = function(method, url, headers) {
-        return new Promise(
-            function(resolve, reject) {
-
-                var xmlhttp = new XMLHttpRequest();
-
-                xmlhttp.open(method, url, true);
-                //xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-
-                xmlhttp.onload = function() {
-                    if (4 == xmlhttp.readyState && 200 == xmlhttp.status) {
-                        resolve(xmlhttp.response);
-                    }
-
-                    reject(Error(xmlhttp.statusText));
-                };
-
-                // Handle network errors
-                xmlhttp.onerror = function() {
-                    reject(Error("Network Error"));
-                };
-
-                xmlhttp.send();
-            }
-        )
-    };
-
-    return {
-        'get': function(url) {
-            return call('GET', url, {})
-        },
-        'post': function(url, headers) {
-            return call('POST', url, headers)
-        },
-        'put': function(url) {
-            return call('PUT', url, {})
-        },
-        'delete': function(url) {
-            return call('DELETE', url, {})
-        }
-    }
-}();
 /**
- * Created by eldadfux on 4/27/15.
- */
-
-/**
- * Router
- *
- * Holds application states and match logic
- */
-var router = function() {
-
-    var states  = [],
-        before  = function() {},
-        after   = function() {}
-    ;
-
-    return {
-
-        /**
-         * State
-         *
-         * Adds a new application state.
-         *
-         * @param path string
-         * @param template string
-         * @param controller function
-         * @returns router
-         */
-        state: function(path, template, controller) { // TODO add support for different request methods
-
-            /**
-             * Validation
-             */
-            if(typeof path !== 'string') {
-                throw new Error('var path must be of type string');
-            }
-
-            if(typeof template !== 'string') {
-                throw new Error('var template must be of type string');
-            }
-
-            if(typeof controller !== 'function') {
-                throw new Error('var controller must be of type function');
-            }
-
-            states[states.length++] = {/* string */ path: path, /* string */ template: template, /* function */ controller: controller};
-
-            return this;
-        },
-
-        /**
-         * Match
-         *
-         * Compare current location and application states to find a match.
-         */
-        match: function() {
-            for (var i = 0; i < states.length; i++) {
-                var value   = states[i],
-                    match   = new RegExp(window.location.origin + value.path.replace(/:[^\s/]+/g, '([\\w-]+)')),  //FIXME get this from response, relative to relevant environment
-                    url     = window.location.href; //FIXME get this from request, relative to relevant environment
-
-                if(url.match(match)) {
-                    return value;
-                }
-            }
-
-            return null
-        }
-    }
-
-}();
-/**
- * Services
+ * Container
  *
  * Uses as container for application services
  */
-var services = function() {
+var container = function() {
 
     var stock = [];
 
@@ -275,7 +46,7 @@ var services = function() {
          * @param name string
          * @param callback function
          * @param singelton bool
-         * @returns services
+         * @returns container
          */
         register: function(name, callback, singelton) {
 
@@ -330,6 +101,84 @@ var services = function() {
         }
     }
 }();
+Object.path = function(object, string, value, returnParent) {
+    string = string.split('.');
+
+    while (string.length > 1)
+        object = object[string.shift()];
+
+    if(undefined !== value) {
+        return object[string.shift()] = value;
+    }
+
+    if(returnParent) {
+        return object;
+    }
+
+    return object[string.shift()];
+};
+/**
+ * Router
+ *
+ * Holds application states and match logic
+ */
+var router = function() {
+
+    var states  = [],
+        before  = function() {},
+        after   = function() {}
+    ;
+
+    return {
+
+        /**
+         * State
+         *
+         * Adds a new application state.
+         *
+         * @param path string
+         * @param view object
+         * @returns router
+         */
+        state: function(path, view) { // TODO add support for different request methods
+
+            /**
+             * Validation
+             */
+            if(typeof path !== 'string') {
+                throw new Error('var path must be of type string');
+            }
+
+            if(typeof view !== 'object') {
+                throw new Error('var view must be of type object');
+            }
+
+            states[states.length++] = {/* string */ path: path, /* object */ view: view};
+
+            return this;
+        },
+
+        /**
+         * Match
+         *
+         * Compare current location and application states to find a match.
+         */
+        match: function() {
+            for (var i = 0; i < states.length; i++) {
+                var value   = states[i],
+                    match   = new RegExp(window.location.origin + value.path.replace(/:[^\s/]+/g, '([\\w-]+)')),  //FIXME get this from response, relative to relevant environment
+                    url     = window.location.href; //FIXME get this from request, relative to relevant environment
+
+                if(url.match(match)) {
+                    return value;
+                }
+            }
+
+            return null
+        }
+    }
+
+}();
 /**
  * View
  *
@@ -343,14 +192,14 @@ var view = function() {
     return {
 
         /**
-         * Comp
+         * Add View
          *
          * Adds a new comp definition to application comp stack.
          *
          * @param object
          * @returns view
          */
-        comp: function(object) {
+        add: function(object) {
 
             if(typeof object !== 'object') {
                 throw new Error('var object must be of type object');
@@ -369,39 +218,44 @@ var view = function() {
          * Render all view components in a given scope.
          *
          * @param scope
+         * @param services
          * @returns view
          */
-        render: function(scope) {
-
+        render: function(scope, services) {
             var view = this;
 
             for (var key in stock) {
                 if (stock.hasOwnProperty(key)) {
                     var value       = stock[key],
-                        elements    = scope.querySelectorAll(value.selector);
+                        elements    = scope.querySelectorAll('[' + value.selector + ']');
 
                     for (var i = 0; i < elements.length; i++) {
                         var element = elements[i];
 
                         if(!value.template) {
-                            value.controller(element);
+                            value.controller(element, services);
                             continue;
                         }
 
                         http
                             .get(value.template)
-                            .then(
-                            function(data){
-                                element.innerHTML = data;
+                            .then(function(element, value) {
+                                return function(data){
+                                    element.innerHTML = data;
 
-                                // execute controller (IOC) TODO: use IOC instead of direct execution
-                                value.controller(element);
+                                    // execute controller (IOC) TODO: use IOC instead of direct execution
+                                    value.controller(element, services);
 
-                                // re-render specific scope
-                                view.render(element);
-                            },
+                                    // re-render specific scope
+                                    view.render(element, services);
 
-                            function(error){ console.error("Failed!", error); }
+                                    element.removeAttribute(value.selector);
+                                    console.log('removed-view', element);
+                                }
+                            }(element, value),
+                            function(error) {
+                                console.error("Failed!", error);
+                            }
                         );
                     }
                 }
@@ -411,6 +265,10 @@ var view = function() {
         }
     }
 }();
+/**
+ * Created by eldadfux on 5/9/15.
+ */
+
 var http = function() {
 
     /**
@@ -487,3 +345,192 @@ var http = function() {
         }
     }
 }();
+
+var view = require('view');
+
+view.add({
+    name: 'ls-bind',
+    selector: 'data-ls-bind',
+    template: false,
+    controller: function(element, container) {
+        var reference   = element.dataset['lsBind']
+                .replace('[\'', '.')
+                .replace('\']', '')
+                .split('.'), // Make syntax consistent using only dot nesting
+            service     = container.get(reference.shift()),
+            path        = reference.join('.'),
+            watch       = Object.path(service, path, undefined, true)
+            ;
+
+        Object.observe(watch, function(changes) {
+            changes.forEach(function(change) {
+                var value = Object.path(service, path);
+
+                if(value != element.value) {
+                    element.value = value;
+                    console.log('updated', service);
+                    console.log('changes', changes);
+                }
+            });
+        });
+
+        element.addEventListener('input', function() {
+            Object.path(service, path, element.value);
+            console.log('input', service);
+        });
+
+        element.value = Object.path(service, path);
+    }
+});
+
+var view = require('view');
+
+view.add({
+    name: 'ls-eval',
+    selector: 'data-ls-eval',
+    template: false,
+    controller: function(element, container) {
+        var statement   = element.dataset['lsEval'];
+alert(2);
+        eval(statement);
+    }
+});
+
+var view = require('view');
+
+view.add({
+    name: 'ls-loop',
+    selector: 'data-ls-loop',
+    template: false,
+    controller: function(element) {
+
+        var reference   = element.dataset['lsLoop'].replace('[\'', '.').replace('\']', '').split('.'), // Make syntax consistent using only dot nesting
+            template    = element.innerHTML,
+            service     = container.get(reference.shift()),
+            path        = reference.join('.'),
+            array       = Object.path(service, path),
+            watch       = Object.path(service, path, undefined, true),
+            render      = function(element, array) {
+                var output = '';
+
+                for (var i = 0; i < array.length; i++) {
+                    //console.log(template);
+                    output += template
+                        .replace(/{{ /g, '{{')
+                        .replace(/ }}/g, '}}')
+                        .replace(/{{value}}/g, array[i])
+                        .replace(/{{key}}/g, i)
+                    ;
+                }
+
+                element.innerHTML = output;
+            }
+            ;
+
+        if(typeof array !== 'array' && typeof array !== 'object') {
+            throw new Error('Reference \'' + path + '\' value must be array or object. ' + (typeof array) + ' given');
+        }
+
+        render(element, array);
+
+        Object.observe(watch, function(changes) {
+            render(element, array);
+        });
+    }
+});
+
+var view = require('view');
+
+view.add({
+    name: 'ls-placeholder',
+    selector: 'data-ls-placeholder',
+    template: false,
+    controller: function(element, container) {
+        var reference   = element.dataset['lsPlaceholder']
+                .replace('[\'', '.')
+                .replace('\']', '')
+                .split('.'), // Make syntax consistent using only dot nesting
+            service     = container.get(reference.shift()),
+            path        = reference.join('.'),
+            watch       = Object.path(service, path, undefined, true)
+            ;
+
+        Object.observe(watch, function(changes) {
+            changes.forEach(function(change) {
+                var value = Object.path(service, path);
+
+                if(value != element.innerHTML) {
+                    element.innerHTML = value;
+                    console.log('updated', service);
+                    console.log('changes', changes);
+                }
+            });
+        });
+
+        element.innerHTML = Object.path(service, path);
+    }
+});
+var view = require('view');
+
+view.add({
+    name: 'ls-scope',
+    selector: 'data-ls-submit',
+    template: false,
+    controller: function(element, container) {
+        var window = container.get('window'),
+            router = container.get('router'),
+            route = router.match()
+            ;
+
+        window.document.addEventListener('click', function(event) {
+            if(event.target.href) {
+                event.preventDefault();
+
+                console.log('state', window.location, event.target.href);
+
+                if(window.location == event.target.href) {
+                    return false;
+                }
+
+                window.history.pushState({}, 'Unknown', event.target.href);
+
+                scope.run(window);
+            }
+
+            return true;
+        });
+
+        window.addEventListener('popstate', function(e) {
+            scope.run(window);
+        });
+
+        this.render(window.document, this.container);
+    }
+});
+
+var view = require('view');
+
+view.add({
+    name: 'ls-submit',
+    selector: 'data-ls-submit',
+    template: false,
+    controller: function(element) {
+        console.log('submit', element);
+        element.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            //alert('submit');
+
+            /**
+             * 1. Get list of parameters
+             * 2. Sort parameters by function signature
+             * 3. Apply parameters to function and execute it
+             */
+
+            var x = [ 'p0', 'p1', 'p2' ];
+            call_me.apply(this, x);
+        });
+
+        //element.nodeName
+    }
+});
