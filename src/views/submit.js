@@ -3,8 +3,7 @@ var view = require('view');
 
 view.add({
     name: 'ls-submit',
-    selector: '[data-ls-submit]',
-    isomorphic: true,
+    selector: 'data-ls-submit',
     template: false,
     controller: function(element) {
         console.log('submit', element);

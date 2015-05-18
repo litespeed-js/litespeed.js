@@ -3,7 +3,7 @@ var view = require('view');
 
 view.add({
     name: 'ls-bind',
-    selector: '[data-ls-bind]',
+    selector: 'data-ls-bind',
     template: false,
     controller: function(element, container) {
         var reference   = element.dataset['lsBind']
