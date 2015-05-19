@@ -2,24 +2,29 @@ window['require'] = function(path) {
     return window[path];
 };
 
-var request     = require("request"),
-    response    = require("response"),
-    router      = require("router"),
+var router      = require("router"),
     view        = require("view"),
+    http        = require("http"),
     container   = require("container"),
 
     app = function() {
         return {
             view: view,
             router: router,
+            http: http,
             container: container,
             run: function(window) {
-                var scope = this;
                 try {
+                    var scope = this;
+
                     this.container
                         .register('window', function() {return window;}, true)
-                        .register('router', function() {return this.router;}, true)
+                        .register('view', function() {return scope.view;}, true)
+                        .register('router', function() {return scope.router;}, true)
+                        .register('http', function() {return scope.http;}, true)
                     ;
+
+                    scope.view.render(window.document, container);
                 }
                 catch (error) {
                     console.error('error', error.message, error.stack, error.toString());
@@ -117,10 +122,24 @@ Object.path = function(object, string, value, returnParent) {
 
     return object[string.shift()];
 };
-/**
- * Created by eldadfux on 5/9/15.
- */
 
+Object.merge = function(obj1, obj2) {
+    var obj3 = {}, attrname;
+
+    for (attrname in obj1) {
+        if (obj1.hasOwnProperty(attrname)) {
+            obj3[attrname] = obj1[attrname];
+        }
+    }
+
+    for (attrname in obj2) {
+        if (obj2.hasOwnProperty(attrname)) {
+            obj3[attrname] = obj2[attrname];
+        }
+    }
+
+    return obj3;
+};
 var http = function() {
 
     /**
@@ -298,45 +317,54 @@ var view = function() {
          * Render all view components in a given scope.
          *
          * @param scope
-         * @param services
+         * @param container
          * @returns view
          */
-        render: function(scope, services) {
+        render: function(scope, container) {
             var view = this;
 
             for (var key in stock) {
                 if (stock.hasOwnProperty(key)) {
                     var value       = stock[key],
-                        elements    = scope.querySelectorAll('[' + value.selector + ']');
+                        elements    = scope.querySelectorAll('[' + value.selector + ']'),
+                        postRender  = function(view, element, container) {
+                            view.controller(element, container);
+
+                            if(true !== value.repeat) {
+                                element.removeAttribute(view.selector);
+                            }
+
+                            console.log('removed-view', view.selector);
+                        };
 
                     for (var i = 0; i < elements.length; i++) {
                         var element = elements[i];
 
+                        console.log(value.name);
+                        console.log(value.template);
+
                         if(!value.template) {
-                            value.controller(element, services);
+                            postRender(value, element, container);
                             continue;
                         }
 
-                        http
+                        var result = http
                             .get(value.template)
                             .then(function(element, value) {
                                 return function(data){
                                     element.innerHTML = data;
 
-                                    // execute controller (IOC) TODO: use IOC instead of direct execution
-                                    value.controller(element, services);
+                                    postRender(value, element, container);
 
                                     // re-render specific scope
-                                    view.render(element, services);
-
-                                    element.removeAttribute(value.selector);
-                                    console.log('removed-view', element);
+                                    view.render(element, container);
                                 }
                             }(element, value),
                             function(error) {
                                 console.error("Failed!", error);
                             }
                         );
+
                     }
                 }
             }
@@ -345,6 +373,63 @@ var view = function() {
         }
     }
 }();
+var view = require('view');
+
+view.add({
+    name: 'ls-app',
+    selector: 'data-ls-app',
+    template: false,
+    repeat: true,
+    controller: function(element, container) {
+        var window  = container.get('window'),
+            router  = container.get('router'),
+            route   = router.match(),
+            view    = container.get('view'),
+            http    = container.get('http'),
+            scope = {
+                name: 'ls-scope',
+                selector: 'data-ls-scope',
+                template: false,
+                repeat: true,
+                controller: function() {console.log(2);}
+            },
+            init    = function(scope) {
+                var route   = router.match();
+                scope.template = route.view.template;
+                scope.controller = function() {};
+
+                view.render(element, container);
+            };
+
+        view.add(scope);
+
+        window.document.addEventListener('click', function(event) {
+            if(!event.target.href) {
+                return false;
+            }
+
+            event.preventDefault();
+
+            console.log('state', window.location, event.target.href);
+
+            if(window.location == event.target.href) {
+                return false;
+            }
+
+            window.history.pushState({}, 'Unknown', event.target.href);
+
+            init(scope);
+
+            return true;
+        });
+
+        window.addEventListener('popstate', function(e) {
+            init(scope);
+        });
+
+        init(scope);
+    }
+});
 
 var view = require('view');
 
@@ -468,43 +553,6 @@ view.add({
         });
 
         element.innerHTML = Object.path(service, path);
-    }
-});
-var view = require('view');
-
-view.add({
-    name: 'ls-scope',
-    selector: 'data-ls-submit',
-    template: false,
-    controller: function(element, container) {
-        var window = container.get('window'),
-            router = container.get('router'),
-            route = router.match()
-            ;
-
-        window.document.addEventListener('click', function(event) {
-            if(event.target.href) {
-                event.preventDefault();
-
-                console.log('state', window.location, event.target.href);
-
-                if(window.location == event.target.href) {
-                    return false;
-                }
-
-                window.history.pushState({}, 'Unknown', event.target.href);
-
-                scope.run(window);
-            }
-
-            return true;
-        });
-
-        window.addEventListener('popstate', function(e) {
-            scope.run(window);
-        });
-
-        this.render(window.document, this.container);
     }
 });
 

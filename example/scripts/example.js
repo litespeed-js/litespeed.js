@@ -4,13 +4,22 @@
     var example = app();
 
     example.router
-        .state('/index.html', '/pages/home.html', function() {})
-        .state('/pages/about.html', '/pages/about.html', function() {})
-        .state('/pages/article.html', '/pages/article.html', function() {})
-        .state('/pages/example.html', '/pages/example.html', function(element, container) {
-            var service = container.get('tasks');
-            var x = 0;
-            setInterval(function() {Object.path(service, 'title', '3s Interval Overtake. (' + (x++) + ')'); service.list.push('Added task');}, 10000);
+        .state('/index.html', {
+            template: '/pages/home.html'
+        })
+        .state('/pages/about.html', {
+            template: '/pages/about.html'
+        })
+        .state('/pages/article.html', {
+            template: '/pages/article.html'
+        })
+        .state('/pages/example.html', {
+            template: '/pages/example.html',
+            controller: function(element, container) {
+                var service = container.get('tasks');
+                var x = 0;
+                setInterval(function() {Object.path(service, 'title', '3s Interval Overtake. (' + (x++) + ')'); service.list.push('Added task');}, 10000);
+            }
         })
     ;
 

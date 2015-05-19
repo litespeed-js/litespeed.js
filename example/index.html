@@ -9,7 +9,7 @@
         <meta name="description" content="Sample Litespeed.js application">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
-    <body>
+    <body data-ls-app>
 
         <header class="header">
             <nav>
@@ -41,6 +41,10 @@
             This is my App scope
             <div class="loader"></div>
         </main>
+
+        <section class="total">
+            <span data-ls-placeholder="tasks.list.length"></span> tasks in total
+        </section>
 
         <script src="scripts/litespeed.js"></script>
         <script src="scripts/example.js"></script>

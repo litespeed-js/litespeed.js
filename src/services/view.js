@@ -37,45 +37,54 @@ var view = function() {
          * Render all view components in a given scope.
          *
          * @param scope
-         * @param services
+         * @param container
          * @returns view
          */
-        render: function(scope, services) {
+        render: function(scope, container) {
             var view = this;
 
             for (var key in stock) {
                 if (stock.hasOwnProperty(key)) {
                     var value       = stock[key],
-                        elements    = scope.querySelectorAll('[' + value.selector + ']');
+                        elements    = scope.querySelectorAll('[' + value.selector + ']'),
+                        postRender  = function(view, element, container) {
+                            view.controller(element, container);
+
+                            if(true !== value.repeat) {
+                                element.removeAttribute(view.selector);
+                            }
+
+                            console.log('removed-view', view.selector);
+                        };
 
                     for (var i = 0; i < elements.length; i++) {
                         var element = elements[i];
 
+                        console.log(value.name);
+                        console.log(value.template);
+
                         if(!value.template) {
-                            value.controller(element, services);
+                            postRender(value, element, container);
                             continue;
                         }
 
-                        http
+                        var result = http
                             .get(value.template)
                             .then(function(element, value) {
                                 return function(data){
                                     element.innerHTML = data;
 
-                                    // execute controller (IOC) TODO: use IOC instead of direct execution
-                                    value.controller(element, services);
+                                    postRender(value, element, container);
 
                                     // re-render specific scope
-                                    view.render(element, services);
-
-                                    element.removeAttribute(value.selector);
-                                    console.log('removed-view', element);
+                                    view.render(element, container);
                                 }
                             }(element, value),
                             function(error) {
                                 console.error("Failed!", error);
                             }
                         );
+
                     }
                 }
             }
