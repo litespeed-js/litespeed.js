@@ -14,14 +14,15 @@ services
     -
 
 components
-    - data-ls-bind *
-    - data-ls-show
-    - data-ls-hide
+    - data-ls-bind -done
+    - data-ls-show -e
+    - data-ls-hide -e
     - data-ls-scope *
-    - data-ls-loop
-    - data-ls-submit
-    - data-ls-click
-    - data-ls-switch
+    - data-ls-loop -h
+    - data-ls-submit -h
+    - data-ls-click -e
+    - data-ls-switch -h
+    - data-ls-attr (set attr watch statement)
 
 router
 
