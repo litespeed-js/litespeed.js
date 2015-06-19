@@ -5,6 +5,8 @@
  */
 var container = function() {
 
+    // FIXME add support for singelton
+
     var stock = [];
 
     return {
