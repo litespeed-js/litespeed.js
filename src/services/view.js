@@ -43,7 +43,7 @@ var view = function() {
         render: function(scope, container) {
             var view = this;
 
-            for (var key in stock) {
+            for (var key in stock) { // Iterate all registered views
                 if (stock.hasOwnProperty(key)) {
                     var value       = stock[key],
                         elements    = scope.querySelectorAll('[' + value.selector + ']'),

@@ -4,6 +4,9 @@
     var example = app();
 
     example.router
+        .state('/', {
+            template: '/pages/home.html'
+        })
         .state('/index.html', {
             template: '/pages/home.html'
         })
