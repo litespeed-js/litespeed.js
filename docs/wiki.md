@@ -3,7 +3,6 @@
 /*jslint browser: true*/
 
 ## Architecture
----
 
 * **app.js** - Main application file, this is the application starting point
 * services/ - Services directory
@@ -18,8 +17,7 @@
     * **placeholder.js** Prints bounded var value to element.
     * **submit.js** Triggers a new state and forward form parameters to it.
 
-## API
----
+## API**
 
 components
     - data-ls-app -done
@@ -32,31 +30,19 @@ components
     - data-ls-switch -h
     - data-ls-attr (set attr watch statement)
 
-router
+## Performance
 
-ioc
-
-Flow
----
-
-init
-match
-render -> load scope comp -> load sub scopes
-
-Performance
----
 Cache
 Single observation point
 Memory monitor
 Garbage collector
 
-Concepts
----
+## Concepts
 
-SimplicityX100
-Uses only HTML for markup - no template engine!
-Relay on native API as much as possible - Vanilla we are!
-Actions over States
+* SimplicityX100
+* Uses only HTML for markup - no template engine!
+* Relay on native API as much as possible - Vanilla we are!
+* Actions over States
     The name states more implement on UI states. but owr application has more then that. Each application hold many actions and functionality. states are the story of your app.
 
 Features to modules:
