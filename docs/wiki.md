@@ -2,25 +2,33 @@
 
 /*jslint browser: true*/
 
-API
+## Architecture
 ---
 
-controller (action)
+* **app.js** - Main application file, this is the application starting point
+* services/ - Services directory
+    * **container.js**
+    * **http.js**
+    * **router.js**
+    * **view.js**
+* views/ - View directory
+    * **app.js** - Main scope, this view is responsible to trigger all other views. Usually placed very high in the DOM.
+    * **bind.js** - Enables 2 way binding on form elements.
+    * **loop.js** - Iterates over an bounded array or object.
+    * **placeholder.js** Prints bounded var value to element.
+    * **submit.js** Triggers a new state and forward form parameters to it.
 
-models
-
-services
-    - HTTP *
-    -
+## API
+---
 
 components
+    - data-ls-app -done
     - data-ls-bind -done
     - data-ls-show -e
     - data-ls-hide -e
-    - data-ls-scope *
+    - data-ls-click -e
     - data-ls-loop -h
     - data-ls-submit -h
-    - data-ls-click -e
     - data-ls-switch -h
     - data-ls-attr (set attr watch statement)
 
@@ -42,43 +50,17 @@ Single observation point
 Memory monitor
 Garbage collector
 
-Concepts to think about
+Concepts
 ---
 
 SimplicityX100
-Templates Engine (Based on HTML only?)
-Relay on native API as much as possible
-Works on both back and front?
+Uses only HTML for markup - no template engine!
+Relay on native API as much as possible - Vanilla we are!
+Actions over States
+    The name states more implement on UI states. but owr application has more then that. Each application hold many actions and functionality. states are the story of your app.
 
 Features to modules:
 
- * MVC - example.js + request.js + response.js
  * Binding - view.js + native observer
  * States - router.js
- * Services - service.js
  * Components - view.js
-
-Modules:
-
-example.js
-request.js
-response.js
-router.js
-container.js
-view.js
-
-Expose: (example from sizzle)
-
- // EXPOSE
- if ( typeof define === "function" && define.amd ) {
- define(function() { return Sizzle; });
- // Sizzle requires that there be a global window in Common-JS like environments
- } else if ( typeof module !== "undefined" && module.exports ) {
- module.exports = Sizzle;
- } else {
- window.Sizzle = Sizzle;
- }
- // EXPOSE
-
- })( window );
-
