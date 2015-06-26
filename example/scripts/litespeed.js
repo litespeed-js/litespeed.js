@@ -32,6 +32,40 @@ var router      = require("router"),
             }
         }
     };
+Object.path = function(object, string, value, returnParent) {
+    string = string.split('.');
+
+    while (string.length > 1)
+        object = object[string.shift()];
+
+    if(undefined !== value) {
+        return object[string.shift()] = value;
+    }
+
+    if(returnParent) {
+        return object;
+    }
+
+    return object[string.shift()];
+};
+
+Object.merge = function(obj1, obj2) {
+    var obj3 = {}, attrname;
+
+    for (attrname in obj1) {
+        if (obj1.hasOwnProperty(attrname)) {
+            obj3[attrname] = obj1[attrname];
+        }
+    }
+
+    for (attrname in obj2) {
+        if (obj2.hasOwnProperty(attrname)) {
+            obj3[attrname] = obj2[attrname];
+        }
+    }
+
+    return obj3;
+};
 /**
  * Container
  *
@@ -108,40 +142,6 @@ var container = function() {
         }
     }
 }();
-Object.path = function(object, string, value, returnParent) {
-    string = string.split('.');
-
-    while (string.length > 1)
-        object = object[string.shift()];
-
-    if(undefined !== value) {
-        return object[string.shift()] = value;
-    }
-
-    if(returnParent) {
-        return object;
-    }
-
-    return object[string.shift()];
-};
-
-Object.merge = function(obj1, obj2) {
-    var obj3 = {}, attrname;
-
-    for (attrname in obj1) {
-        if (obj1.hasOwnProperty(attrname)) {
-            obj3[attrname] = obj1[attrname];
-        }
-    }
-
-    for (attrname in obj2) {
-        if (obj2.hasOwnProperty(attrname)) {
-            obj3[attrname] = obj2[attrname];
-        }
-    }
-
-    return obj3;
-};
 var http = function() {
 
     /**
@@ -398,9 +398,9 @@ view.add({
                 controller: function() {}
             },
             init    = function(scope) {
-                var route   = router.match(window.location.pathname);
-                scope.template = route.view.template;
-                scope.controller = function() {console.log('TODO: Replace with real controller callback');};
+                var route           = router.match(window.location.pathname);
+                scope.template      = (undefined !== route.view.template) ? route.view.template : null;
+                scope.controller    = (undefined !== route.view.controller) ? route.view.controller : function() {};
 
                 view.render(element, container);
             };
