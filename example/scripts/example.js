@@ -28,6 +28,16 @@
                 }, 10000);
             }
         })
+        .state('/pages/todo/add', {
+            controller: function (element, container) {
+
+            }
+        })
+        .state('/pages/todo/remove', {
+            controller: function (element, container) {
+
+            }
+        })
     ;
 
     example.container
