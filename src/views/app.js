@@ -8,7 +8,7 @@ view.add({
     controller: function(element, container) {
         var window  = container.get('window'),
             router  = container.get('router'),
-            route   = router.match(),
+            route   = router.match(window.location.pathname),
             view    = container.get('view'),
             http    = container.get('http'),
             scope = {
@@ -16,12 +16,12 @@ view.add({
                 selector: 'data-ls-scope',
                 template: false,
                 repeat: true,
-                controller: function() {console.log(2);}
+                controller: function() {}
             },
             init    = function(scope) {
-                var route   = router.match();
+                var route   = router.match(window.location.pathname);
                 scope.template = route.view.template;
-                scope.controller = function() {};
+                scope.controller = function() {console.log('TODO: Replace with real controller callback');};
 
                 view.render(element, container);
             };

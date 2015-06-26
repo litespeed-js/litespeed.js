@@ -21,7 +21,7 @@ var router = function() {
          * @param view object
          * @returns router
          */
-        state: function(path, view) { // TODO add support for different request methods
+        state: function(path, view) {
 
             /**
              * Validation
@@ -43,12 +43,14 @@ var router = function() {
          * Match
          *
          * Compare current location and application states to find a match.
+         *
+         * @param url string
+         * @return value object|null
          */
-        match: function() {
+        match: function(url) {
             for (var i = 0; i < states.length; i++) {
                 var value   = states[i],
-                    match   = new RegExp(window.location.origin + value.path.replace(/:[^\s/]+/g, '([\\w-]+)')),  //FIXME get this from response, relative to relevant environment
-                    url     = window.location.href; //FIXME get this from request, relative to relevant environment
+                    match   = new RegExp(value.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
 
                 if(url.match(match)) {
                     return value;

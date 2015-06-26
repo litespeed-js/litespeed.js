@@ -241,7 +241,7 @@ var router = function() {
          * @param view object
          * @returns router
          */
-        state: function(path, view) { // TODO add support for different request methods
+        state: function(path, view) {
 
             /**
              * Validation
@@ -263,12 +263,14 @@ var router = function() {
          * Match
          *
          * Compare current location and application states to find a match.
+         *
+         * @param url string
+         * @return value object|null
          */
-        match: function() {
+        match: function(url) {
             for (var i = 0; i < states.length; i++) {
                 var value   = states[i],
-                    match   = new RegExp(window.location.origin + value.path.replace(/:[^\s/]+/g, '([\\w-]+)')),  //FIXME get this from response, relative to relevant environment
-                    url     = window.location.href; //FIXME get this from request, relative to relevant environment
+                    match   = new RegExp(value.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
 
                 if(url.match(match)) {
                     return value;
@@ -385,7 +387,7 @@ view.add({
     controller: function(element, container) {
         var window  = container.get('window'),
             router  = container.get('router'),
-            route   = router.match(),
+            route   = router.match(window.location.pathname),
             view    = container.get('view'),
             http    = container.get('http'),
             scope = {
@@ -393,12 +395,12 @@ view.add({
                 selector: 'data-ls-scope',
                 template: false,
                 repeat: true,
-                controller: function() {console.log(2);}
+                controller: function() {}
             },
             init    = function(scope) {
-                var route   = router.match();
+                var route   = router.match(window.location.pathname);
                 scope.template = route.view.template;
-                scope.controller = function() {};
+                scope.controller = function() {console.log('TODO: Replace with real controller callback');};
 
                 view.render(element, container);
             };
@@ -512,29 +514,32 @@ view.add({
             render      = function(element, array) {
                 var output = '';
 
-                for (var i = 0; i < array.length; i++) {
-                    //console.log(template);
+                for (var prop in array) {
+                    if (!array.hasOwnProperty(prop)) {
+                        continue
+                    }
+
                     output += template
                         .replace(/{{ /g, '{{')
                         .replace(/ }}/g, '}}')
-                        .replace(/{{value}}/g, array[i])
-                        .replace(/{{key}}/g, i)
+                        .replace(/{{value}}/g, array[prop])
+                        .replace(/{{key}}/g, prop)
                     ;
                 }
 
                 element.innerHTML = output;
             }
         ;
-
         if(typeof array !== 'array' && typeof array !== 'object') {
             throw new Error('Reference \'' + path + '\' value must be array or object. ' + (typeof array) + ' given');
         }
 
         render(element, array);
 
-        Object.observe(watch, function(changes) {
+        Object.observe(array, function(changes) {
             render(element, array);
         });
+/*
 
         var dragSrcEl = null;
 
@@ -606,6 +611,7 @@ view.add({
         };
 
         start();
+*/
     }
 });
 
@@ -647,21 +653,17 @@ view.add({
     name: 'ls-submit',
     selector: 'data-ls-submit',
     template: false,
-    controller: function(element) {
-        console.log('submit', element);
+    controller: function(element, container) {
         element.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            //alert('submit');
+            container.get('messages').add('Saved Successfully!', 2.5);
 
             /**
              * 1. Get list of parameters
              * 2. Sort parameters by function signature
              * 3. Apply parameters to function and execute it
              */
-
-            var x = [ 'p0', 'p1', 'p2' ];
-            call_me.apply(this, x);
         });
 
         //element.nodeName

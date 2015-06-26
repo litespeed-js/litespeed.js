@@ -30,13 +30,16 @@
                         <a href="/pages/example.html">Example</a>
                     </li>
                 </ul>
-
             </nav>
 
             <a href="/index.html" title="Litespeed.js" alt="Litespeed.js">
                 <img src="/images/litespeed.png" alt="Litespeed.js" title="Litespeed.js" class="logo" />
             </a>
         </header>
+
+        <ul class="messages" data-ls-loop="messages.list" data-ls-as="message">
+            <li class="column" draggable="true">#{{ key }} - {{ value }}</li>
+        </ul>
 
         <main class="section" data-ls-scope="">
             This is my App scope
