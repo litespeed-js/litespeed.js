@@ -19,9 +19,9 @@ view.add({
                 controller: function() {}
             },
             init    = function(scope) {
-                var route   = router.match(window.location.pathname);
-                scope.template = route.view.template;
-                scope.controller = function() {console.log('TODO: Replace with real controller callback');};
+                var route           = router.match(window.location.pathname);
+                scope.template      = (undefined !== route.view.template) ? route.view.template : null;
+                scope.controller    = (undefined !== route.view.controller) ? route.view.controller : function() {};
 
                 view.render(element, container);
             };
