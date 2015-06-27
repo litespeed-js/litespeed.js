@@ -48,26 +48,22 @@ var view = function() {
                     var value       = stock[key],
                         elements    = scope.querySelectorAll('[' + value.selector + ']'),
                         postRender  = function(view, element, container) {
-                            view.controller(element, container);
+                            view.controller(element, container); // Execute controller
 
-                            if(true !== value.repeat) {
+                            if(true !== value.repeat) { // Remove view that should not repeat itself
                                 element.removeAttribute(view.selector);
                             }
-
-                            console.log('removed-view', view.selector);
                         };
 
                     for (var i = 0; i < elements.length; i++) {
                         var element = elements[i];
-
-                        console.log(value.name);
-                        console.log(value.template);
 
                         if(!value.template) {
                             postRender(value, element, container);
                             continue;
                         }
 
+                        // Load new view template
                         var result = http
                             .get(value.template)
                             .then(function(element, value) {
