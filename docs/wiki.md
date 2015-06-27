@@ -1,6 +1,17 @@
 # Litespeed.js WIKI
 
-/*jslint browser: true*/
+## Concepts
+
+* Simplicity is most important
+* Use only HTML for markup - no template engines!
+* Relay on native API as much as possible - Vanilla we are!
+* Actions over just states
+
+FIXME:
+The name states is to related with UI states, Our application has more then that.
+Each application hold many actions and functions over just states.
+Actions are the story of our app.
+Action can represent both states and functionality.
 
 ## Architecture
 
@@ -36,17 +47,3 @@ Cache
 Single observation point
 Memory monitor
 Garbage collector
-
-## Concepts
-
-* SimplicityX100
-* Uses only HTML for markup - no template engine!
-* Relay on native API as much as possible - Vanilla we are!
-* Actions over States
-    The name states more implement on UI states. but owr application has more then that. Each application hold many actions and functionality. states are the story of your app.
-
-Features to modules:
-
- * Binding - view.js + native observer
- * States - router.js
- * Components - view.js
