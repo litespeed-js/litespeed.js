@@ -17,6 +17,7 @@ var router      = require("router"),
                 try {
                     var scope = this;
 
+                    // Register all core services
                     this.container
                         .register('window', function() {return window;}, true)
                         .register('view', function() {return scope.view;}, true)
@@ -24,10 +25,14 @@ var router      = require("router"),
                         .register('http', function() {return scope.http;}, true)
                     ;
 
+
+                    // Trigger reclusive app rendering
                     scope.view.render(window.document, container);
                 }
                 catch (error) {
-                    console.error('error', error.message, error.stack, error.toString());
+                    //TODO add custom error handling
+                    this.container.get('messages').add('Error Occurred: "' + error.message + '"', 3);
+                    console.error('error', error.message, error.stack, error.toString(), this.container.get('messages'));
                 }
             }
         }
