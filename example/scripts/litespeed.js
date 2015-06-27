@@ -17,6 +17,7 @@ var router      = require("router"),
                 try {
                     var scope = this;
 
+                    // Register all core services
                     this.container
                         .register('window', function() {return window;}, true)
                         .register('view', function() {return scope.view;}, true)
@@ -24,48 +25,18 @@ var router      = require("router"),
                         .register('http', function() {return scope.http;}, true)
                     ;
 
+
+                    // Trigger reclusive app rendering
                     scope.view.render(window.document, container);
                 }
                 catch (error) {
-                    console.error('error', error.message, error.stack, error.toString());
+                    //TODO add custom error handling
+                    this.container.get('messages').add('Error Occurred: "' + error.message + '"', 3);
+                    console.error('error', error.message, error.stack, error.toString(), this.container.get('messages'));
                 }
             }
         }
     };
-Object.path = function(object, string, value, returnParent) {
-    string = string.split('.');
-
-    while (string.length > 1)
-        object = object[string.shift()];
-
-    if(undefined !== value) {
-        return object[string.shift()] = value;
-    }
-
-    if(returnParent) {
-        return object;
-    }
-
-    return object[string.shift()];
-};
-
-Object.merge = function(obj1, obj2) {
-    var obj3 = {}, attrname;
-
-    for (attrname in obj1) {
-        if (obj1.hasOwnProperty(attrname)) {
-            obj3[attrname] = obj1[attrname];
-        }
-    }
-
-    for (attrname in obj2) {
-        if (obj2.hasOwnProperty(attrname)) {
-            obj3[attrname] = obj2[attrname];
-        }
-    }
-
-    return obj3;
-};
 /**
  * Container
  *
@@ -218,6 +189,40 @@ var http = function() {
         }
     }
 }();
+Object.path = function(object, string, value, returnParent) {
+    string = string.split('.');
+
+    while (string.length > 1)
+        object = object[string.shift()];
+
+    if(undefined !== value) {
+        return object[string.shift()] = value;
+    }
+
+    if(returnParent) {
+        return object;
+    }
+
+    return object[string.shift()];
+};
+
+Object.merge = function(obj1, obj2) {
+    var obj3 = {}, attrname;
+
+    for (attrname in obj1) {
+        if (obj1.hasOwnProperty(attrname)) {
+            obj3[attrname] = obj1[attrname];
+        }
+    }
+
+    for (attrname in obj2) {
+        if (obj2.hasOwnProperty(attrname)) {
+            obj3[attrname] = obj2[attrname];
+        }
+    }
+
+    return obj3;
+};
 /**
  * Router
  *
@@ -332,26 +337,22 @@ var view = function() {
                     var value       = stock[key],
                         elements    = scope.querySelectorAll('[' + value.selector + ']'),
                         postRender  = function(view, element, container) {
-                            view.controller(element, container);
+                            view.controller(element, container); // Execute controller
 
-                            if(true !== value.repeat) {
+                            if(true !== value.repeat) { // Remove view that should not repeat itself
                                 element.removeAttribute(view.selector);
                             }
-
-                            console.log('removed-view', view.selector);
                         };
 
                     for (var i = 0; i < elements.length; i++) {
                         var element = elements[i];
-
-                        console.log(value.name);
-                        console.log(value.template);
 
                         if(!value.template) {
                             postRender(value, element, container);
                             continue;
                         }
 
+                        // Load new view template
                         var result = http
                             .get(value.template)
                             .then(function(element, value) {
@@ -390,48 +391,59 @@ view.add({
             route   = router.match(window.location.pathname),
             view    = container.get('view'),
             http    = container.get('http'),
-            scope = {
+            scope   = {
                 name: 'ls-scope',
                 selector: 'data-ls-scope',
                 template: false,
                 repeat: true,
-                controller: function() {}
+                controller: function() {},
+                state: true
             },
-            init    = function(scope) {
-                var route           = router.match(window.location.pathname);
+            init    = function(route) {
+                // Merge
                 scope.template      = (undefined !== route.view.template) ? route.view.template : null;
                 scope.controller    = (undefined !== route.view.controller) ? route.view.controller : function() {};
+                scope.state         = (undefined !== route.view.state) ? route.view.state : true;
 
                 view.render(element, container);
             };
 
         view.add(scope);
 
-        window.document.addEventListener('click', function(event) {
-            if(!event.target.href) {
+        window.document.addEventListener('click', function(event) { // Handle user navigation
+
+            if(!event.target.href) { // Just a normal click not an href
                 return false;
             }
 
-            event.preventDefault();
+            var route = router.match(event.target.href);
 
-            console.log('state', window.location, event.target.href);
-
-            if(window.location == event.target.href) {
+            if(null === route) { // No match. this link is not related to our app
                 return false;
             }
 
-            window.history.pushState({}, 'Unknown', event.target.href);
+            event.preventDefault(); // Stop normal browser behavior. Start to act as single page
 
-            init(scope);
+            if(window.location == event.target.href) { // Same link. Don't re-execute a thing
+                return false;
+            }
+
+            route.view.state = (undefined === route.view.state) ? true : route.view.state;
+
+            if(true === route.view.state) {
+                window.history.pushState({}, 'Unknown', event.target.href);
+            }
+
+            init(route);
 
             return true;
         });
 
-        window.addEventListener('popstate', function(e) {
-            init(scope);
+        window.addEventListener('popstate', function(e) { // Handle back button behavior
+            init(router.match(window.location.pathname));
         });
 
-        init(scope);
+        init(router.match(window.location.pathname)); // Handle first start
     }
 });
 
