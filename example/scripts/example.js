@@ -18,25 +18,26 @@
         })
         .state('/pages/example.html', {
             template: '/pages/example.html',
-            controller: function (element, container) {alert('xxx');
+            controller: function (element, container) {
                 var service = container.get('tasks');
                 var x = 0;
                 setInterval(function () {
                     Object.path(service, 'title', '3s Interval Overtake. (' + (x++) + ')');
                     service.list.push('Added task');
-                    console.log(service);
                 }, 10000);
             }
         })
         .state('/pages/todo/add', {
             controller: function (element, container) {
-
-            }
+                alert('exec');
+            },
+            state: false
         })
         .state('/pages/todo/remove', {
             controller: function (element, container) {
 
-            }
+            },
+            state: false
         })
     ;
 
