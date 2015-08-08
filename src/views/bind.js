@@ -1,6 +1,3 @@
-
-var view = require('view');
-
 view.add({
     name: 'ls-bind',
     selector: 'data-ls-bind',

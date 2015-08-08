@@ -1,6 +1,3 @@
-
-var view = require('view');
-
 view.add({
     name: 'ls-loop',
     selector: 'data-ls-loop',

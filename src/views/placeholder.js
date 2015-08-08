@@ -1,6 +1,3 @@
-
-var view = require('view');
-
 view.add({
     name: 'ls-placeholder',
     selector: 'data-ls-placeholder',

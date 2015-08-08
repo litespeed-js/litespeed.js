@@ -1,5 +1,3 @@
-var view = require('view');
-
 view.add({
     name: 'ls-app',
     selector: 'data-ls-app',

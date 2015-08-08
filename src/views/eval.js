@@ -1,6 +1,3 @@
-
-var view = require('view');
-
 view.add({
     name: 'ls-eval',
     selector: 'data-ls-eval',
