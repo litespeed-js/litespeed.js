@@ -1,0 +1,17 @@
+{
+  "name": "litespeed.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/eldadfux/litespeed.js",
+  "authors": [
+    "eldadfux <eldad.fux@gmail.com>"
+  ],
+  "description": "Lite and fast JS",
+  "main": "./litespeed.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "framework"
+  ],
+  "license": "MIT"
+}
