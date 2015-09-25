@@ -1,42 +1,34 @@
-window['require'] = function(path) {
-    return window[path];
-};
+var app = function() {
+    return {
+        view: view,
+        router: router,
+        http: http,
+        form: form,
+        container: container,
+        run: function(window) {
+            try {
+                var scope = this;
 
-var router      = require("router"),
-    view        = require("view"),
-    http        = require("http"),
-    container   = require("container"),
+                // Register all core services
+                this.container
+                    .register('window', function() {return window;}, true)
+                    .register('view', function() {return scope.view;}, true)
+                    .register('router', function() {return scope.router;}, true)
+                    .register('http', function() {return scope.http;}, true)
+                    .register('form', function() {return scope.form;}, true)
+                ;
 
-    app = function() {
-        return {
-            view: view,
-            router: router,
-            http: http,
-            container: container,
-            run: function(window) {
-                try {
-                    var scope = this;
-
-                    // Register all core services
-                    this.container
-                        .register('window', function() {return window;}, true)
-                        .register('view', function() {return scope.view;}, true)
-                        .register('router', function() {return scope.router;}, true)
-                        .register('http', function() {return scope.http;}, true)
-                    ;
-
-
-                    // Trigger reclusive app rendering
-                    scope.view.render(window.document, container);
-                }
-                catch (error) {
-                    //TODO add custom error handling
-                    this.container.get('messages').add('Error Occurred: "' + error.message + '"', 3);
-                    console.error('error', error.message, error.stack, error.toString(), this.container.get('messages'));
-                }
+                // Trigger reclusive app rendering
+                scope.view.render(window.document, container);
+            }
+            catch (error) {
+                //TODO add custom error handling
+                this.container.get('messages').add('Error Occurred: "' + error.message + '"', 3);
+                console.error('error', error.message, error.stack, error.toString(), this.container.get('messages'));
             }
         }
-    };
+    }
+};
 /**
  * Container
  *
@@ -273,16 +265,18 @@ var router = function() {
          * @return value object|null
          */
         match: function(url) {
+            var result = null;
+
             for (var i = 0; i < states.length; i++) {
                 var value   = states[i],
                     match   = new RegExp(value.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
 
                 if(url.match(match)) {
-                    return value;
+                    result = value;
                 }
             }
 
-            return null
+            return result
         }
     }
 
@@ -378,8 +372,6 @@ var view = function() {
         }
     }
 }();
-var view = require('view');
-
 view.add({
     name: 'ls-app',
     selector: 'data-ls-app',
@@ -446,9 +438,6 @@ view.add({
         init(router.match(window.location.pathname)); // Handle first start
     }
 });
-
-var view = require('view');
-
 view.add({
     name: 'ls-bind',
     selector: 'data-ls-bind',
@@ -483,9 +472,6 @@ view.add({
         element.value = Object.path(service, path);
     }
 });
-
-var view = require('view');
-
 view.add({
     name: 'ls-dnd',
     selector: 'data-ls-dnd',
@@ -495,22 +481,15 @@ view.add({
 
     }
 });
-
-var view = require('view');
-
 view.add({
     name: 'ls-eval',
     selector: 'data-ls-eval',
     template: false,
     controller: function(element, container) {
         var statement   = element.dataset['lsEval'];
-alert(2);
         eval(statement);
     }
 });
-
-var view = require('view');
-
 view.add({
     name: 'ls-loop',
     selector: 'data-ls-loop',
@@ -626,9 +605,6 @@ view.add({
 */
     }
 });
-
-var view = require('view');
-
 view.add({
     name: 'ls-placeholder',
     selector: 'data-ls-placeholder',
@@ -658,19 +634,19 @@ view.add({
         element.innerHTML = Object.path(service, path);
     }
 });
-
-var view = require('view');
-
 view.add({
     name: 'ls-submit',
     selector: 'data-ls-submit',
     template: false,
     controller: function(element, container) {
+        var target = element.dataset['lsSubmit'];
+
         element.addEventListener('submit', function(event) {
             event.preventDefault();
-
-            container.get('messages').add('Saved Successfully!', 2.5);
-
+            container.get('form').set(element);
+            var route = container.get('router').match(target);
+            console.log(route);
+            //container.get('messages').add('Saved Successfully!', 2.5);
             /**
              * 1. Get list of parameters
              * 2. Sort parameters by function signature
