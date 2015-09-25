@@ -48,16 +48,18 @@ var router = function() {
          * @return value object|null
          */
         match: function(url) {
+            var result = null;
+
             for (var i = 0; i < states.length; i++) {
                 var value   = states[i],
                     match   = new RegExp(value.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
 
                 if(url.match(match)) {
-                    return value;
+                    result = value;
                 }
             }
 
-            return null
+            return result
         }
     }
 
