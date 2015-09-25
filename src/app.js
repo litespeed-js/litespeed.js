@@ -3,7 +3,6 @@ var app = function() {
         view: view,
         router: router,
         http: http,
-        form: form,
         container: container,
         run: function(window) {
             try {
@@ -15,7 +14,6 @@ var app = function() {
                     .register('view', function() {return scope.view;}, true)
                     .register('router', function() {return scope.router;}, true)
                     .register('http', function() {return scope.http;}, true)
-                    .register('form', function() {return scope.form;}, true)
                 ;
 
                 // Trigger reclusive app rendering
