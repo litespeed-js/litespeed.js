@@ -17,27 +17,27 @@ var container = function() {
          * Adds a new service definition to application services stack.
          *
          * @param name string
-         * @param callback function
+         * @param object callback|object
          * @param singelton bool
          * @returns container
          */
-        register: function(name, callback, singelton) {
+        register: function(name, object, singelton) {
 
             if(typeof name !== 'string') {
                 throw new Error('var name must be of type string');
             }
 
-            if(typeof callback !== 'function') {
-                throw new Error('var callback must be of type function');
+            if(typeof object !== 'function' && (typeof object !== 'object')) {
+                throw new Error('var object must be of type function or object');
             }
 
             if(typeof singelton !== 'boolean') {
-                throw new Error('var callback must be of type boolean');
+                throw new Error('var singelton must be of type boolean');
             }
 
             stock[name] = {
                 name: name,
-                callback: callback,
+                object: object,
                 singleton: singelton,
                 instance: null
             };
@@ -61,7 +61,7 @@ var container = function() {
             }
 
             if(service.instance === null) {
-                var instance  = service.callback();
+                var instance  = (typeof service.object == 'function') ? service.object() : service.object;
 
                 if(service.singleton) {
                     service.instance = instance;
