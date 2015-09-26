@@ -21,8 +21,7 @@ var app = function() {
             }
             catch (error) {
                 //TODO add custom error handling
-                this.container.get('messages').add('Error Occurred: "' + error.message + '"', 3);
-                console.error('error', error.message, error.stack, error.toString(), this.container.get('messages'));
+                console.error('error', error.message, error.stack, error.toString());
             }
         }
     }
