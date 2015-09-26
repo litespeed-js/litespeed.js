@@ -35,6 +35,7 @@ var http = function() {
 
                 xmlhttp.open(method, url, true);
 
+                // Set Headers
                 for (var key in headers) {
                     if (headers.hasOwnProperty(key)) {
                         xmlhttp.setRequestHeader(key, headers[key]);
