@@ -21,8 +21,7 @@ var app = function() {
             }
             catch (error) {
                 //TODO add custom error handling
-                this.container.get('messages').add('Error Occurred: "' + error.message + '"', 3);
-                console.error('error', error.message, error.stack, error.toString(), this.container.get('messages'));
+                console.error('error', error.message, error.stack, error.toString());
             }
         }
     }
@@ -46,27 +45,27 @@ var container = function() {
          * Adds a new service definition to application services stack.
          *
          * @param name string
-         * @param callback function
+         * @param object callback|object
          * @param singelton bool
          * @returns container
          */
-        register: function(name, callback, singelton) {
+        register: function(name, object, singelton) {
 
             if(typeof name !== 'string') {
                 throw new Error('var name must be of type string');
             }
 
-            if(typeof callback !== 'function') {
-                throw new Error('var callback must be of type function');
+            if(typeof object !== 'function' && (typeof object !== 'object')) {
+                throw new Error('var object must be of type function or object');
             }
 
             if(typeof singelton !== 'boolean') {
-                throw new Error('var callback must be of type boolean');
+                throw new Error('var singelton must be of type boolean');
             }
 
             stock[name] = {
                 name: name,
-                callback: callback,
+                object: object,
                 singleton: singelton,
                 instance: null
             };
@@ -90,7 +89,7 @@ var container = function() {
             }
 
             if(service.instance === null) {
-                var instance  = service.callback();
+                var instance  = (typeof service.object == 'function') ? service.object() : service.object;
 
                 if(service.singleton) {
                     service.instance = instance;
@@ -140,6 +139,7 @@ var http = function() {
 
                 xmlhttp.open(method, url, true);
 
+                // Set Headers
                 for (var key in headers) {
                     if (headers.hasOwnProperty(key)) {
                         xmlhttp.setRequestHeader(key, headers[key]);
@@ -191,6 +191,10 @@ Object.path = function(object, string, value, returnParent) {
 
     if(returnParent) {
         return object;
+    }
+
+    if(undefined == object) {
+        return '';
     }
 
     return object[string.shift()];
@@ -446,25 +450,48 @@ view.add({
                 .replace('\']', '')
                 .split('.'), // Make syntax consistent using only dot nesting
             service     = container.get(reference.shift()),
-            path        = reference.join('.'),
-            watch       = Object.path(service, path, undefined, true)
-            ;
+            path        = reference.join('.')
+        ;
 
-        Object.observe(watch, function(changes) {
+        Object.observe(service, function(changes) {
             changes.forEach(function(change) {
                 var value = Object.path(service, path);
 
-                if(value != element.value) {
-                    element.value = value;
-                    console.log('updated', service);
-                    console.log('changes', changes);
+                var key = (
+                    (element.type == 'button') ||
+                    (element.type == 'checkbox') ||
+                    (element.type == 'color') ||
+                    (element.type == 'date') ||
+                    (element.type == 'datetime') ||
+                    (element.type == 'datetime-local') ||
+                    (element.type == 'email') ||
+                    (element.type == 'file') ||
+                    (element.type == 'hidden') ||
+                    (element.type == 'image') ||
+                    (element.type == 'month') ||
+                    (element.type == 'number') ||
+                    (element.type == 'password') ||
+                    (element.type == 'radio') ||
+                    (element.type == 'range') ||
+                    (element.type == 'reset') ||
+                    (element.type == 'search') ||
+                    (element.type == 'submit') ||
+                    (element.type == 'tel') ||
+                    (element.type == 'text') ||
+                    (element.type == 'time') ||
+                    (element.type == 'url') ||
+                    (element.type == 'week') ||
+                    (element.type == 'textarea')
+                ) ? 'value' : 'innerText';
+
+                if(value != element[key]) {
+                    element[key] = value;
                 }
             });
         });
 
         element.addEventListener('input', function() {
             Object.path(service, path, element.value);
-            console.log('input', service);
         });
 
         element.value = Object.path(service, path);
@@ -601,35 +628,6 @@ view.add({
 
         start();
 */
-    }
-});
-view.add({
-    name: 'ls-placeholder',
-    selector: 'data-ls-placeholder',
-    template: false,
-    controller: function(element, container) {
-        var reference   = element.dataset['lsPlaceholder']
-                .replace('[\'', '.')
-                .replace('\']', '')
-                .split('.'), // Make syntax consistent using only dot nesting
-            service     = container.get(reference.shift()),
-            path        = reference.join('.'),
-            watch       = Object.path(service, path, undefined, true)
-            ;
-
-        Object.observe(watch, function(changes) {
-            changes.forEach(function(change) {
-                var value = Object.path(service, path);
-
-                if(value != element.innerHTML) {
-                    element.innerHTML = value;
-                    console.log('updated', service);
-                    console.log('changes', changes);
-                }
-            });
-        });
-
-        element.innerHTML = Object.path(service, path);
     }
 });
 view.add({
