@@ -44,15 +44,12 @@ view.add({
 
                 if(value != element[key]) {
                     element[key] = value;
-                    console.log('updated', service);
-                    console.log('changes', changes);
                 }
             });
         });
 
         element.addEventListener('input', function() {
             Object.path(service, path, element.value);
-            console.log('input', service);
         });
 
         element.value = Object.path(service, path);
