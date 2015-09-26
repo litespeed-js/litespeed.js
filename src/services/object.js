@@ -12,6 +12,10 @@ Object.path = function(object, string, value, returnParent) {
         return object;
     }
 
+    if(undefined == object) {
+        return '';
+    }
+
     return object[string.shift()];
 };
 
