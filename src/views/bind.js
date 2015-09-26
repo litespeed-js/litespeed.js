@@ -8,16 +8,42 @@ view.add({
                 .replace('\']', '')
                 .split('.'), // Make syntax consistent using only dot nesting
             service     = container.get(reference.shift()),
-            path        = reference.join('.'),
-            watch       = Object.path(service, path, undefined, true)
-            ;
+            path        = reference.join('.')
+        ;
 
-        Object.observe(watch, function(changes) {
+        Object.observe(service, function(changes) {
             changes.forEach(function(change) {
                 var value = Object.path(service, path);
 
-                if(value != element.value) {
-                    element.value = value;
+                var key = (
+                    (element.type == 'button') ||
+                    (element.type == 'checkbox') ||
+                    (element.type == 'color') ||
+                    (element.type == 'date') ||
+                    (element.type == 'datetime') ||
+                    (element.type == 'datetime-local') ||
+                    (element.type == 'email') ||
+                    (element.type == 'file') ||
+                    (element.type == 'hidden') ||
+                    (element.type == 'image') ||
+                    (element.type == 'month') ||
+                    (element.type == 'number') ||
+                    (element.type == 'password') ||
+                    (element.type == 'radio') ||
+                    (element.type == 'range') ||
+                    (element.type == 'reset') ||
+                    (element.type == 'search') ||
+                    (element.type == 'submit') ||
+                    (element.type == 'tel') ||
+                    (element.type == 'text') ||
+                    (element.type == 'time') ||
+                    (element.type == 'url') ||
+                    (element.type == 'week') ||
+                    (element.type == 'textarea')
+                ) ? 'value' : 'innerText';
+
+                if(value != element[key]) {
+                    element[key] = value;
                     console.log('updated', service);
                     console.log('changes', changes);
                 }
