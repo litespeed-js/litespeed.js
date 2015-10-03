@@ -11,7 +11,7 @@ view.add({
             path        = reference.join('.')
         ;
 
-        Object.observe(service, function(changes) {
+        Object.observeNested(service, function(changes) {
             changes.forEach(function(change) {
                 var value = Object.path(service, path);
 

@@ -1,22 +1,22 @@
-Object.path = function(object, string, value, returnParent) {
-    string = string.split('.');
+Object.path = function(object, path, value) {
+    path = path.split('.');
 
-    while (string.length > 1)
-        object = object[string.shift()];
+    // Iterating path
+    while (path.length > 1) {
+        object = object[path.shift()];
+    }
 
+    // Set new value
     if(undefined !== value) {
-        return object[string.shift()] = value;
+        return object[path.shift()] = value;
     }
 
-    if(returnParent) {
-        return object;
-    }
-
+    // Return null when missing path
     if(undefined == object) {
-        return '';
+        return null;
     }
 
-    return object[string.shift()];
+    return object[path.shift()];
 };
 
 Object.merge = function(obj1, obj2) {
@@ -35,4 +35,16 @@ Object.merge = function(obj1, obj2) {
     }
 
     return obj3;
+};
+
+Object.observeNested = function(obj, callback) {
+    Object.observe(obj, function(changes){
+        changes.forEach(function(change) {
+            if (typeof obj[change.name] == 'object') {
+                Object.observeNested(obj[change.name], callback);
+            }
+        });
+
+        callback.apply(this, arguments);
+    });
 };

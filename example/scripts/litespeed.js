@@ -179,25 +179,25 @@ var http = function() {
         }
     }
 }();
-Object.path = function(object, string, value, returnParent) {
-    string = string.split('.');
+Object.path = function(object, path, value) {
+    path = path.split('.');
 
-    while (string.length > 1)
-        object = object[string.shift()];
+    // Iterating path
+    while (path.length > 1) {
+        object = object[path.shift()];
+    }
 
+    // Set new value
     if(undefined !== value) {
-        return object[string.shift()] = value;
+        return object[path.shift()] = value;
     }
 
-    if(returnParent) {
-        return object;
-    }
-
+    // Return null when missing path
     if(undefined == object) {
-        return '';
+        return null;
     }
 
-    return object[string.shift()];
+    return object[path.shift()];
 };
 
 Object.merge = function(obj1, obj2) {
@@ -216,6 +216,18 @@ Object.merge = function(obj1, obj2) {
     }
 
     return obj3;
+};
+
+Object.observeNested = function(obj, callback) {
+    Object.observe(obj, function(changes){
+        changes.forEach(function(change) {
+            if (typeof obj[change.name] == 'object') {
+                Object.observeNested(obj[change.name], callback);
+            }
+        });
+
+        callback.apply(this, arguments);
+    });
 };
 /**
  * Router
@@ -453,7 +465,7 @@ view.add({
             path        = reference.join('.')
         ;
 
-        Object.observe(service, function(changes) {
+        Object.observeNested(service, function(changes) {
             changes.forEach(function(change) {
                 var value = Object.path(service, path);
 
@@ -498,15 +510,6 @@ view.add({
     }
 });
 view.add({
-    name: 'ls-dnd',
-    selector: 'data-ls-dnd',
-    template: false,
-    controller: function(element) {
-
-
-    }
-});
-view.add({
     name: 'ls-eval',
     selector: 'data-ls-eval',
     template: false,
@@ -520,40 +523,60 @@ view.add({
     selector: 'data-ls-loop',
     template: false,
     controller: function(element) {
-
-        var reference   = element.dataset['lsLoop'].replace('[\'', '.').replace('\']', '').split('.'), // Make syntax consistent using only dot nesting
+        var reference   = element.dataset['lsLoop']
+                .replace('[\'', '.')
+                .replace('\']', '')
+                .split('.'), // Make syntax consistent using only dot nesting
             template    = element.innerHTML,
             service     = container.get(reference.shift()),
             path        = reference.join('.'),
-            array       = Object.path(service, path),
-            watch       = Object.path(service, path, undefined, true),
-            render      = function(element, array) {
-                var output = '';
+            array       = Object.path(service, path)
+        ;
 
-                for (var prop in array) {
-                    if (!array.hasOwnProperty(prop)) {
+        array = (null == array) ? [] : array; // Cast null to empty array
+
+        var render = function(element, array, template) {
+            var output = '';
+
+            for (var prop in array) {
+                if (!array.hasOwnProperty(prop)) {
+                    continue
+                }
+
+                var keys = Object.keys(array[prop]);
+
+                for (var key in keys) {
+                    if (!keys.hasOwnProperty(key)) {
                         continue
                     }
 
-                    output += template
-                        .replace(/{{ /g, '{{')
-                        .replace(/ }}/g, '}}')
-                        .replace(/{{value}}/g, array[prop])
-                        .replace(/{{key}}/g, prop)
-                    ;
+                    template = template.replace('{{ element.' + keys[key] + ' }}', array[prop][keys[key]]);
                 }
 
-                element.innerHTML = output;
+                console.log(array[prop]);
+
+                output += template
+                    .replace(/{{ /g, '{{')
+                    .replace(/ }}/g, '}}')
+                    .replace(/{{value}}/g, array[prop])
+                    .replace(/{{key}}/g, prop)
+                ;
             }
-        ;
+
+            element.innerHTML = output;
+        };
+
+        element.innerHTML = '';
+
         if(typeof array !== 'array' && typeof array !== 'object') {
             throw new Error('Reference \'' + path + '\' value must be array or object. ' + (typeof array) + ' given');
         }
 
-        render(element, array);
+        render(element, array, template);
 
-        Object.observe(array, function(changes) {
-            render(element, array);
+        Object.observeNested(service, function(changes) {
+            array = Object.path(service, path);
+            render(element, array, template);
         });
 /*
 
