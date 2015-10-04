@@ -17,7 +17,10 @@ var app = function() {
                 //TODO add custom error handling
                 console.error('error', error.message, error.stack, error.toString());
             }
-        }
+        },
+        view: view,
+        http: http,
+        router: router
     }
 };
 view.add({
