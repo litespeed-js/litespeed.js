@@ -39,7 +39,6 @@ components
     - data-ls-loop -h
     - data-ls-submit -h
     - data-ls-switch -h
-    - data-ls-attr (set attr watch statement)
 
 ## Performance
 

@@ -1,23 +1,17 @@
 var app = function() {
     return {
-        view: view,
-        router: router,
-        http: http,
-        container: container,
         run: function(window) {
             try {
-                var scope = this;
-
                 // Register all core services
                 this.container
-                    .register('window', function() {return window;}, true)
-                    .register('view', function() {return scope.view;}, true)
-                    .register('router', function() {return scope.router;}, true)
-                    .register('http', function() {return scope.http;}, true)
+                    .register('window', window, true)
+                    .register('view', view, true)
+                    .register('router', router, true)
+                    .register('http', http, true)
                 ;
 
                 // Trigger reclusive app rendering
-                scope.view.render(window.document, container);
+                this.view.render(window.document, container);
             }
             catch (error) {
                 //TODO add custom error handling
@@ -26,6 +20,296 @@ var app = function() {
         }
     }
 };
+view.add({
+    name: 'ls-app',
+    selector: 'data-ls-app',
+    template: false,
+    repeat: true,
+    controller: function(element, container) {
+        var window  = container.get('window'),
+            router  = container.get('router'),
+            route   = router.match(window.location.pathname),
+            view    = container.get('view'),
+            http    = container.get('http'),
+            scope   = {
+                name: 'ls-scope',
+                selector: 'data-ls-scope',
+                template: false,
+                repeat: true,
+                controller: function() {},
+                state: true
+            },
+            init    = function(route) {
+                // Merge
+                scope.template      = (undefined !== route.view.template) ? route.view.template : null;
+                scope.controller    = (undefined !== route.view.controller) ? route.view.controller : function() {};
+                scope.state         = (undefined !== route.view.state) ? route.view.state : true;
+
+                view.render(element, container);
+            };
+
+        view.add(scope);
+
+        window.document.addEventListener('click', function(event) { // Handle user navigation
+
+            if(!event.target.href) { // Just a normal click not an href
+                return false;
+            }
+
+            var route = router.match(event.target.href);
+
+            if(null === route) { // No match. this link is not related to our app
+                return false;
+            }
+
+            event.preventDefault(); // Stop normal browser behavior. Start to act as single page
+
+            if(window.location == event.target.href) { // Same link. Don't re-execute a thing
+                return false;
+            }
+
+            route.view.state = (undefined === route.view.state) ? true : route.view.state;
+
+            if(true === route.view.state) {
+                window.history.pushState({}, 'Unknown', event.target.href);
+            }
+
+            init(route);
+
+            return true;
+        });
+
+        window.addEventListener('popstate', function(e) { // Handle back button behavior
+            init(router.match(window.location.pathname));
+        });
+
+        init(router.match(window.location.pathname)); // Handle first start
+    }
+});
+view.add({
+    name: 'ls-bind',
+    selector: 'data-ls-bind',
+    template: false,
+    controller: function(element, container) {
+        var reference   = element.dataset['lsBind']
+                .replace('[\'', '.')
+                .replace('\']', '')
+                .split('.'), // Make syntax consistent using only dot nesting
+            service     = container.get(reference.shift()),
+            path        = reference.join('.')
+        ;
+
+        Object.observeNested(service, function(changes) {
+            changes.forEach(function(change) {
+                var value = Object.path(service, path);
+
+                var key = (
+                    (element.type == 'button') ||
+                    (element.type == 'checkbox') ||
+                    (element.type == 'color') ||
+                    (element.type == 'date') ||
+                    (element.type == 'datetime') ||
+                    (element.type == 'datetime-local') ||
+                    (element.type == 'email') ||
+                    (element.type == 'file') ||
+                    (element.type == 'hidden') ||
+                    (element.type == 'image') ||
+                    (element.type == 'month') ||
+                    (element.type == 'number') ||
+                    (element.type == 'password') ||
+                    (element.type == 'radio') ||
+                    (element.type == 'range') ||
+                    (element.type == 'reset') ||
+                    (element.type == 'search') ||
+                    (element.type == 'submit') ||
+                    (element.type == 'tel') ||
+                    (element.type == 'text') ||
+                    (element.type == 'time') ||
+                    (element.type == 'url') ||
+                    (element.type == 'week') ||
+                    (element.type == 'textarea')
+                ) ? 'value' : 'innerText';
+
+                if(value != element[key]) {
+                    element[key] = value;
+                }
+            });
+        });
+
+        element.addEventListener('input', function() {
+            Object.path(service, path, element.value);
+        });
+
+        element.value = Object.path(service, path);
+    }
+});
+view.add({
+    name: 'ls-eval',
+    selector: 'data-ls-eval',
+    template: false,
+    controller: function(element, container) {
+        var statement   = element.dataset['lsEval'];
+        eval(statement);
+    }
+});
+view.add({
+    name: 'ls-loop',
+    selector: 'data-ls-loop',
+    template: false,
+    controller: function(element) {
+        var reference   = element.dataset['lsLoop']
+                .replace('[\'', '.')
+                .replace('\']', '')
+                .split('.'), // Make syntax consistent using only dot nesting
+            template    = element.innerHTML,
+            service     = container.get(reference.shift()),
+            path        = reference.join('.'),
+            array       = Object.path(service, path)
+        ;
+
+        array = (null == array) ? [] : array; // Cast null to empty array
+
+        var render = function(element, array, template) {
+            var output = '';
+
+            for (var prop in array) {
+                if (!array.hasOwnProperty(prop)) {
+                    continue
+                }
+
+                var keys = Object.keys(array[prop]);
+
+                for (var key in keys) {
+                    if (!keys.hasOwnProperty(key)) {
+                        continue
+                    }
+
+                    template = template.replace('{{ element.' + keys[key] + ' }}', array[prop][keys[key]]);
+                }
+
+                console.log(array[prop]);
+
+                output += template
+                    .replace(/{{ /g, '{{')
+                    .replace(/ }}/g, '}}')
+                    .replace(/{{value}}/g, array[prop])
+                    .replace(/{{key}}/g, prop)
+                ;
+            }
+
+            element.innerHTML = output;
+        };
+
+        element.innerHTML = '';
+
+        if(typeof array !== 'array' && typeof array !== 'object') {
+            throw new Error('Reference \'' + path + '\' value must be array or object. ' + (typeof array) + ' given');
+        }
+
+        render(element, array, template);
+
+        Object.observeNested(service, function(changes) {
+            array = Object.path(service, path);
+            render(element, array, template);
+        });
+/*
+
+        var dragSrcEl = null;
+
+        function handleDragStart(e) {
+            // Target (this) element is the source node.
+            this.style.opacity = '0.4';
+
+            dragSrcEl = this;
+
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault(); // Necessary. Allows us to drop.
+            }
+
+            e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+            return false;
+        }
+
+        function handleDragEnter(e) {
+            // this / e.target is the current hover target.
+            this.classList.add('over');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('over');  // this / e.target is previous target element.
+        }
+
+        function handleDrop(e) {
+            // this/e.target is current target element.
+
+            if (e.stopPropagation) {
+                e.stopPropagation(); // Stops some browsers from redirecting.
+            }
+
+            // Don't do anything if dropping the same column we're dragging.
+            if (dragSrcEl != this) {
+                // Set the source column's HTML to the HTML of the column we dropped on.
+                dragSrcEl.innerHTML = this.innerHTML;
+                this.innerHTML = e.dataTransfer.getData('text/html');
+            }
+
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';
+
+            // this/e.target is the source node.
+
+            [].forEach.call(element.children, function (node) {
+                node.classList.remove('over');
+            });
+        }
+
+        var start = function() {
+            [].forEach.call(element.children, function(node) {
+                node.addEventListener('dragstart',  handleDragStart, false);
+                node.addEventListener('dragenter',  handleDragEnter, false);
+                node.addEventListener('dragover',   handleDragOver, false);
+                node.addEventListener('dragleave',  handleDragLeave, false);
+                node.addEventListener('drop',       handleDrop, false);
+                node.addEventListener('dragend',    handleDragEnd, false);
+            });
+        };
+
+        start();
+*/
+    }
+});
+view.add({
+    name: 'ls-submit',
+    selector: 'data-ls-submit',
+    template: false,
+    controller: function(element, container) {
+        var target = element.dataset['lsSubmit'];
+
+        element.addEventListener('submit', function(event) {
+            event.preventDefault();
+            container.get('form').set(element);
+            var route = container.get('router').match(target);
+            console.log(route);
+            //container.get('messages').add('Saved Successfully!', 2.5);
+            /**
+             * 1. Get list of parameters
+             * 2. Sort parameters by function signature
+             * 3. Apply parameters to function and execute it
+             */
+        });
+
+        //element.nodeName
+    }
+});
 /**
  * Container
  *
@@ -386,293 +670,3 @@ var view = function() {
         }
     }
 }();
-view.add({
-    name: 'ls-app',
-    selector: 'data-ls-app',
-    template: false,
-    repeat: true,
-    controller: function(element, container) {
-        var window  = container.get('window'),
-            router  = container.get('router'),
-            route   = router.match(window.location.pathname),
-            view    = container.get('view'),
-            http    = container.get('http'),
-            scope   = {
-                name: 'ls-scope',
-                selector: 'data-ls-scope',
-                template: false,
-                repeat: true,
-                controller: function() {},
-                state: true
-            },
-            init    = function(route) {
-                // Merge
-                scope.template      = (undefined !== route.view.template) ? route.view.template : null;
-                scope.controller    = (undefined !== route.view.controller) ? route.view.controller : function() {};
-                scope.state         = (undefined !== route.view.state) ? route.view.state : true;
-
-                view.render(element, container);
-            };
-
-        view.add(scope);
-
-        window.document.addEventListener('click', function(event) { // Handle user navigation
-
-            if(!event.target.href) { // Just a normal click not an href
-                return false;
-            }
-
-            var route = router.match(event.target.href);
-
-            if(null === route) { // No match. this link is not related to our app
-                return false;
-            }
-
-            event.preventDefault(); // Stop normal browser behavior. Start to act as single page
-
-            if(window.location == event.target.href) { // Same link. Don't re-execute a thing
-                return false;
-            }
-
-            route.view.state = (undefined === route.view.state) ? true : route.view.state;
-
-            if(true === route.view.state) {
-                window.history.pushState({}, 'Unknown', event.target.href);
-            }
-
-            init(route);
-
-            return true;
-        });
-
-        window.addEventListener('popstate', function(e) { // Handle back button behavior
-            init(router.match(window.location.pathname));
-        });
-
-        init(router.match(window.location.pathname)); // Handle first start
-    }
-});
-view.add({
-    name: 'ls-bind',
-    selector: 'data-ls-bind',
-    template: false,
-    controller: function(element, container) {
-        var reference   = element.dataset['lsBind']
-                .replace('[\'', '.')
-                .replace('\']', '')
-                .split('.'), // Make syntax consistent using only dot nesting
-            service     = container.get(reference.shift()),
-            path        = reference.join('.')
-        ;
-
-        Object.observeNested(service, function(changes) {
-            changes.forEach(function(change) {
-                var value = Object.path(service, path);
-
-                var key = (
-                    (element.type == 'button') ||
-                    (element.type == 'checkbox') ||
-                    (element.type == 'color') ||
-                    (element.type == 'date') ||
-                    (element.type == 'datetime') ||
-                    (element.type == 'datetime-local') ||
-                    (element.type == 'email') ||
-                    (element.type == 'file') ||
-                    (element.type == 'hidden') ||
-                    (element.type == 'image') ||
-                    (element.type == 'month') ||
-                    (element.type == 'number') ||
-                    (element.type == 'password') ||
-                    (element.type == 'radio') ||
-                    (element.type == 'range') ||
-                    (element.type == 'reset') ||
-                    (element.type == 'search') ||
-                    (element.type == 'submit') ||
-                    (element.type == 'tel') ||
-                    (element.type == 'text') ||
-                    (element.type == 'time') ||
-                    (element.type == 'url') ||
-                    (element.type == 'week') ||
-                    (element.type == 'textarea')
-                ) ? 'value' : 'innerText';
-
-                if(value != element[key]) {
-                    element[key] = value;
-                }
-            });
-        });
-
-        element.addEventListener('input', function() {
-            Object.path(service, path, element.value);
-        });
-
-        element.value = Object.path(service, path);
-    }
-});
-view.add({
-    name: 'ls-eval',
-    selector: 'data-ls-eval',
-    template: false,
-    controller: function(element, container) {
-        var statement   = element.dataset['lsEval'];
-        eval(statement);
-    }
-});
-view.add({
-    name: 'ls-loop',
-    selector: 'data-ls-loop',
-    template: false,
-    controller: function(element) {
-        var reference   = element.dataset['lsLoop']
-                .replace('[\'', '.')
-                .replace('\']', '')
-                .split('.'), // Make syntax consistent using only dot nesting
-            template    = element.innerHTML,
-            service     = container.get(reference.shift()),
-            path        = reference.join('.'),
-            array       = Object.path(service, path)
-        ;
-
-        array = (null == array) ? [] : array; // Cast null to empty array
-
-        var render = function(element, array, template) {
-            var output = '';
-
-            for (var prop in array) {
-                if (!array.hasOwnProperty(prop)) {
-                    continue
-                }
-
-                var keys = Object.keys(array[prop]);
-
-                for (var key in keys) {
-                    if (!keys.hasOwnProperty(key)) {
-                        continue
-                    }
-
-                    template = template.replace('{{ element.' + keys[key] + ' }}', array[prop][keys[key]]);
-                }
-
-                console.log(array[prop]);
-
-                output += template
-                    .replace(/{{ /g, '{{')
-                    .replace(/ }}/g, '}}')
-                    .replace(/{{value}}/g, array[prop])
-                    .replace(/{{key}}/g, prop)
-                ;
-            }
-
-            element.innerHTML = output;
-        };
-
-        element.innerHTML = '';
-
-        if(typeof array !== 'array' && typeof array !== 'object') {
-            throw new Error('Reference \'' + path + '\' value must be array or object. ' + (typeof array) + ' given');
-        }
-
-        render(element, array, template);
-
-        Object.observeNested(service, function(changes) {
-            array = Object.path(service, path);
-            render(element, array, template);
-        });
-/*
-
-        var dragSrcEl = null;
-
-        function handleDragStart(e) {
-            // Target (this) element is the source node.
-            this.style.opacity = '0.4';
-
-            dragSrcEl = this;
-
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.innerHTML);
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault(); // Necessary. Allows us to drop.
-            }
-
-            e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
-
-            return false;
-        }
-
-        function handleDragEnter(e) {
-            // this / e.target is the current hover target.
-            this.classList.add('over');
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('over');  // this / e.target is previous target element.
-        }
-
-        function handleDrop(e) {
-            // this/e.target is current target element.
-
-            if (e.stopPropagation) {
-                e.stopPropagation(); // Stops some browsers from redirecting.
-            }
-
-            // Don't do anything if dropping the same column we're dragging.
-            if (dragSrcEl != this) {
-                // Set the source column's HTML to the HTML of the column we dropped on.
-                dragSrcEl.innerHTML = this.innerHTML;
-                this.innerHTML = e.dataTransfer.getData('text/html');
-            }
-
-            return false;
-        }
-
-        function handleDragEnd(e) {
-            this.style.opacity = '1';
-
-            // this/e.target is the source node.
-
-            [].forEach.call(element.children, function (node) {
-                node.classList.remove('over');
-            });
-        }
-
-        var start = function() {
-            [].forEach.call(element.children, function(node) {
-                node.addEventListener('dragstart',  handleDragStart, false);
-                node.addEventListener('dragenter',  handleDragEnter, false);
-                node.addEventListener('dragover',   handleDragOver, false);
-                node.addEventListener('dragleave',  handleDragLeave, false);
-                node.addEventListener('drop',       handleDrop, false);
-                node.addEventListener('dragend',    handleDragEnd, false);
-            });
-        };
-
-        start();
-*/
-    }
-});
-view.add({
-    name: 'ls-submit',
-    selector: 'data-ls-submit',
-    template: false,
-    controller: function(element, container) {
-        var target = element.dataset['lsSubmit'];
-
-        element.addEventListener('submit', function(event) {
-            event.preventDefault();
-            container.get('form').set(element);
-            var route = container.get('router').match(target);
-            console.log(route);
-            //container.get('messages').add('Saved Successfully!', 2.5);
-            /**
-             * 1. Get list of parameters
-             * 2. Sort parameters by function signature
-             * 3. Apply parameters to function and execute it
-             */
-        });
-
-        //element.nodeName
-    }
-});

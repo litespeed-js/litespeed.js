@@ -1,23 +1,17 @@
 var app = function() {
     return {
-        view: view,
-        router: router,
-        http: http,
-        container: container,
         run: function(window) {
             try {
-                var scope = this;
-
                 // Register all core services
                 this.container
-                    .register('window', function() {return window;}, true)
-                    .register('view', function() {return scope.view;}, true)
-                    .register('router', function() {return scope.router;}, true)
-                    .register('http', function() {return scope.http;}, true)
+                    .register('window', window, true)
+                    .register('view', view, true)
+                    .register('router', router, true)
+                    .register('http', http, true)
                 ;
 
                 // Trigger reclusive app rendering
-                scope.view.render(window.document, container);
+                this.view.render(window.document, container);
             }
             catch (error) {
                 //TODO add custom error handling
