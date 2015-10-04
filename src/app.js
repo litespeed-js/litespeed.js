@@ -18,6 +18,7 @@ var app = function() {
                 console.error('error', error.message, error.stack, error.toString());
             }
         },
+        container: container,
         view: view,
         http: http,
         router: router
