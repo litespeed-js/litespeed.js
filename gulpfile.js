@@ -7,17 +7,20 @@ var gulp    = require('gulp'),
     rename  = require('gulp-rename'),
     watch   = require('gulp-watch'),
     copy    = require('gulp-copy'),
+    babel   = require("gulp-babel"),
 
     // Config
     config  = {
-        mainFile: './litespeed.js'
+        mainFile: './litespeed.js',
+        src: 'src/**/*.js',
+        dest: './example/scripts'
     }
 ;
 
 gulp.task('concat', function() {
-    return gulp.src('src/**/*.js')
+    return gulp.src(config.src)
         .pipe(concat(config.mainFile))
-        .pipe(gulp.dest('./example/scripts'));
+        .pipe(gulp.dest(config.dest));
 });
 
 gulp.task('uglify', function() {
@@ -26,12 +29,18 @@ gulp.task('uglify', function() {
         .pipe(rename({
             extname: '.min.js'
         }))
-        .pipe(gulp.dest('./example/scripts'));
+        .pipe(gulp.dest(config.dest));
 });
 
 gulp.task('watch', function() {
-    gulp.watch('src/**/*.js', ['build']);
+    gulp.watch(config.src, ['build']);
+});
+
+gulp.task('bubel', function () {
+    return gulp.src(config.src)
+        .pipe(babel())
+        .pipe(gulp.dest(config.dest));
 });
 
 // Default Task
-gulp.task('build', ['concat', 'uglify']);
+gulp.task('build', ['concat', 'uglify', 'bubel']);
