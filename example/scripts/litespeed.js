@@ -1,29 +1,3 @@
-var app = function() {
-    return {
-        run: function(window) {
-            try {
-                // Register all core services
-                this.container
-                    .register('window', window, true)
-                    .register('view', view, true)
-                    .register('router', router, true)
-                    .register('http', http, true)
-                ;
-
-                // Trigger reclusive app rendering
-                this.view.render(window.document, container);
-            }
-            catch (error) {
-                //TODO add custom error handling
-                console.error('error', error.message, error.stack, error.toString());
-            }
-        },
-        container: container,
-        view: view,
-        http: http,
-        router: router
-    }
-};
 /**
  * Container
  *
@@ -48,17 +22,16 @@ var container = function() {
          * @returns container
          */
         register: function(name, object, singelton) {
-
             if(typeof name !== 'string') {
                 throw new Error('var name must be of type string');
             }
 
             if(typeof object !== 'function' && (typeof object !== 'object')) {
-                throw new Error('var object must be of type function or object');
+                throw new Error('var object "' + name + '" must be of type function or object');
             }
 
             if(typeof singelton !== 'boolean') {
-                throw new Error('var singelton must be of type boolean');
+                throw new Error('var singelton "' + name + '" must be of type boolean');
             }
 
             stock[name] = {
@@ -216,6 +189,39 @@ Object.merge = function(obj1, obj2) {
     return obj3;
 };
 
+Object.observe = function(obj) {
+    var keys = Object.keys(obj);
+
+    for(var k=0; k < keys.length; k++) {
+
+        var key = keys[k];
+
+        (function(key){
+
+            var keyName = key+'value';
+            var oldKeyName = 'old'+key+'value';
+
+            obj[oldKeyName] = obj[key];
+
+            Object.defineProperty(obj, key, {
+                get: function() { return this[keyName]; },
+                set: function(newValue) {
+
+                    console.log('old-value: ',this[oldKeyName]);
+                    console.log('new-value: ',newValue);
+
+                    this[keyName] = newValue;
+                    this[oldKeyName] = this[keyName];
+
+                }
+            });
+
+
+
+        })(key);
+    }
+};
+
 Object.observeNested = function(obj, callback) {
     Object.observe(obj, function(changes){
         changes.forEach(function(change) {
@@ -227,6 +233,7 @@ Object.observeNested = function(obj, callback) {
         callback.apply(this, arguments);
     });
 };
+
 /**
  * Router
  *
@@ -384,6 +391,32 @@ var view = function() {
         }
     }
 }();
+var app = function() {
+    return {
+        run: function(window) {
+            try {
+                // Register all core services
+                this.container
+                    .register('window', window, true)
+                    .register('view', view, true)
+                    .register('router', router, true)
+                    .register('http', http, true)
+                ;
+
+                // Trigger reclusive app rendering
+                this.view.render(window.document, container);
+            }
+            catch (error) {
+                //TODO add custom error handling
+                console.error('error', error.message, error.stack, error.toString());
+            }
+        },
+        container: container,
+        view: view,
+        http: http,
+        router: router
+    }
+};
 view.add({
     name: 'ls-app',
     selector: 'data-ls-app',
@@ -462,48 +495,7 @@ view.add({
             service     = container.get(reference.shift()),
             path        = reference.join('.')
         ;
-
-        Object.observeNested(service, function(changes) {
-            changes.forEach(function(change) {
-                var value = Object.path(service, path);
-
-                var key = (
-                    (element.type == 'button') ||
-                    (element.type == 'checkbox') ||
-                    (element.type == 'color') ||
-                    (element.type == 'date') ||
-                    (element.type == 'datetime') ||
-                    (element.type == 'datetime-local') ||
-                    (element.type == 'email') ||
-                    (element.type == 'file') ||
-                    (element.type == 'hidden') ||
-                    (element.type == 'image') ||
-                    (element.type == 'month') ||
-                    (element.type == 'number') ||
-                    (element.type == 'password') ||
-                    (element.type == 'radio') ||
-                    (element.type == 'range') ||
-                    (element.type == 'reset') ||
-                    (element.type == 'search') ||
-                    (element.type == 'submit') ||
-                    (element.type == 'tel') ||
-                    (element.type == 'text') ||
-                    (element.type == 'time') ||
-                    (element.type == 'url') ||
-                    (element.type == 'week') ||
-                    (element.type == 'textarea')
-                ) ? 'value' : 'innerText';
-
-                if(value != element[key]) {
-                    element[key] = value;
-                }
-            });
-        });
-
-        element.addEventListener('input', function() {
-            Object.path(service, path, element.value);
-        });
-
+        
         element.value = Object.path(service, path);
     }
 });
@@ -571,11 +563,6 @@ view.add({
         }
 
         render(element, array, template);
-
-        Object.observeNested(service, function(changes) {
-            array = Object.path(service, path);
-            render(element, array, template);
-        });
 /*
 
         var dragSrcEl = null;
@@ -670,6 +657,34 @@ view.add({
              * 3. Apply parameters to function and execute it
              */
         });
+
+/*
+
+        $.fn.toJSO = function() {
+
+            if(!this.children('[name]').length) return this.val();
+
+            var jso = new Object();
+
+            this.children('[name]').each(function(){
+                var name = $(this).getAttribute('name');
+                var type = $(this).getAttribute('type');
+
+                if($(this).siblings("[name="+name+"]").length){
+                    if( type == 'checkbox' && !$(this).checked) return true;
+                    if( type == 'radio' && !$(this).checked) return true;
+
+                    if(!jso[name]) jso[name] = [];
+
+                    jso[name].push($(this).toJSO());
+                }
+                else{
+                    jso[name] = $(this).toJSO();
+                }
+            });
+
+            return jso;
+        };*/
 
         //element.nodeName
     }

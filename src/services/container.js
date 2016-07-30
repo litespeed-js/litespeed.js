@@ -22,17 +22,16 @@ var container = function() {
          * @returns container
          */
         register: function(name, object, singelton) {
-
             if(typeof name !== 'string') {
                 throw new Error('var name must be of type string');
             }
 
             if(typeof object !== 'function' && (typeof object !== 'object')) {
-                throw new Error('var object must be of type function or object');
+                throw new Error('var object "' + name + '" must be of type function or object');
             }
 
             if(typeof singelton !== 'boolean') {
-                throw new Error('var singelton must be of type boolean');
+                throw new Error('var singelton "' + name + '" must be of type boolean');
             }
 
             stock[name] = {

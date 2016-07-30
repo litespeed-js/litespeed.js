@@ -18,6 +18,34 @@ view.add({
              */
         });
 
+/*
+
+        $.fn.toJSO = function() {
+
+            if(!this.children('[name]').length) return this.val();
+
+            var jso = new Object();
+
+            this.children('[name]').each(function(){
+                var name = $(this).getAttribute('name');
+                var type = $(this).getAttribute('type');
+
+                if($(this).siblings("[name="+name+"]").length){
+                    if( type == 'checkbox' && !$(this).checked) return true;
+                    if( type == 'radio' && !$(this).checked) return true;
+
+                    if(!jso[name]) jso[name] = [];
+
+                    jso[name].push($(this).toJSO());
+                }
+                else{
+                    jso[name] = $(this).toJSO();
+                }
+            });
+
+            return jso;
+        };*/
+
         //element.nodeName
     }
 });

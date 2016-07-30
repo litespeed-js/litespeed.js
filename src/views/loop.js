@@ -53,11 +53,6 @@ view.add({
         }
 
         render(element, array, template);
-
-        Object.observeNested(service, function(changes) {
-            array = Object.path(service, path);
-            render(element, array, template);
-        });
 /*
 
         var dragSrcEl = null;

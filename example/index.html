@@ -4,36 +4,36 @@
         <meta charset="utf-8">
         <title>Litespeed.js Example</title>
         <link rel="icon" type="image/png" href="/images/favicon.png">
-        <link href="styles/default.css" rel="stylesheet" />
+        <link href="/styles/default.css" rel="stylesheet" />
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <meta name="description" content="Sample Litespeed.js application">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
-    <body data-ls-app>
 
+    <body data-ls-app>
         <header class="header">
             <nav>
                 <ul>
                     <li>
-                        <a href="/index.html">Home</a>
+                        <a href="/index.html" data-route>Home</a>
                     </li>
                     <li>
-                        <a href="/pages/getting-started.html">Getting Started</a>
+                        <a href="/getting-started.html">Getting Started</a>
                     </li>
                     <li>
-                        <a href="/pages/docs.html">Docs</a>
+                        <a href="/docs.html">Docs</a>
                     </li>
                     <li>
-                        <a href="/pages/article.html">Blog</a>
+                        <a href="/article.html">Blog</a>
                     </li>
                     <li>
-                        <a href="/pages/example.html">Example</a>
+                        <a href="/example.html">Example</a>
                     </li>
                     <li>
-                        <a href="/pages/todo/add">Task Demo</a>
+                        <a href="/todo/add">Task Demo</a>
                     </li>
                     <li>
-                        <span onclick="alert(0); window.location = '/pages/todo/add';">Task Demo</span>
+                        <span onclick="alert(0); window.location = '/todo/add';">Task Demo</span>
                     </li>
                 </ul>
             </nav>
@@ -47,7 +47,7 @@
             <li class="column" draggable="true">#{{ key }} - {{ value }}</li>
         </ul>
 
-        <main class="section" data-ls-scope="">
+        <main data-ls-scope="">
             This is my App scope
             <div class="loader"></div>
         </main>
@@ -57,7 +57,130 @@
         </section>
 
         <script src="scripts/litespeed.js"></script>
-        <script src="scripts/example.js"></script>
+        <script>
+            (function (window) {
+                "use strict";
 
+                var example = app();
+
+                example.router
+                        .state('/', {
+                            template: '/pages/home.html'
+                        })
+                        .state('/index.html', {
+                            template: '/pages/index.html'
+                        })
+                        .state('/tasks/add.html', {
+                            template: '/pages/about.html'
+                        })
+                        .state('/about.html', {
+                            template: '/pages/about.html'
+                        })
+                        .state('/article.html', {
+                            template: '/pages/article.html'
+                        })
+                        .state('/example.html', {
+                            template: '/pages/example.html',
+                            controller: function (element, container) {
+                                var service = container.get('tasks');
+                                var x = 0;
+                                setInterval(function () {
+                                    Object.path(service, 'title', '3s Interval Overtake. (' + (x++) + ')');
+                                    service.list.push('Added task');
+                                }, 10000);
+                            }
+                        })
+                        .state('/todo/add', {
+                            controller: function (element, container) {
+                                alert('exec');
+                            },
+                            state: false
+                        })
+                        .state('/todo/remove', {
+                            controller: function (element, container) {
+
+                            },
+                            state: false
+                        })
+                ;
+
+                example.container
+                        .register('tasks', function () {
+                            return {
+                                title: 'Task Title',
+                                test: {
+                                    new: 'title',
+                                    nested: {
+                                        value: 'empty'
+                                    }
+                                },
+                                list: [
+                                    'This is just my first task',
+                                    'This is just another test adding a second task',
+                                    'What do you think about this test'
+                                ],
+                                add: function (task) {
+                                    this.list.push(task);
+                                }
+                            }
+                        }, true)
+                ;
+
+                example.container
+                        /**
+                         * Messages
+                         *
+                         * Manage UI notifications, add time limited messages
+                         */
+                        .register('messages', function () {
+                            var messageId = 0;
+
+                            return {
+                                list: {},
+
+                                /**
+                                 * Add a Message
+                                 *
+                                 * Add a new notification message for limited time.
+                                 *
+                                 * @param message
+                                 * @param seconds
+                                 * @returns {*}
+                                 */
+                                add: function (message, seconds) {
+                                    this.list[++messageId] = message;
+
+                                    var scope = this;
+
+                                    (function(messageId, seconds) {
+                                        setTimeout(function() {
+                                            scope.remove(messageId);
+                                        }, seconds * 5000);
+                                    }(messageId, seconds));
+
+                                    return this;
+                                },
+
+                                /**
+                                 * Remove a message
+                                 *
+                                 * Removes a notification message with given ID number
+                                 *
+                                 * @param messageId
+                                 * @returns {*}
+                                 */
+                                remove: function (messageId) {
+                                    delete this.list[messageId];
+                                    return this;
+                                }
+                            }
+                        }, true)
+                ;
+
+                example.run(window);
+
+            }(window));
+
+        </script>
     </body>
 </html>

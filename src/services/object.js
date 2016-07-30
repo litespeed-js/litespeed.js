@@ -37,6 +37,39 @@ Object.merge = function(obj1, obj2) {
     return obj3;
 };
 
+Object.observe = function(obj) {
+    var keys = Object.keys(obj);
+
+    for(var k=0; k < keys.length; k++) {
+
+        var key = keys[k];
+
+        (function(key){
+
+            var keyName = key+'value';
+            var oldKeyName = 'old'+key+'value';
+
+            obj[oldKeyName] = obj[key];
+
+            Object.defineProperty(obj, key, {
+                get: function() { return this[keyName]; },
+                set: function(newValue) {
+
+                    console.log('old-value: ',this[oldKeyName]);
+                    console.log('new-value: ',newValue);
+
+                    this[keyName] = newValue;
+                    this[oldKeyName] = this[keyName];
+
+                }
+            });
+
+
+
+        })(key);
+    }
+};
+
 Object.observeNested = function(obj, callback) {
     Object.observe(obj, function(changes){
         changes.forEach(function(change) {
