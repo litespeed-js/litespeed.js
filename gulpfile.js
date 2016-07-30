@@ -25,7 +25,8 @@ var gulp        = require('gulp'),
             'src/views/bind.js',
             'src/views/eval.js',
             'src/views/loop.js',
-            'src/views/submit.js'
+            'src/views/submit.js',
+            'src/views/placeholder.js'
         ],
         dest: './example/scripts'
     }

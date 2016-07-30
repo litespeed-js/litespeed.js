@@ -54,6 +54,11 @@ var router = function() {
                 var value   = states[i],
                     match   = new RegExp(value.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
 
+                console.log(url, value.path)
+;                if('/' == value.path && value.path != url) {
+                    continue;
+                }
+
                 if(url.match(match)) {
                     result = value;
                 }

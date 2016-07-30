@@ -290,6 +290,11 @@ var router = function() {
                 var value   = states[i],
                     match   = new RegExp(value.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
 
+                console.log(url, value.path)
+;                if('/' == value.path && value.path != url) {
+                    continue;
+                }
+
                 if(url.match(match)) {
                     result = value;
                 }
@@ -687,5 +692,20 @@ view.add({
         };*/
 
         //element.nodeName
+    }
+});
+view.add({
+    name: 'ls-placeholder',
+    selector: 'data-ls-placeholder',
+    template: false,
+    controller: function(element, container) {
+        var reference   = element.dataset['lsPlaceholder']
+            .replace('[\'', '.')
+            .replace('\']', '')
+            .split('.'), // Make syntax consistent using only dot nesting
+            service     = container.get(reference.shift()),
+            path        = reference.join('.');
+
+        element.innerHTML = Object.path(service, path);
     }
 });
