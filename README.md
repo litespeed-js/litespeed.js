@@ -4,7 +4,6 @@ A simple javascript framework to build simple web applications.
 
 - [Features](#features)
 - [Getting Started](#getting-started)
-- [Versioning](#versioning)
 - [Contributing](#contributing)
 - [Copyright and license](#copyright-and-license)
 
