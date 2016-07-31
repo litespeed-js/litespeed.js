@@ -10,7 +10,16 @@ view.add({
             service     = container.get(reference.shift()),
             path        = reference.join('.')
         ;
-        
-        element.value = Object.path(service, path);
+
+        if(
+            element.tagName == 'INPUT' ||
+            element.tagName == 'SELECT' ||
+            element.tagName == 'TEXTAREA'
+        ) {
+            element.value = Object.path(service, path);
+        }
+        else {
+            element.innerHTML = Object.path(service, path);
+        }
     }
 });

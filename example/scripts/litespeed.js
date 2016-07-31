@@ -290,7 +290,6 @@ var router = function() {
                 var value   = states[i],
                     match   = new RegExp(value.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
 
-                console.log(url, value.path)
 ;                if('/' == value.path && value.path != url) {
                     continue;
                 }
@@ -500,8 +499,17 @@ view.add({
             service     = container.get(reference.shift()),
             path        = reference.join('.')
         ;
-        
-        element.value = Object.path(service, path);
+
+        if(
+            element.tagName == 'INPUT' ||
+            element.tagName == 'SELECT' ||
+            element.tagName == 'TEXTAREA'
+        ) {
+            element.value = Object.path(service, path);
+        }
+        else {
+            element.innerHTML = Object.path(service, path);
+        }
     }
 });
 view.add({
@@ -547,8 +555,6 @@ view.add({
 
                     template = template.replace('{{ element.' + keys[key] + ' }}', array[prop][keys[key]]);
                 }
-
-                console.log(array[prop]);
 
                 output += template
                     .replace(/{{ /g, '{{')

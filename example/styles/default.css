@@ -190,3 +190,22 @@ footer {
 	text-decoration: underline;
 	font-weight: 200;
 }
+
+pre {
+	max-width: 550px;
+    border-radius: 5px;
+    border-color: #f1f1f1;
+    border-width: 1px;
+    border-style: solid;
+	font-size: 14px;
+	margin: 20px auto;
+}
+
+code {
+	border-radius: 5px;
+	border-color: #E8E8E8;
+	border-width: 30px 0 0 0;
+	border-style: solid;
+    padding: 7px 14px!important;
+    margin: 0;
+}

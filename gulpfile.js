@@ -52,7 +52,7 @@ gulp.task('watch', function() {
 });
 
 gulp.task('bubel', function () {
-    return gulp.src(config.src)
+    return gulp.src(config.mainFile)
         .pipe(babel())
         .pipe(gulp.dest(config.dest));
 });

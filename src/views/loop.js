@@ -33,8 +33,6 @@ view.add({
                     template = template.replace('{{ element.' + keys[key] + ' }}', array[prop][keys[key]]);
                 }
 
-                console.log(array[prop]);
-
                 output += template
                     .replace(/{{ /g, '{{')
                     .replace(/ }}/g, '}}')

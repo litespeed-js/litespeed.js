@@ -5,9 +5,16 @@
         <title>Litespeed.js</title>
         <link rel="icon" type="image/png" href="/images/favicon.png">
         <link href="/styles/default.css" rel="stylesheet" />
+        <link href="/styles/github-gist.css" rel="stylesheet" />
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <meta name="description" content="Sample Litespeed.js application">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <style>
+            [data-ls-placeholder] {
+                background: red;
+            }
+        </style>
     </head>
 
     <body data-ls-app>
@@ -21,13 +28,13 @@
                         <a href="/getting-started.html">Getting Started</a>
                     </li>
                     <li>
+                        <a href="/example.html">Demo</a>
+                    </li>
+                    <li>
                         <a href="/docs.html">Docs</a>
                     </li>
                     <li>
                         <a href="/article.html">Blog</a>
-                    </li>
-                    <li>
-                        <a href="/example.html">Example</a>
                     </li>
 <!--                    <li>
                         <a href="/todo/add">Task Demo</a>
@@ -54,11 +61,24 @@
 
         <hr />
 
+        <pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;body data-ls-app&gt;
+        &lt;main data-ls-scope=&quot;&quot;&gt;
+            This is my App scope
+            &lt;div class=&quot;loader&quot;&gt;&lt;/div&gt;
+        &lt;/main&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <hr />
+
         <footer>
             © 2015-2016. Code licensed under an MIT License
         </footer>
 
         <script src="scripts/litespeed.js"></script>
+        <script src="scripts/highlight.pack.js"></script>
         <script>
             (function (window) {
                 "use strict";
@@ -184,5 +204,6 @@
             }(window));
 
         </script>
+        <script>hljs.initHighlightingOnLoad();</script>
     </body>
 </html>

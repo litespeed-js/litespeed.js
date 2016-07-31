@@ -2,26 +2,19 @@
 
 - [Features](#features)
 - [Getting Started](#getting-started)
-- [Testing](#testing)
-- [Building](#building)
 - [Versioning](#versioning)
 - [Contributing](#contributing)
 
 ## Features
 
-* MVC
-* Binding
-* States
-* Services
+* MV* design
+* Dependency injection
+* Single page application
 * Components
 
 ## Getting Started
 
-[For full documentation go over to our WIKI]()
-
-## Testing
-
-## Building
+TODO
 
 ## Versioning
 
