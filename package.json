@@ -7,6 +7,19 @@
   "homepage": "https://github.com/eldadfux/litespeed.js",
   "bugs": "https://github.com/eldadfux/litespeed.js/issues",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eldadfux/litespeed.js.git"
+  },
+  "keywords": [
+    "litespeed",
+    "frameowrk",
+    "lite",
+    "speed",
+    "lightspeed",
+    "light",
+    "javascript"
+  ],
   "dependencies": {
     "gulp": "3.9.0",
     "gulp-uglify": "1.0.2",
