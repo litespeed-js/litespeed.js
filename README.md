@@ -1,4 +1,4 @@
-# ![Litespeed.js Logo](example/images/litespeed.png "Litespeed.js Logo")
+# ![Litespeed.js Logo](https://raw.githubusercontent.com/eldadfux/litespeed.js/master/example/images/litespeed.png "Litespeed.js Logo")
 
 A simple javascript framework to build simple web applications.
 
