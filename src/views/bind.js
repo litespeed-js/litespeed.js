@@ -14,6 +14,7 @@ view.add({
         if(
             element.tagName == 'INPUT' ||
             element.tagName == 'SELECT' ||
+            element.tagName == 'BUTTON' ||
             element.tagName == 'TEXTAREA'
         ) {
             element.value = Object.path(service, path);
