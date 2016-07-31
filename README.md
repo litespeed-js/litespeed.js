@@ -1,5 +1,7 @@
 # ![Litespeed.js Logo](example/images/litespeed.png "Litespeed.js Logo")
 
+A simple javascript framework to build simple web applications.
+
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Versioning](#versioning)
