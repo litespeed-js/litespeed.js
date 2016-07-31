@@ -19,14 +19,6 @@ A simple javascript framework to build simple web applications.
 
 TODO
 
-## Versioning
-
-For transparency and insight into our release cycle, and for striving to maintain backward compatibility, Utopia PHP Framework will be maintained under the Semantic Versioning guidelines as much as possible. Releases will be numbered with the following format:
-
-`<major>.<minor>.<patch>`
-
-For more information on SemVer, please visit [http://semver.org/](http://semver.org/).
-
 ## Contributing
 
 TODO
