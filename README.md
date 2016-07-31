@@ -4,6 +4,7 @@
 - [Getting Started](#getting-started)
 - [Versioning](#versioning)
 - [Contributing](#contributing)
+- [Copyright and license](#copyright-and-license)
 
 ## Features
 
@@ -25,3 +26,9 @@ For transparency and insight into our release cycle, and for striving to maintai
 For more information on SemVer, please visit [http://semver.org/](http://semver.org/).
 
 ## Contributing
+
+TODO
+
+## Copyright and license
+
+The MIT License (MIT) http://www.opensource.org/licenses/mit-license.php
