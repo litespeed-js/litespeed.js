@@ -13,8 +13,15 @@ A simple javascript framework to build simple web applications.
 * Dependency injection
 * Single page application
 * Components
+* Services
 
 ## Getting Started
+
+Install with:
+
+    npm install litespeed.js
+
+### Usage Example
 
 TODO
 
