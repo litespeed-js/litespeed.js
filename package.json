@@ -1,8 +1,12 @@
 {
   "name": "litespeed.js",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "main": "gulpfile.js",
+  "description": "A simple javascript framework to build simple web applications.",
+  "homepage": "https://github.com/eldadfux/litespeed.js",
+  "bugs": "https://github.com/eldadfux/litespeed.js/issues",
+  "license": "MIT",
   "dependencies": {
     "gulp": "3.9.0",
     "gulp-uglify": "1.0.2",
