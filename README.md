@@ -4,6 +4,8 @@ A simple javascript framework to build simple web applications.
 
 ** STILL WORK IN PROGRESS **
 
+[![npm version](https://badge.fury.io/js/litespeed.js.svg)](https://badge.fury.io/js/litespeed.js)
+
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
