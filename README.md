@@ -2,6 +2,8 @@
 
 A simple javascript framework to build simple web applications.
 
+** STILL WORK IN PROGRESS **
+
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
