@@ -650,67 +650,63 @@ view.add({
 */
     }
 });
+/**
+ * Code solution inspired by:
+ * http://codereview.stackexchange.com/questions/13443/jquery-plugin-node-tojson-convert-html-form-to-js-object
+ */
 view.add({
     name: 'ls-submit',
     selector: 'data-ls-submit',
     template: false,
-    controller: function(element, container) {
-        var target = element.dataset['lsSubmit'];
+    controller: function(element) {
+        function parse(element) {
+            var elements = element.children;
 
-        console.log('elements', element.elements, element.elements.length);
+            if(!elements.length) {
+                return element.value;
+            }
+            else if('SELECT' == element.tagName) {
+                return element.children[element.selectedIndex].value;
+            }
 
+            var json = {};
+
+            Array.prototype.forEach.call(elements, function(value, key) {
+                if (!value.hasAttribute('name')) {
+                    return;
+                }
+
+                var name        = value.getAttribute('name');
+                var type        = value.getAttribute('type');
+                var siblings    = 0;
+
+                for (var i = 0; i < value.parentNode.children.length; i++) {
+                    if(value.parentNode.children[i].getAttribute('name') == name) {
+                        siblings++;
+                    }
+                }
+
+                if(1 < siblings) { // Handle array
+                    if( type == 'checkbox' && !value.checked) return true;
+                    if( type == 'radio' && !value.checked) return true;
+                    if(!json[name]) json[name] = [];
+
+                    json[name].push(parse(value));
+                }
+                else { // Handle single key - value pair
+                    json[name] = parse(value);
+                }
+            });
+
+            return json;
+        }
+
+        console.log(parse(element));
 
         element.addEventListener('submit', function(event) {
             event.preventDefault();
-            container.get('form').set(element);
-            var route = container.get('router').match(target);
-            console.log(route);
-            //container.get('messages').add('Saved Successfully!', 2.5);
-            /**
-             * 1. Get list of parameters
-             * 2. Sort parameters by function signature
-             * 3. Apply parameters to function and execute it
-             */
+            console.log(parse(element));
         });
-
-/*
- http://codereview.stackexchange.com/questions/13443/jquery-plugin-node-tojson-convert-html-form-to-js-object
-
- $.fn.toJSO = function() {
-
-     if(!this.children('[name]').length) return this.val();
-     //element.elements;
-
-     var jso = new Object();
-
-     this.children('[name]').each(function() {
-
-         var name = $(this).attr('name');
-         var type = $(this).attr('type');
-
-        if($(this).siblings("[name="+name+"]").length) {
-
-            if( type == 'checkbox' && !$(this).prop('checked')) return true;
-            if( type == 'radio' && !$(this).prop('checked')) return true;
-
-            if(!jso[name]) jso[name] = [];
-
-            jso[name].push($(this).toJSO());
-
-        }
-        else {
-            jso[name] = $(this).toJSO();
-        }
-
-     });
-
-     return jso;
- };
-
-
-*/
-
-        //element.nodeName
     }
 });
 view.add({
