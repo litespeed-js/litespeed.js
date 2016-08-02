@@ -5,6 +5,9 @@ view.add({
     controller: function(element, container) {
         var target = element.dataset['lsSubmit'];
 
+        console.log('elements', element.elements, element.elements.length);
+
+
         element.addEventListener('submit', function(event) {
             event.preventDefault();
             container.get('form').set(element);
@@ -19,32 +22,41 @@ view.add({
         });
 
 /*
+ http://codereview.stackexchange.com/questions/13443/jquery-plugin-node-tojson-convert-html-form-to-js-object
 
-        $.fn.toJSO = function() {
+ $.fn.toJSO = function() {
 
-            if(!this.children('[name]').length) return this.val();
+     if(!this.children('[name]').length) return this.val();
+     //element.elements;
 
-            var jso = new Object();
+     var jso = new Object();
 
-            this.children('[name]').each(function(){
-                var name = $(this).getAttribute('name');
-                var type = $(this).getAttribute('type');
+     this.children('[name]').each(function() {
 
-                if($(this).siblings("[name="+name+"]").length){
-                    if( type == 'checkbox' && !$(this).checked) return true;
-                    if( type == 'radio' && !$(this).checked) return true;
+         var name = $(this).attr('name');
+         var type = $(this).attr('type');
 
-                    if(!jso[name]) jso[name] = [];
+        if($(this).siblings("[name="+name+"]").length) {
 
-                    jso[name].push($(this).toJSO());
-                }
-                else{
-                    jso[name] = $(this).toJSO();
-                }
-            });
+            if( type == 'checkbox' && !$(this).prop('checked')) return true;
+            if( type == 'radio' && !$(this).prop('checked')) return true;
 
-            return jso;
-        };*/
+            if(!jso[name]) jso[name] = [];
+
+            jso[name].push($(this).toJSO());
+
+        }
+        else {
+            jso[name] = $(this).toJSO();
+        }
+
+     });
+
+     return jso;
+ };
+
+
+*/
 
         //element.nodeName
     }

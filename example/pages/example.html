@@ -22,9 +22,66 @@
 <hr>
 
 <form data-ls-submit="/tasks/add">
-    <input type="text" name="task" value="" placeholder="Add a new task..." data-arg="1">
+    <input type="text" name="tasky" value="1" placeholder="Add a new task..." data-arg="1">
+    <input type="text" name="taskx" value="2" placeholder="Add a new task..." data-arg="1">
 </form>
 
 <section class="total">
     <span data-ls-bind="tasks.list.length"></span> tasks in total
 </section>
+
+<form name="myForm" data-detect="true" data-ls-submit="/tasks/add">
+
+    <label for="myForm">Form</label>
+
+    <input name="myFirstName" placeholder="myFirstName"/>
+    <input name="mySecondName" placeholder="mySecondName"/>
+    <input name="myLastName" placeholder="myLastName"/>
+
+    <fieldset name="myLibrary">
+
+        <legend>Library</legend>
+
+        <input name="myLibraryName" placeholder="myLibraryName"/>
+
+        <select name="myLibraryGenre">
+            <option value="SciFi">Sci-Fi</option>
+            <option value="Horror">Horror</option>
+            <option value="Manuals">Manuals</option>
+            <option value="Comics">Comics</option>
+        </select>
+
+        <fieldset name="myBook">
+
+            <legend>Book</legend>
+
+            <input name="myBookTitle" placeholder="myBookTitle"/>
+            <input name="myBookDate" type="date" placeholder="myBookDate"/>
+            <input name="myBookEditor" placeholder="myBookEditor"/>
+            <br/>
+            <input name="myFavouriteQuote" placeholder="myFavouriteQuote"/>
+            <input name="myFavouriteQuote" placeholder="myFavouriteQuote"/>
+            <input name="myFavouriteQuote" placeholder="myFavouriteQuote"/>
+            <input name="myFavouriteQuote" placeholder="myFavouriteQuote"/>
+
+        </fieldset>
+
+        <fieldset name="myBook">
+
+            <legend>Book</legend>
+
+            <input name="myBookTitle" placeholder="myBookTitle"/>
+            <input name="myBookDate" type="date" placeholder="myBookDate"/>
+            <input name="myBookEditor" placeholder="myBookEditor"/>
+            <br/>
+            <input name="myFavouriteQuote" placeholder="myFavouriteQuote"/>
+            <input name="myFavouriteQuote" placeholder="myFavouriteQuote"/>
+            <input name="myFavouriteQuote" placeholder="myFavouriteQuote"/>
+            <input name="myFavouriteQuote" placeholder="myFavouriteQuote"/>
+
+        </fieldset>
+
+    </fieldset>
+
+    <input type="submit" value="Submit me!">
+</form>
