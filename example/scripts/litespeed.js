@@ -701,8 +701,6 @@ view.add({
             return json;
         }
 
-        console.log(parse(element));
-
         element.addEventListener('submit', function(event) {
             event.preventDefault();
             console.log(parse(element));
