@@ -202,10 +202,27 @@ pre {
 }
 
 code {
-	border-radius: 5px;
-	border-color: #E8E8E8;
+	border-radius: 3px;
+	border-color: #f1f1f1;
 	border-width: 30px 0 0 0;
 	border-style: solid;
     padding: 7px 14px!important;
     margin: 0;
+}
+
+.terminal {
+    background: #282b2e;
+    color: #a9b7c6;
+    border-radius: 3px;
+    padding: 10px;
+    margin: 20px auto;
+    width: 280px;
+}
+
+.terminal:before {
+    content: '$ ';
+}
+
+.fade {
+    color: #808080;
 }
