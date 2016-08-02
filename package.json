@@ -1,6 +1,6 @@
 {
   "name": "litespeed.js",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": false,
   "main": "gulpfile.js",
   "description": "A simple javascript framework to build simple web applications.",
