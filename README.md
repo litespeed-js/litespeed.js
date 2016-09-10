@@ -23,7 +23,9 @@ A simple javascript framework to build simple web applications.
 
 Install with:
 
-    npm install litespeed.js
+```bash
+npm install litespeed.js
+```
 
 ### Usage Example
 
