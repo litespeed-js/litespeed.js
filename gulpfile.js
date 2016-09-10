@@ -10,8 +10,7 @@ var gulp        = require('gulp'),
     babel       = require("gulp-babel"),
     webserver   = require('gulp-webserver'),
 
-
-// Config
+    // Config
     config  = {
         mainFile: './litespeed.js',
         src: [

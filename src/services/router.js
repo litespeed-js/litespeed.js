@@ -44,6 +44,9 @@ var router = function() {
          *
          * Compare current location and application states to find a match.
          *
+         * TODO: Resort array of states
+         * http://stackoverflow.com/questions/8837454/sort-array-of-objects-by-single-key-with-date-value
+         *
          * @param url string
          * @return value object|null
          */
