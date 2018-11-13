@@ -4,10 +4,10 @@ The container service allows to manage dependency injection across the applicati
 
 ## API
 
-- [set](#set)
-- [get](#get)
-- [resolve](#resolve)
-- [path](#path)
+- [set()](#set)
+- [get()](#get)
+- [resolve()](#resolve)
+- [path()](#path)
 
 ### set()
 
