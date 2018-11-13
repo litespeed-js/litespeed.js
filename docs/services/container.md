@@ -50,3 +50,24 @@ let result = container.resolve(function(window, myService) {
     window.alert(myService['hello']); // Alert: 'world'
 });
 ```
+
+### path()
+
+Get value by object path, or set value in object path if value param is passed 
+
+Param | Type | Description
+--- | --- | ---
+**path** | string | Dot separated nested object path
+**value** | mixed | Value to be set in given path. **(optional)**
+
+#### Example
+```js
+
+// Get Path Value
+let result = container.path('myService.foo'); // = 'bar'
+
+// Set Path Value
+container.path('myService.foo', 'new value');
+
+let result = container.path('myService.foo'); // = 'new value'
+```
