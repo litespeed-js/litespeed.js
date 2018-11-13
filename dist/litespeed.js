@@ -1,19 +1,19 @@
 
-var container=function(){var stock=[];var cachePrefix='none';var setCachePrefix=function(prefix){cachePrefix=prefix;return this;};var getCachePrefix=function(){return cachePrefix;};var set=function(name,object,singleton,cache){if(typeof name!=='string'){throw new Error('var name must be of type string');}
+let container=function(){let stock=[];let cachePrefix='none';let setCachePrefix=function(prefix){cachePrefix=prefix;return this;};let getCachePrefix=function(){return cachePrefix;};let set=function(name,object,singleton,cache){if(typeof name!=='string'){throw new Error('var name must be of type string');}
 if(typeof singleton!=='boolean'){throw new Error('var singleton "'+singleton+'" of service "'+name+'" must be of type boolean');}
 if(cache){window.localStorage.setItem(getCachePrefix()+'.'+name,JSON.stringify(object));}
-stock[name]={name:name,object:object,singleton:singleton,instance:null};return this;};var memory={};var get=function(name){var service=(undefined!==stock[name])?stock[name]:null;if(null===service){if(memory[getCachePrefix()+'.'+name]){return memory[getCachePrefix()+'.'+name];}
-var cached=window.localStorage.getItem(getCachePrefix()+'.'+name);if(cached){cached=JSON.parse(cached);memory[getCachePrefix()+'.'+name]=cached;return cached;}
+stock[name]={name:name,object:object,singleton:singleton,instance:null};return this;};let memory={};let get=function(name){let service=(undefined!==stock[name])?stock[name]:null;if(null===service){if(memory[getCachePrefix()+'.'+name]){return memory[getCachePrefix()+'.'+name];}
+let cached=window.localStorage.getItem(getCachePrefix()+'.'+name);if(cached){cached=JSON.parse(cached);memory[getCachePrefix()+'.'+name]=cached;return cached;}
 return null;}
-if(service.instance===null){var instance=(typeof service.object==='function')?this.resolve(service.object):service.object;if(service.singleton){service.instance=instance;}
+if(service.instance===null){let instance=(typeof service.object==='function')?this.resolve(service.object):service.object;if(service.singleton){service.instance=instance;}
 return instance;}
-return service.instance;};var resolve=function(target){if(!target){return function(){};}
-var self=this;var FN_ARGS=/^function\s*[^\(]*\(\s*([^\)]*)\)/m;var text=target.toString()||'';var args=text.match(FN_ARGS)[1].split(',');return target.apply(target,args.map(function(value){return self.get(value.trim());}));};var path=function(path,value){path=path.split('.');var object=this.get(path.shift());while(path.length>1){if(undefined==object){return null;}
+return service.instance;};let resolve=function(target){if(!target){return function(){};}
+let self=this;let FN_ARGS=/^function\s*[^\(]*\(\s*([^\)]*)\)/m;let text=target.toString()||'';let args=text.match(FN_ARGS)[1].split(',');return target.apply(target,args.map(function(value){return self.get(value.trim());}));};let path=function(path,value){path=path.split('.');let object=this.get(path.shift());while(path.length>1){if(undefined==object){return null;}
 object=object[path.shift()];}
 if(undefined!=value){return object[path.shift()]=value;}
 if(undefined==object){return null;}
-var shift=path.shift();if(undefined==shift){return object;}
-return object[shift];};var container={set:set,get:get,resolve:resolve,path:path,setCachePrefix:setCachePrefix,getCachePrefix:getCachePrefix};set('container',container,true);return container;}();container.set('http',function(document){var globalParams=[],globalHeaders=[];var addParam=function(url,param,value){param=encodeURIComponent(param);var a=document.createElement('a');param+=(value?"="+encodeURIComponent(value):"");a.href=url;a.search+=(a.search?"&":"")+param;return a.href;};var request=function(method,url,headers,payload,progress){var i;if(-1==['GET','POST','PUT','DELETE','TRACE','HEAD','OPTIONS','CONNECT','PATCH'].indexOf(method)){throw new Error('var method must contain a valid HTTP method name');}
+let shift=path.shift();if(undefined==shift){return object;}
+return object[shift];};let container={set:set,get:get,resolve:resolve,path:path,setCachePrefix:setCachePrefix,getCachePrefix:getCachePrefix};set('container',container,true);return container;}();container.set('http',function(document){var globalParams=[],globalHeaders=[];var addParam=function(url,param,value){param=encodeURIComponent(param);var a=document.createElement('a');param+=(value?"="+encodeURIComponent(value):"");a.href=url;a.search+=(a.search?"&":"")+param;return a.href;};var request=function(method,url,headers,payload,progress){var i;if(-1==['GET','POST','PUT','DELETE','TRACE','HEAD','OPTIONS','CONNECT','PATCH'].indexOf(method)){throw new Error('var method must contain a valid HTTP method name');}
 if(typeof url!=='string'){throw new Error('var url must be of type string');}
 if(typeof headers!=='object'){throw new Error('var headers must be of type object');}
 if(typeof url!=='string'){throw new Error('var url must be of type string');}
@@ -24,7 +24,7 @@ xmlhttp.onload=function(){if(4==xmlhttp.readyState&&200==xmlhttp.status){resolve
 else{document.dispatchEvent(new CustomEvent('http-'+method.toLowerCase()+'-'+xmlhttp.status));reject(new Error(xmlhttp.statusText));}};if(progress){xmlhttp.addEventListener('progress',progress);xmlhttp.upload.addEventListener('progress',progress,false);}
 xmlhttp.onerror=function(){reject(new Error("Network Error"));};xmlhttp.send(payload);})};return{'get':function(url){return request('GET',url,{},'')},'post':function(url,headers,payload){return request('POST',url,headers,payload)},'put':function(url,headers,payload){return request('PUT',url,headers,payload)},'delete':function(url){return request('DELETE',url,{},'')},'addGlobalParam':function(key,value){globalParams.push({key:key,value:value});},'addGlobalHeader':function(key,value){globalHeaders.push({key:key,value:value});}}},true);container.set('cookie',function(document){function get(name){var value="; "+document.cookie,parts=value.split("; "+name+"=");if(parts.length===2){return parts.pop().split(";").shift();}}
 function set(name,value,days){var date=new Date();date.setTime(date.getTime()+(days*24*60*60*1000));var expires=(0<days)?'expires='+date.toUTCString():'expires=0';document.cookie=name+"="+value+";"+expires+";path=/";}
-return{'get':get,'set':set}},true);String.prototype.replaceAll=function(search,replacement){var target=this;return target.replace(new RegExp(search,'g'),replacement);};Object.path=function(object,path,value){path=path.split('.');while(path.length>1){if(undefined===object){return null;}
+return{'get':get,'set':set}},true);Object.path=function(object,path,value){path=path.split('.');while(path.length>1){if(undefined===object){return null;}
 object=object[path.shift()];}
 if(undefined!==value){return object[path.shift()]=value;}
 if(undefined===object){return null;}

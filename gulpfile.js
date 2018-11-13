@@ -2,12 +2,7 @@
 var gulp        = require('gulp'),
 
     // Plugins
-    uglify      = require('gulp-uglify'),
     concat      = require('gulp-concat'),
-    rename      = require('gulp-rename'),
-    watch       = require('gulp-watch'),
-    copy        = require('gulp-copy'),
-    babel       = require("gulp-babel"),
     webserver   = require('gulp-webserver'),
     jsmin       = require('gulp-jsmin'),
 
@@ -18,7 +13,6 @@ var gulp        = require('gulp'),
             'src/services/container.js',
             'src/services/http.js',
             'src/services/cookie.js',
-            'src/services/string.js',
             'src/services/object.js',
             'src/services/view.js',
             'src/services/form.js',
@@ -56,21 +50,6 @@ gulp.task('concat', function() {
     return gulp.src(config.src)
         .pipe(concat(config.mainFile))
         .pipe(jsmin())
-        .pipe(gulp.dest(config.dest));
-});
-
-gulp.task('uglify', ['concat', 'bubel'], function() {
-    return gulp.src(config.dest + '/' + config.mainFile)
-        .pipe(uglify())
-        .pipe(rename({
-            extname: '.min.js'
-        }))
-        .pipe(gulp.dest(config.dest));
-});
-
-gulp.task('bubel', ['concat'], function () {
-    return gulp.src(config.dest + '/' + config.mainFile)
-        .pipe(babel())
         .pipe(gulp.dest(config.dest));
 });
 
