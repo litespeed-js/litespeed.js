@@ -43,11 +43,11 @@ let service = container.get('myService');
 
 ### resolve()
 
-This is where the dependency 'magic' happens. This method receives a callable variable, analyze argument names, makes registered service matching those name available inside the callable function and executes it. 
+This is where the dependency 'magic' happens. This method receives a callable variable, analyze argument names, makes registered service matching those name available inside the callable function and executes it 
 
 Param | Type | Description
 --- | --- | ---
-**name** | callable | Function needed to be resolved with requested services.
+**name** | callable | Function needed to be resolved with requested services
 
 #### Example
 ```js
@@ -63,7 +63,7 @@ Get value by object path, or set value in object path if value param is passed
 Param | Type | Description
 --- | --- | ---
 **path** | string | Dot separated nested object path
-**value** | mixed | Value to be set in given path. **(optional)**
+**value** | mixed | Value to be set in given path **(optional)**
 
 #### Example
 ```js
