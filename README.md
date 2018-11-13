@@ -28,7 +28,7 @@ TODO
 
 Service | Description | API & Examples
 --- | --- | ---
-**container** | Manage service registration and dependency injection internally. | [API & Examples](#docs)
+**container** | Manage service registration and dependency injection internally. | [API & Examples](/docs/services/container.md)
 **cookie** | Manages user cookie, retrive and set cookies. | [API & Examples](#docs)
 **expression** | Parse template syntax expressions and execute them as JS code. | [API & Examples](#docs)
 **filter** | Use predefined string filters or add custom filters. | [API & Examples](#docs)

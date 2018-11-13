@@ -17,7 +17,7 @@ Param | Type | Description
 
 #### Example
 ```js
-app.container.set('service', {
+container.set('service', {
     'hello': 'world',
     'foo': 'bar'
 }, true, false);
