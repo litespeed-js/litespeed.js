@@ -3,18 +3,18 @@
  *
  * Uses as container for application services
  */
-var container = function() {
+let container = function() {
 
-    var stock = [];
+    let stock = [];
 
-    var cachePrefix  = 'none';
+    let cachePrefix  = 'none';
 
-    var setCachePrefix = function (prefix) {
+    let setCachePrefix = function (prefix) {
         cachePrefix = prefix;
         return this;
     };
 
-    var getCachePrefix = function () {
+    let getCachePrefix = function () {
         return cachePrefix;
     };
 
@@ -29,7 +29,7 @@ var container = function() {
      * @param cache bool
      * @returns container
      */
-    var set = function(name, object, singleton, cache) {
+    let set = function(name, object, singleton, cache) {
         if(typeof name !== 'string') {
             throw new Error('var name must be of type string');
         }
@@ -52,7 +52,7 @@ var container = function() {
         return this;
     };
 
-    var memory = {};
+    let memory = {};
 
     /**
      * Get Service
@@ -62,8 +62,8 @@ var container = function() {
      * @param name
      * @returns {*}
      */
-    var get = function(name) {
-        var service = (undefined !== stock[name]) ? stock[name] : null;
+    let get = function(name) {
+        let service = (undefined !== stock[name]) ? stock[name] : null;
 
         if(null === service) {
 
@@ -71,7 +71,7 @@ var container = function() {
                 return memory[getCachePrefix() + '.' + name];
             }
 
-            var cached = window.localStorage.getItem(getCachePrefix() + '.' + name);
+            let cached = window.localStorage.getItem(getCachePrefix() + '.' + name);
 
             if(cached) {
                 cached = JSON.parse(cached);
@@ -84,7 +84,7 @@ var container = function() {
         }
 
         if(service.instance === null) {
-            var instance  = (typeof service.object === 'function') ? this.resolve(service.object) : service.object;
+            let instance  = (typeof service.object === 'function') ? this.resolve(service.object) : service.object;
 
             if(service.singleton) {
                 service.instance = instance;
@@ -96,29 +96,29 @@ var container = function() {
         return service.instance;
     };
 
-    var resolve = function(target) {
+    let resolve = function(target) {
         if(!target) {
             return function () {
 
             };
         }
 
-        var self = this;
-        var FN_ARGS = /^function\s*[^\(]*\(\s*([^\)]*)\)/m;
-        var text = target.toString() || '';
-        var args = text.match(FN_ARGS)[1].split(',');
+        let self = this;
+        let FN_ARGS = /^function\s*[^\(]*\(\s*([^\)]*)\)/m;
+        let text = target.toString() || '';
+        let args = text.match(FN_ARGS)[1].split(',');
 
         return target.apply(target, args.map(function(value) {
             return self.get(value.trim());
         }));
     };
 
-    var path = function(path, value) {
+    let path = function(path, value) {
         path = path
             .split('.')
         ;
 
-        var object = this.get(path.shift());
+        let object = this.get(path.shift());
 
         // Iterating path
         while (path.length > 1) {
@@ -139,7 +139,7 @@ var container = function() {
             return null;
         }
 
-        var shift = path.shift();
+        let shift = path.shift();
 
         if(undefined == shift) {
             return object;
@@ -148,7 +148,7 @@ var container = function() {
         return object[shift];
     };
 
-    var container = {
+    let container = {
         set: set,
         get: get,
         resolve: resolve,
