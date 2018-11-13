@@ -90,17 +90,17 @@ footer {
 
 .home h1, p {
 	margin: 10px auto;
-	width: 700px;
+	max-width: 700px;
 }
 
 .section {
 	display: block;
 	margin: 0 auto;
-	width: 700px;
+	max-width: 650px;
+	padding: 10px;
 }
 
 .info {
-	width: 420px;
 	margin: 40px auto;
 	text-align: center;
 }
@@ -130,6 +130,7 @@ footer {
 	background: #a0a0a0;
 	opacity: .4;
 	height: 50px;
+	width: 15px;
 	line-height: 50px;
 	padding: 0 20px;
 	display: inline-block;
@@ -193,22 +194,14 @@ footer {
 }
 
 pre {
-	max-width: 550px;
-    border-radius: 5px;
-    border-color: #f1f1f1;
-    border-width: 1px;
-    border-style: solid;
-	font-size: 14px;
-	margin: 20px auto;
+	font-size: 16px;
+	border-radius: 10px;
+	margin: 10px auto 20px auto;
 }
 
 code {
-	border-radius: 3px;
-	border-color: #f1f1f1;
-	border-width: 30px 0 0 0;
-	border-style: solid;
-    padding: 7px 14px!important;
-    margin: 0;
+	padding: 20px!important;
+	border-radius: 5px;
 }
 
 .terminal {
@@ -226,4 +219,16 @@ code {
 
 .fade {
     color: #808080;
+}
+
+.load-start {
+	opacity: 0;
+}
+
+.load-end {
+	opacity: 1;
+	transition: opacity .5s ease-out;
+	-moz-transition: opacity .5s ease-out;
+	-webkit-transition: opacity .5s ease-out;
+	-o-transition: opacity .5s ease-out;
 }

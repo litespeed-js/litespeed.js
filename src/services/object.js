@@ -3,6 +3,10 @@ Object.path = function(object, path, value) {
 
     // Iterating path
     while (path.length > 1) {
+        if(undefined === object) {
+            return null;
+        }
+
         object = object[path.shift()];
     }
 
@@ -12,72 +16,42 @@ Object.path = function(object, path, value) {
     }
 
     // Return null when missing path
-    if(undefined == object) {
+    if(undefined === object) {
         return null;
     }
 
     return object[path.shift()];
 };
 
-Object.merge = function(obj1, obj2) {
-    var obj3 = {}, attrname;
-
-    for (attrname in obj1) {
-        if (obj1.hasOwnProperty(attrname)) {
-            obj3[attrname] = obj1[attrname];
+if (!Array.prototype.includes) {
+    Array.prototype.includes = function(searchElement /*, fromIndex*/) {
+        'use strict';
+        if (this == null) {
+            throw new TypeError('Array.prototype.includes called on null or undefined');
         }
-    }
 
-    for (attrname in obj2) {
-        if (obj2.hasOwnProperty(attrname)) {
-            obj3[attrname] = obj2[attrname];
+        var O = Object(this);
+        var len = parseInt(O.length, 10) || 0;
+        if (len === 0) {
+            return false;
         }
-    }
-
-    return obj3;
-};
-
-Object.observe = function(obj) {
-    var keys = Object.keys(obj);
-
-    for(var k=0; k < keys.length; k++) {
-
-        var key = keys[k];
-
-        (function(key){
-
-            var keyName = key+'value';
-            var oldKeyName = 'old'+key+'value';
-
-            obj[oldKeyName] = obj[key];
-
-            Object.defineProperty(obj, key, {
-                get: function() { return this[keyName]; },
-                set: function(newValue) {
-
-                    console.log('old-value: ',this[oldKeyName]);
-                    console.log('new-value: ',newValue);
-
-                    this[keyName] = newValue;
-                    this[oldKeyName] = this[keyName];
-
-                }
-            });
-
-
-
-        })(key);
-    }
-};
-
-Object.observeNested = function(obj, callback) {
-    Object.observe(obj, function(changes){
-        changes.forEach(function(change) {
-            if (typeof obj[change.name] == 'object') {
-                Object.observeNested(obj[change.name], callback);
+        var n = parseInt(arguments[1], 10) || 0;
+        var k;
+        if (n >= 0) {
+            k = n;
+        } else {
+            k = len + n;
+            if (k < 0) {k = 0;}
+        }
+        var currentElement;
+        while (k < len) {
+            currentElement = O[k];
+            if (searchElement === currentElement ||
+                (searchElement !== searchElement && currentElement !== currentElement)) { // NaN !== NaN
+                return true;
             }
-        });
-
-        callback.apply(this, arguments);
-    });
-};
+            k++;
+        }
+        return false;
+    };
+}

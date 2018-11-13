@@ -5,10 +5,10 @@
         <title>Litespeed.js</title>
         <link rel="icon" type="image/png" href="/favicon.png">
         <link href="/styles/default.css" rel="stylesheet" />
-        <link href="/styles/github-gist.css" rel="stylesheet" />
+        <link href="/styles/androidstudio.css" rel="stylesheet" />
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <meta name="description" content="Sample Litespeed.js application">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
 
         <style>
             [data-ls-placeholder] {
@@ -17,31 +17,31 @@
         </style>
     </head>
 
-    <body data-ls-app>
+    <body data-ls-init data-first-from-server="false">
         <header class="header">
             <nav>
                 <ul>
                     <li>
-                        <a href="/index.html" data-route>Home</a>
+                        <a href="/" data-route>Home</a>
                     </li>
                     <li>
-                        <a href="/getting-started.html">Getting Started</a>
+                        <!--<a href="/getting-started.html">Getting Started</a>-->
                     </li>
                     <li>
                         <a href="/example.html">Demo</a>
                     </li>
                     <li>
-                        <a href="/docs.html">Docs</a>
+                        <!--<a href="/docs.html">Docs</a>-->
                     </li>
                     <li>
                         <a href="/article.html">Blog</a>
                     </li>
-<!--                    <li>
-                        <a href="/todo/add">Task Demo</a>
+                    <li>
+                        <!--<a href="/todo/add">Task Demo</a>-->
                     </li>
                     <li>
-                        <span onclick="alert(0); window.location = '/todo/add';">Task Demo</span>
-                    </li>-->
+                        <!--<span onclick="alert(0); window.location = '/todo/add';">Task Demo</span>-->
+                    </li>
                 </ul>
             </nav>
 
@@ -50,26 +50,9 @@
             </a>
         </header>
 
-        <ul class="messages" data-ls-loop="messages.list" data-ls-as="message">
-            <li class="column" draggable="true">#{{ key }} - {{ value }}</li>
-        </ul>
-
-        <main data-ls-scope="">
-            This is my App scope
+        <main data-ls-scope="" style="min-height: 500px">
             <div class="loader"></div>
         </main>
-
-        <hr />
-
-        <pre><code class="html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;body data-ls-app&gt;
-        &lt;main data-ls-scope=&quot;&quot;&gt;
-            This is my App scope
-            &lt;div class=&quot;loader&quot;&gt;&lt;/div&gt;
-        &lt;/main&gt;
-    &lt;/body&gt;
-&lt;/html&gt;</code></pre>
 
         <hr />
 
@@ -77,133 +60,102 @@
             © 2015-2016. Code licensed under an MIT License
         </footer>
 
-        <script src="scripts/litespeed.js"></script>
         <script src="scripts/highlight.pack.js"></script>
         <script>
             (function (window) {
                 "use strict";
 
-                var example = app();
+                document.addEventListener("DOMContentLoaded", function() {
+                    var head      = document.getElementsByTagName('head')[0];
+                    var script    = document.createElement('script');
+                    script.type   = 'text/javascript';
+                    script.async  = true;
+                    script.src    = 'scripts/litespeed.js';
 
-                example.router
-                        .state('/', {
-                            template: '/pages/home.html'
-                        })
-                        .state('/index.html', {
-                            template: '/pages/index.html'
-                        })
-                        .state('/tasks/add.html', {
-                            template: '/pages/about.html'
-                        })
-                        .state('/about.html', {
-                            template: '/pages/about.html'
-                        })
-                        .state('/article.html', {
-                            template: '/pages/article.html'
-                        })
-                        .state('/example.html', {
-                            template: '/pages/example.html',
-                            controller: function (element, container) {
-                                var service = container.get('tasks');
-                                var x = 0;
-                                setInterval(function () {
-                                    Object.path(service, 'title', '3s Interval Overtake. (' + (x++) + ')');
-                                    service.list.push('Added task');
-                                }, 10000);
-                            }
-                        })
-                        .state('/todo/add', {
-                            controller: function (element, container) {
-                                alert('exec');
-                            },
-                            state: false
-                        })
-                        .state('/todo/remove', {
-                            controller: function (element, container) {
+                    script.onload = function() {
+                        window.Demo = app('v1.0.0'); // Init app and set cache buster value
 
-                            },
-                            state: false
-                        })
-                ;
+                        var state   = window.Demo.container.get('state');
+                        var view    = window.Demo.container.get('view');
 
-                example.container
-                        .register('tasks', function () {
-                            return {
-                                title: 'Task Title',
-                                test: {
-                                    new: 'title',
-                                    nested: {
-                                        value: 'empty'
+                        state
+                            .add('/', {
+                                template: '/pages/index.html'
+                            })
+                            .add('/tasks/add.html', {
+                                template: '/pages/about.html'
+                            })
+                            .add('/about.html', {
+                                template: '/pages/about.html'
+                            })
+                            .add('/article.html', {
+                                template: '/pages/article.html'
+                            })
+                            .add('/example.html', {
+                                template: '/pages/example.html',
+                                controller: function (element, container) {
+                                    var service = container.get('tasks');
+                                    var x = 0;
+                                    setInterval(function () {
+                                        Object.path(service, 'title', '3s Interval Overtake. (' + (x++) + ')');
+                                        service.list.push('Added task');
+                                    }, 10000);
+                                }
+                            })
+                            .add('/todo/add', {
+                                controller: function (element, container) {
+                                    alert('exec');
+                                },
+                                state: false
+                            })
+                            .add('/todo/remove', {
+                                controller: function (element, container) {
+
+                                },
+                                state: false
+                            })
+                        ;
+
+                        window.Demo.container
+                            .set('tasks', function () {
+                                return {
+                                    title: 'Task Title',
+                                    test: {
+                                        'new': 'title',
+                                        'nested': {
+                                            'value': 'empty'
+                                        }
+                                    },
+                                    list: [
+                                        'This is just my first task',
+                                        'This is just another test adding a second task',
+                                        'What do you think about this test'
+                                    ],
+                                    add: function (task) {
+                                        this.list.push(task);
                                     }
-                                },
-                                list: [
-                                    'This is just my first task',
-                                    'This is just another test adding a second task',
-                                    'What do you think about this test'
-                                ],
-                                add: function (task) {
-                                    this.list.push(task);
                                 }
-                            }
-                        }, true)
-                ;
+                            }, true)
+                        ;
 
-                example.container
-                        /**
-                         * Messages
-                         *
-                         * Manage UI notifications, add time limited messages
-                         */
-                        .register('messages', function () {
-                            var messageId = 0;
-
-                            return {
-                                list: {},
-
-                                /**
-                                 * Add a Message
-                                 *
-                                 * Add a new notification message for limited time.
-                                 *
-                                 * @param message
-                                 * @param seconds
-                                 * @returns {*}
-                                 */
-                                add: function (message, seconds) {
-                                    this.list[++messageId] = message;
-
-                                    var scope = this;
-
-                                    (function(messageId, seconds) {
-                                        setTimeout(function() {
-                                            scope.remove(messageId);
-                                        }, seconds * 5000);
-                                    }(messageId, seconds));
-
-                                    return this;
-                                },
-
-                                /**
-                                 * Remove a message
-                                 *
-                                 * Removes a notification message with given ID number
-                                 *
-                                 * @param messageId
-                                 * @returns {*}
-                                 */
-                                remove: function (messageId) {
-                                    delete this.list[messageId];
-                                    return this;
+                        view
+                            .add(
+                                {
+                                    selector: 'data-code',
+                                    controller: function(element) {
+                                        hljs.highlightBlock(element);
+                                    }
                                 }
-                            }
-                        }, true)
-                ;
+                            );
 
-                example.run(window);
+                        window.Demo.run(window);
+                    };
+
+                    head.appendChild(script);
+                });
 
             }(window));
 
         </script>
-        <script>hljs.initHighlightingOnLoad();</script>
     </body>
 </html>

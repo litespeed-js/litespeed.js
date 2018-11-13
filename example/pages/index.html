@@ -1,8 +1,8 @@
 
-<section>
-    <p class="center">Welcome to Litespeed.js. A <span class="underline">simple</span> javascript framework to build <span class="underline">simple</span> web applications.</p>
+<div class="section">
+    <p class="center">Welcome to Litespeed.js. A <span class="underline">fast</span> javascript framework to build <span class="underline">simple</span> web applications.</p>
 
-    <section class="info">
+    <div class="info">
 
         <a href="https://github.com/eldadfux/litespeed.js/archive/master.zip" target="_blank" class="box download">
             <i class="fa fa-download"></i> Download
@@ -21,7 +21,74 @@
 
         <br />
 
-        <a href="https://twitter.com/eldadfux" class="twitter" target="_blank"><i class="fa fa-twitter"></i> Follow on Twitter @eldadfux</a>
+        <a href="https://twitter.com/eldadfux" class="twitter" target="_blank"><i class="fa fa-twitter"></i> Follow me on Twitter @eldadfux</a>
 
-    </section>
-</section>
+    </div>
+
+    <h2>Getting Started</h2>
+
+    index.html
+    <pre><code data-code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;body data-ls-init&gt;
+        &#x3C;h1&#x3E;Hello World!&#x3C;/h1&#x3E;
+        &lt;main data-ls-scope=&quot;&quot;&gt;
+            &#x3C;!-- This is where your view will print --&#x3E;
+        &lt;/main&gt;
+
+
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+    app.js
+    <pre><code data-code class="js">(function (window) {
+    "use strict";
+
+    // Init app and set cache buster value
+    window.Demo = app('v1.0.0');
+
+    var state   = window.Demo.container.get('state');
+    var view    = window.Demo.container.get('view');
+
+    state
+        .add('/', {
+            template: '/pages/home.html'
+        })
+        .add('/index.html', {
+            template: '/pages/index.html'
+        })
+        .add('/tasks/add.html', {
+            template: '/pages/about.html'
+        })
+        .add('/about.html', {
+            template: '/pages/about.html'
+        })
+    ;
+
+    window.Demo.container
+        .set('tasks', function () {
+            return {
+                title: 'Task Title',
+                test: {
+                    'new': 'title',
+                    'nested': {
+                        'value': 'empty'
+                    }
+                },
+                list: [
+                    'This is just my first task',
+                    'This is just another test adding a second task',
+                    'What do you think about this test'
+                ],
+                add: function (task) {
+                    this.list.push(task);
+                }
+            }
+        }, true)
+    ;
+
+    window.Demo.run(window);
+
+}(window));</code></pre>
+
+</div>

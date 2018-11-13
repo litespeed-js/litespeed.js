@@ -3,12 +3,22 @@
  *
  * Manage application scopes and different views
  */
-var view = function() {
+container.set('view', function(http, container) {
+    var stock = {};
 
-    var stock = {},
-        i = 0;
+    var execute = function(view, node, container) {
+        container.set('element', node, true);
+
+        container.resolve(view.controller);
+
+        if(true !== view.repeat) { // Remove view that should not repeat itself
+            node.removeAttribute(view.selector);
+        }
+    };
 
     return {
+
+        stock: stock,
 
         /**
          * Add View
@@ -16,7 +26,7 @@ var view = function() {
          * Adds a new comp definition to application comp stack.
          *
          * @param object
-         * @returns view
+         * @returns {add}
          */
         add: function(object) {
 
@@ -24,9 +34,31 @@ var view = function() {
                 throw new Error('var object must be of type object');
             }
 
-            var key = (object.singelton) ? object.name : object.name + '-' + i++;
+            var defaults = {
+                'selector': '',
+                'controller': function () {},
+                'template': '',
+                'repeat': false,
+                'protected': false
+            };
 
-            stock[key] = object;
+            for (var prop in defaults) {
+                if (!defaults.hasOwnProperty(prop)) {
+                    continue;
+                }
+
+                if (prop in object) {
+                    continue;
+                }
+
+                object[prop] = defaults[prop];
+            }
+
+            if(!object.selector) {
+                throw new Error('View component is missing a selector attribute');
+            }
+
+            stock[object.selector] = object;
 
             return this;
         },
@@ -36,56 +68,89 @@ var view = function() {
          *
          * Render all view components in a given scope.
          *
-         * @param scope
-         * @param container
+         * @param element
          * @returns view
          */
-        render: function(scope, container) {
-            var view = this;
+        render: function(element) {
+            var self    = this;
+            var list    = (element) ? element.childNodes : [];
 
-            for (var key in stock) { // Iterate all registered views
-                if (stock.hasOwnProperty(key)) {
-                    var value       = stock[key],
-                        elements    = scope.querySelectorAll('[' + value.selector + ']'),
-                        postRender  = function(view, element, container) {
-                            view.controller(element, container); // Execute controller
+            if(element.$lsSkip === true) {
+                list = [];
+            }
 
-                            if(true !== value.repeat) { // Remove view that should not repeat itself
-                                element.removeAttribute(view.selector);
+            // Run on tree
+            for (var i = 0; i < list.length; i++) { // Loop threw all DOM children
+                var node = list[i];
+
+                if(1 !== node.nodeType) { // Skip text nodes
+                    continue;
+                }
+
+                if(node.attributes && node.attributes.length) { // Loop threw child attributes
+                    for (var x = 0; x < node.attributes.length; x++) {
+                        var length  = node.attributes.length;
+                        var attr    = node.attributes[x];
+
+                        if(!stock[attr.nodeName]) {
+                            continue; // No such view component
+                        }
+
+                        var comp = stock[attr.nodeName];
+
+                        if (typeof comp.template === "function") { // If template is function and not string resolve it first
+                            comp.template = container.resolve(comp.template);
+                        }
+
+                        if(!comp.template) { // Execute with no template
+                            (function (comp, node, container) {
+                                execute(comp, node, container);
+                            })(comp, node, container);
+
+                            if(length !== node.attributes.length) {
+                                x--;
                             }
-                        };
 
-                    for (var i = 0; i < elements.length; i++) {
-                        var element = elements[i];
-
-                        if(!value.template) {
-                            postRender(value, element, container);
                             continue;
                         }
 
+                        node.classList.remove('load-end');
+                        node.classList.add('load-start');
+
+                        node.$lsSkip = true;
+
                         // Load new view template
-                        var result = http
-                            .get(value.template)
-                            .then(function(element, value) {
-                                return function(data){
-                                    element.innerHTML = data;
+                        http.get(comp.template)
+                            .then(function(node, comp) {
+                                    return function(data){
+                                        node.$lsSkip = false;
 
-                                    postRender(value, element, container);
+                                        node.innerHTML = data;
 
-                                    // re-render specific scope
-                                    view.render(element, container);
+                                        node.classList.remove('load-start');
+                                        node.classList.add('load-end');
+
+                                        (function (comp, node, container) { // Execute after template has been loaded
+                                            execute(comp, node, container);
+                                        })(comp, node, container);
+
+                                        // re-render specific scope children after template is loaded
+                                        self.render(node);
+                                    }
+                                }(node, comp),
+                                function(error) {
+                                    throw new Error('Failed to load comp template: ' + error.message);
                                 }
-                            }(element, value),
-                            function(error) {
-                                console.error("Failed!", error);
-                            }
-                        );
-
+                            );
                     }
+                }
+
+                if(true !== node.$lsSkip) { // ELEMENT told not to render child nodes
+                    this.render(node);
                 }
             }
 
-            return this;
+            element.dispatchEvent(new window.Event('rendered', {bubbles: false}));
         }
     }
-}();
+}, true);

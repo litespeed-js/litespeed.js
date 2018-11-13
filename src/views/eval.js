@@ -1,9 +1,9 @@
-view.add({
-    name: 'ls-eval',
+container.get('view').add({
     selector: 'data-ls-eval',
     template: false,
-    controller: function(element, container) {
-        var statement   = element.dataset['lsEval'];
+    controller: function(element, expression) {
+        var statement = expression.parse(element.dataset['lsEval']);
+
         eval(statement);
     }
 });

@@ -7,16 +7,17 @@
 <h2>Data Binding</h2>
 
 <label>Auto: </label>
-<input type="text" value="demo1" data-ls-bind="tasks['title']">
+<input type="text" value="demo1" data-ls-print="tasks['title']">
 
 <label>Title: </label>
-<input type="text" value="title" data-ls-bind="window.document.title">
+<input type="text" value="title" data-ls-print="window.document.title">
 
 <hr>
 
 <h2>Tasks</h2>
 <ul data-ls-dnd="123" data-ls-loop="tasks.list" data-ls-as="task">
-    <li class="column" draggable="true">#{{ key }} - {{ value }}</li>
+    <li>
+        #<span data-ls-print="task"></span></li>
 </ul>
 
 <hr>
@@ -27,7 +28,7 @@
 </form>
 
 <section class="total">
-    <span data-ls-bind="tasks.list.length"></span> tasks in total
+    <span data-ls-print="tasks.list.length"></span> tasks in total
 </section>
 
 <form name="form" data-detect="true" data-ls-submit="/tasks/add">

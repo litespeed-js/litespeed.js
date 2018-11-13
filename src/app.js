@@ -1,26 +1,26 @@
-var app = function() {
+// Register all core services
+container
+    .set('window', window, true)
+    .set('document', window.document, true)
+    .set('element', window.document, true)
+;
+
+var app = function(version) {
     return {
         run: function(window) {
             try {
-                // Register all core services
-                this.container
-                    .register('window', window, true)
-                    .register('view', view, true)
-                    .register('router', router, true)
-                    .register('http', http, true)
-                ;
+                container.get('http').addGlobalParam('version', version);
 
                 // Trigger reclusive app rendering
-                this.view.render(window.document, container);
+                this.view.render(window.document);
             }
             catch (error) {
-                //TODO add custom error handling
-                console.error('error', error.message, error.stack, error.toString());
+                var handler = container.resolve(this.error);
+                handler(error);
             }
         },
+        error: function() {return function(error) {console.error('error', error.message, error.stack, error.toString());}},
         container: container,
-        view: view,
-        http: http,
-        router: router
+        view: this.container.get('view')
     }
 };

@@ -9,36 +9,58 @@ var gulp        = require('gulp'),
     copy        = require('gulp-copy'),
     babel       = require("gulp-babel"),
     webserver   = require('gulp-webserver'),
+    jsmin       = require('gulp-jsmin'),
 
     // Config
     config  = {
-        mainFile: './litespeed.js',
+        mainFile: 'litespeed.js',
         src: [
             'src/services/container.js',
             'src/services/http.js',
+            'src/services/cookie.js',
+            'src/services/string.js',
             'src/services/object.js',
-            'src/services/router.js',
             'src/services/view.js',
+            'src/services/form.js',
+            'src/services/state.js',
+            'src/services/expression.js',
+            'src/services/filter.js',
             'src/app.js',
-            'src/views/app.js',
-            'src/views/bind.js',
+            'src/views/init.js',
+            'src/views/alt.js',
+            'src/views/class.js',
+            'src/views/echo.js',
             'src/views/eval.js',
+            'src/views/for.js',
+            'src/views/hide.js',
+            'src/views/href.js',
+            'src/views/id.js',
+            'src/views/if.js',
             'src/views/loop.js',
-            'src/views/submit.js',
-            'src/views/placeholder.js'
+            'src/views/options.js',
+            'src/views/print.js',
+            'src/views/rerender.js',
+            'src/views/selected.js',
+            'src/views/src.js',
+            'src/views/style.js',
+            'src/views/template.js',
+            'src/views/title.js',
+            'src/views/trigger.js',
+            'src/views/placeholder.js',
+            'src/views/dragDrop.js'
         ],
-        dest: './example/scripts'
+        dest: './dist'
     }
 ;
-
 gulp.task('concat', function() {
     return gulp.src(config.src)
         .pipe(concat(config.mainFile))
+        .pipe(jsmin())
         .pipe(gulp.dest(config.dest));
 });
 
-gulp.task('uglify', function() {
-    return gulp.src(config.mainFile)
+gulp.task('uglify', ['concat', 'bubel'], function() {
+    return gulp.src(config.dest + '/' + config.mainFile)
         .pipe(uglify())
         .pipe(rename({
             extname: '.min.js'
@@ -46,14 +68,19 @@ gulp.task('uglify', function() {
         .pipe(gulp.dest(config.dest));
 });
 
+gulp.task('bubel', ['concat'], function () {
+    return gulp.src(config.dest + '/' + config.mainFile)
+        .pipe(babel())
+        .pipe(gulp.dest(config.dest));
+});
+
 gulp.task('watch', function() {
     gulp.watch(config.src, ['build']);
 });
 
-gulp.task('bubel', function () {
-    return gulp.src(config.mainFile)
-        .pipe(babel())
-        .pipe(gulp.dest(config.dest));
+gulp.task('demo', ['concat'], function () {
+    gulp.src(config.dest + '/' + config.mainFile)
+        .pipe(gulp.dest('./example/scripts'));
 });
 
 gulp.task('webserver', function() {
@@ -64,4 +91,4 @@ gulp.task('webserver', function() {
 });
 
 // Default Task
-gulp.task('build', ['concat', 'uglify', 'bubel']);
+gulp.task('build', ['concat', 'demo']);
