@@ -17,8 +17,36 @@ Param | Type | Description
 
 #### Example
 ```js
-container.set('service', {
+container.set('myService', {
     'hello': 'world',
     'foo': 'bar'
 }, true, false);
+```
+
+### get()
+
+Get registered service. Return service instance if already created (singleton) or initialize it if no instance is yet available.
+
+Param | Type | Description
+--- | --- | ---
+**name** | string | Name of the service
+
+#### Example
+```js
+let service = container.get('myService');
+```
+
+### resolve()
+
+This is where the dependency 'magic' happens. This method receives a callable variable, analyze argument names, makes registered service matching those name available inside the callable function and executes it. 
+
+Param | Type | Description
+--- | --- | ---
+**name** | callable | Function needed to be resolved with requested services.
+
+#### Example
+```js
+let result = container.resolve(function(window, myService) {
+    window.alert(myService['hello']); // Alert: 'world'
+});
 ```
