@@ -40,9 +40,7 @@ Service | Description | API & Examples
 **filter** | Use predefined string filters or add custom filters. | [API & Examples](#docs)
 **form** | Parse form elements to JSON data. | [API & Examples](#docs)
 **http** | Manage HTTP interactions with server side APIs. | [API & Examples](#docs)
-**object** | Object ... | [API & Examples](#docs)
 **state** | Manage state registration and routing. | [API & Examples](#docs)
-**string** | Extends core string functions | [API & Examples](#docs)
 **view** | Handles views registration and rendering | [API & Examples](#docs)
 
 ## Views
