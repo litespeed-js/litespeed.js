@@ -14,11 +14,17 @@ Litespeed is build using an [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93v
 
 ## Getting Started
 
-Install with:
+Install with [NPM](https://www.npmjs.com/):
 
 ```bash
 npm install litespeed.js
 ```
+
+Install with CDN:
+```html
+<script src="https://raw.githubusercontent.com/eldadfux/litespeed.js/master/dist/litespeed.min.js"></script>
+```
+
 
 ### Usage Example
 
