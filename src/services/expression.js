@@ -18,7 +18,7 @@ container.set('expression', function(container, filter) {
 
             return string.replace(reg, function(match)
                 {
-                    var reference = match.substring(2, match.length -2)
+                    let reference = match.substring(2, match.length -2)
                         .replace('[\'', '.')  // Make syntax consistent using only dot nesting
                         .replace('\']', '')  // Make syntax consistent using only dot nesting
                         .trim() // Clear whitespaces
@@ -26,9 +26,9 @@ container.set('expression', function(container, filter) {
 
                     reference = reference.split('|');
 
-                    var path = (reference[0] || '');
-                    var filterName = (reference[1] || '');
-                    var result = container.path(path);
+                    let path = (reference[0] || '');
+                    let filterName = (reference[1] || '');
+                    let result = container.path(path);
 
                     result = (null === result || undefined === result) ? def : result;
 
