@@ -31,7 +31,7 @@ As of version 0.2.* litespeed.js weights only 6.3kb (minified and compressed)
 
 * [Getting Started](/docs/get-started.md)
 
-## Services
+### Services
 
 Service | Description | API & Examples
 --- | --- | ---
@@ -44,7 +44,7 @@ Service | Description | API & Examples
 **state** | Manage state registration and routing. | [API & Examples](#docs)
 **view** | Handles views registration and rendering | [API & Examples](#docs)
 
-## Views
+### Views
 
 TODO
 
