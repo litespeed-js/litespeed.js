@@ -1,6 +1,8 @@
 # Filter
 
-The filter service allows you to register new filter and use them to format given values for user display or for integration with other services. 
+The filter service allows you to register new filter and use them to format given values for user display or for integration with other services.
+
+The filters listed in the filters service are the ones used by the '[data-ls-echo](/docs/views/echo.md)' view internally. 
 
 ## API
 
