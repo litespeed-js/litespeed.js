@@ -26,9 +26,9 @@ Install with CDN:
 ```
 
 
-### Usage Example
+### Docs
 
-TODO
+* [Getting Started](/docs/get-started.md)
 
 ## Services
 
