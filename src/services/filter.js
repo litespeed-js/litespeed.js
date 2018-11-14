@@ -4,22 +4,22 @@
  * Manage application scopes and different views
  */
 container.set('filter', function() {
-    var filters = {};
+    let filters = {};
 
-    var add = function (name, callback) {
+    let add = function (name, callback) {
         filters[name] = callback;
         return this;
     };
 
-    var apply = function (value, name, options) {
-        return filters[name](value, options);
+    let apply = function (value, name) {
+        return filters[name](value);
     };
 
-    add('uppercase', function (value, options) {
+    add('uppercase', function (value) {
         return value.toUpperCase();
     });
 
-    add('lowercase', function (value, options) {
+    add('lowercase', function (value) {
         return value.toLowerCase();
     });
 
