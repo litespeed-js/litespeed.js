@@ -1,12 +1,12 @@
 # Expression
 
-The expression service parses litespeed.js template syntax.
+The expression service parses Litespeed.js template syntax.
 
 The main use for this service is to bind service value into views and view components like '[data-ls-echo](/docs/views/echo.md)' and '[data-ls-if](/docs/views/if.md)' rely on it heavily.
 
 The expression parser detects service path references, evaluate them and parses the final results.
 
-Litespeed expression also supports 'mustache' or 'twig' like filters to give a lot more flexibility and power. 
+Litespeed.js expression also supports 'mustache' or 'twig' like filters to give a lot more flexibility and power. 
 
 ## API
 

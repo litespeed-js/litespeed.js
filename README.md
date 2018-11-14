@@ -37,7 +37,7 @@ Service | Description | API & Examples
 --- | --- | ---
 **container** | Manage service registration and dependency injection internally. | [API & Examples](/docs/services/container.md)
 **cookie** | Manages user cookie, retrive and set cookies. | [API & Examples](/docs/services/cookie.md)
-**expression** | Parse template syntax expressions and execute them as JS code. | [API & Examples](#docs)
+**expression** | Parse template syntax expressions and execute them as JS code. | [API & Examples](/docs/services/expression.md)
 **filter** | Use predefined string filters or add custom filters. | [API & Examples](#docs)
 **form** | Parse form elements to JSON data. | [API & Examples](#docs)
 **http** | Manage HTTP interactions with server side APIs. | [API & Examples](#docs)
