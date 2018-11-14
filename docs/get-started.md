@@ -58,3 +58,9 @@ The first step to get started with Litespeed.js is to init the framework in your
 ```
 
 This is a basic example that shows how to init a Litespeed.js app and set 3 different views for our main scope with their respective URL's.
+
+## Creating a New Service
+
+## Creating a New View Component
+
+## Creating a New Filter

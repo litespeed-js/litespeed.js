@@ -25,8 +25,9 @@ Install with CDN:
 <script src="https://raw.githubusercontent.com/eldadfux/litespeed.js/master/dist/litespeed.min.js"></script>
 ```
 
+As of version 0.2.* litespeed.js weights only 6.3kb (minified and compressed)
 
-### Docs
+## Docs
 
 * [Getting Started](/docs/get-started.md)
 
