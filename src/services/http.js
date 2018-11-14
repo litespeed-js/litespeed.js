@@ -1,11 +1,11 @@
 container.set('http', function(document) {
 
-    var globalParams    = [],
+    let globalParams    = [],
         globalHeaders   = [];
 
-    var addParam = function(url, param, value) {
+    let addParam = function(url, param, value) {
         param = encodeURIComponent(param);
-        var a = document.createElement('a');
+        let a = document.createElement('a');
         param += (value ? "=" + encodeURIComponent(value) : "");
         a.href = url;
         a.search += (a.search ? "&" : "") + param;
@@ -20,10 +20,10 @@ container.set('http', function(document) {
      * @param progress callback
      * @returns Promise
      */
-    var request = function(method, url, headers, payload, progress) {
-        var i;
+    let request = function(method, url, headers, payload, progress) {
+        let i;
 
-        if(-1 == ['GET', 'POST', 'PUT', 'DELETE', 'TRACE', 'HEAD', 'OPTIONS', 'CONNECT', 'PATCH'].indexOf(method)) {
+        if(-1 === ['GET', 'POST', 'PUT', 'DELETE', 'TRACE', 'HEAD', 'OPTIONS', 'CONNECT', 'PATCH'].indexOf(method)) {
             throw new Error('var method must contain a valid HTTP method name');
         }
 
@@ -45,7 +45,7 @@ container.set('http', function(document) {
 
         return new Promise(
             function(resolve, reject) {
-                var xmlhttp = new XMLHttpRequest();
+                let xmlhttp = new XMLHttpRequest();
 
                 xmlhttp.open(method, url, true);
 
@@ -56,14 +56,14 @@ container.set('http', function(document) {
                 }
 
                 // Set Headers
-                for (var key in headers) {
+                for (let key in headers) {
                     if (headers.hasOwnProperty(key)) {
                         xmlhttp.setRequestHeader(key, headers[key]);
                     }
                 }
 
                 xmlhttp.onload = function() {
-                    if (4 == xmlhttp.readyState && 200 == xmlhttp.status) {
+                    if (4 === xmlhttp.readyState && 200 === xmlhttp.status) {
                         resolve(xmlhttp.response);
                     }
                     else {

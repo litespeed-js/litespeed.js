@@ -28,18 +28,12 @@ container.set('form', function() {
         return value;
     }
 
-    function getDatasetProperty(dataset, propName) {
-        var data = JSON.parse(JSON.stringify(dataset));
-
-        return data[propName] || undefined;
-    }
-
     function toJson(element, json) {
         json         = json || {};
-        var name     = element.getAttribute('name');
-        var type     = element.getAttribute('type');
-        var castTo   = element.getAttribute('data-cast-to');
-        var ref      = json;
+        let name     = element.getAttribute('name');
+        let type     = element.getAttribute('type');
+        let castTo   = element.getAttribute('data-cast-to');
+        let ref      = json;
 
         if(name && 'FORM' !== element.tagName) {
             if('FIELDSET' === element.tagName) { // Fieldset Array / Object
@@ -97,7 +91,7 @@ container.set('form', function() {
             }
         }
 
-        for (var i = 0; i < element.children.length; i++) {
+        for (let i = 0; i < element.children.length; i++) {
             if(Array.isArray(ref)) {
                 ref.push({});
                 toJson(element.children[i], ref[ref.length]);
