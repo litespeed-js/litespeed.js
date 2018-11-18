@@ -1,12 +1,13 @@
 {
   "name": "litespeed.js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": false,
   "main": "gulpfile.js",
   "description": "A simple javascript framework to build simple web applications.",
   "homepage": "https://github.com/eldadfux/litespeed.js",
   "bugs": "https://github.com/eldadfux/litespeed.js/issues",
   "license": "MIT",
+  "jsdelivr": "dist/litespeed.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/eldadfux/litespeed.js.git"
