@@ -4,12 +4,13 @@ container.get('view').add({
     repeat: true,
     controller: function(element, expression) {
         let result = '';
+        let syntax = element.dataset['lsIf'] || '';
 
         try {
-            result = !!(eval(expression.parse(element.dataset['lsIf'], 'undefined')));
+            result = !!(eval(expression.parse(syntax, 'undefined')));
         }
         catch (error) {
-            throw new Error('Failed to evaluate expression: '.error.message);
+            throw new Error('Failed to evaluate expression "' + syntax + '": ' + error);
         }
 
         element.$lsSkip = !result;
