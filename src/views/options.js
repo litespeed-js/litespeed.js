@@ -49,8 +49,8 @@ container.get('view').add({
 
                 container.set('option', options[x], false, false);
 
-                child.value = (key) ? expression.parse(key) : JSON.stringify(options[x]);
-                child.innerText = (label) ? expression.parse(label) : JSON.stringify(options[x]);
+                child.value = (key) ? expression.parse(key) : x;
+                child.innerText = (label) ? expression.parse(label) : (typeof options[x] !== 'string') ? JSON.stringify(options[x]) : options[x];
                 child.selected = (child.value === value);
                 element.appendChild(child);
                 element.disabled = false;

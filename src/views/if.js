@@ -7,7 +7,7 @@ container.get('view').add({
         let syntax = element.dataset['lsIf'] || '';
 
         try {
-            result = !!(eval(expression.parse(syntax, 'undefined')));
+            result = !!(eval(expression.parse(syntax, 'undefined').replace(/(\r\n|\n|\r)/gm, ' '))); // Remove all line breaks to avoid evaluation error
         }
         catch (error) {
             throw new Error('Failed to evaluate expression "' + syntax + '": ' + error);
