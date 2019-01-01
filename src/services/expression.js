@@ -4,7 +4,7 @@
  * Manage application scopes and different views
  */
 container.set('expression', function(container, filter) {
-    var reg = /(\{{.*?\}})/gi;
+    let reg = /(\{{.*?\}})/gi;
 
     return {
 

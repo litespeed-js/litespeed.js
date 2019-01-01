@@ -152,9 +152,17 @@ container.set('state', function(window) {
      * Change current state to given URL
      *
      * @param URL string
+     * @param replace bool
      */
-    var change = function(URL) {
-        window.history.pushState({}, '', URL);
+    var change = function(URL, replace) {
+
+        if(!replace) {
+            window.history.pushState({}, '', URL);
+        }
+        else {
+            window.history.replaceState({}, '', URL);
+        }
+
         window.dispatchEvent(new PopStateEvent('popstate', {}));
     };
 

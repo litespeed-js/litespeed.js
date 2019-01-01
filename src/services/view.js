@@ -89,6 +89,11 @@ container.set('view', function(http, container) {
 
                 if(node.attributes && node.attributes.length) { // Loop threw child attributes
                     for (var x = 0; x < node.attributes.length; x++) {
+
+                        //if (node.$lsSkip === true) { // Stop render if comp has set $lsSkip
+                        //    break;
+                        //}
+
                         var length  = node.attributes.length;
                         var attr    = node.attributes[x];
 

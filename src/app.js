@@ -21,6 +21,6 @@ var app = function(version) {
         },
         error: function() {return function(error) {console.error('error', error.message, error.stack, error.toString());}},
         container: container,
-        view: this.container.get('view')
+        view: container.get('view')
     }
 };
