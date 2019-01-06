@@ -42,6 +42,7 @@ container.get('view').add({
                 var context = element.dataset['lsLoop'] + '.' + index;
 
                 container.set(element.dataset['lsAs'], container.path(context), true);
+                container.set('$index', index, true);
 
                 view.render(children[prop]);
             })(prop);
@@ -51,6 +52,7 @@ container.get('view').add({
                 var callback = function(event) {
                     (function (index) {
                         container.set(element.dataset['lsAs'], container.path(element.dataset['lsLoop'] + '.' + index), true);
+                        container.set('$index', index, true);
 
                         view.render(event.target);
                     })(prop);
