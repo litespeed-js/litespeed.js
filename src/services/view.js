@@ -94,8 +94,9 @@ container.set('view', function(http, container) {
                         //    break;
                         //}
 
+                        var pointer = (!/Edge/.test(navigator.userAgent)) ? x : (node.attributes.length -1) - x;
                         var length  = node.attributes.length;
-                        var attr    = node.attributes[x];
+                        var attr    = node.attributes[pointer];
 
                         if(!stock[attr.nodeName]) {
                             continue; // No such view component
