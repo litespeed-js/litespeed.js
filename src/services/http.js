@@ -97,6 +97,9 @@ container.set('http', function(document) {
         'put': function(url, headers, payload) {
             return request('PUT', url, headers, payload)
         },
+        'patch': function(url, headers, payload) {
+            return request('PATCH', url, headers, payload)
+        },
         'delete': function(url) {
             return request('DELETE', url, {}, '')
         },
