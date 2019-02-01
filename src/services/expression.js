@@ -27,15 +27,16 @@ container.set('expression', function(container, filter) {
                     reference = reference.split('|');
 
                     let path = (reference[0] || '');
-                    let filterName = (reference[1] || '');
                     let result = container.path(path);
 
                     result = (null === result || undefined === result) ? def : result;
 
                     result = (typeof result === 'object') ? JSON.stringify(result) : result;
 
-                    if(filterName) {
-                        result = filter.apply(result, filterName, {});
+                    if(reference.length >= 2) {
+                        for(let i=1;i<reference.length;i++) {
+                            result = filter.apply(result, reference[i], {});
+                        }
                     }
 
                     return result;

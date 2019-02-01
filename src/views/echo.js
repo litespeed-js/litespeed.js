@@ -3,10 +3,10 @@ container.get('view').add({
     template: false,
     repeat: true,
     controller: function(element, expression, filter) {
-        var def             = expression.parse(element.getAttribute('data-default') || '');
-        var filterName      = element.getAttribute('data-filter') || '';
-        var filterOptions   = JSON.parse(element.getAttribute('data-filter-options') || '{}');
-        var result          = expression.parse(element.dataset['lsEcho']);
+        let def             = expression.parse(element.getAttribute('data-default') || '');
+        let filterName      = element.getAttribute('data-filter') || '';
+        let filterOptions   = JSON.parse(element.getAttribute('data-filter-options') || '{}');
+        let result          = expression.parse(element.dataset['lsEcho']);
 
         result = result || def;
 
