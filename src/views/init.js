@@ -3,8 +3,8 @@ container.get('view').add({
     template: false,
     repeat: true,
     controller: function(element, window, document, view, state) {
-        var firstFromServer = (element.getAttribute('data-first-from-server') === 'true');
-        var scope   = {
+        let firstFromServer = (element.getAttribute('data-first-from-server') === 'true');
+        let scope   = {
                 selector: 'data-ls-scope',
                 template: false,
                 repeat: true,
@@ -58,7 +58,7 @@ container.get('view').add({
         view.add(scope);
 
         document.addEventListener('click', function(event) { // Handle user navigation
-            var target = findParent('a', event.target);
+            let target = findParent('a', event.target);
 
             if(!target) {
                 return false; // no a target
@@ -80,7 +80,7 @@ container.get('view').add({
                 return false;
             }
 
-            var route = state.match(target);
+            let route = state.match(target);
 
             if(null === route) { // No match. this link is not related to our app
                 return false;
@@ -109,7 +109,7 @@ container.get('view').add({
         });
 
         window.addEventListener('popstate', function() { // Handle back button behavior
-            var route = state.match(window.location);
+            let route = state.match(window.location);
 
             if(state.getPrevious() && state.getPrevious().view && (state.getPrevious().view.scope !== route.view.scope)) {
                 window.location.reload();

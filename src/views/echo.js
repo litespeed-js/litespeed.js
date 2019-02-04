@@ -21,7 +21,7 @@ container.get('view').add({
             element.tagName === 'BUTTON' ||
             element.tagName === 'TEXTAREA'
         ) {
-            var type = element.getAttribute('type');
+            let type = element.getAttribute('type');
 
             if ('radio' === type) {
                 if (result.toString() === def) {

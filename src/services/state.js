@@ -1,23 +1,23 @@
 container.set('state', function(window) {
 
-    var states      = [];
-    var current     = null;
-    var previous    = null;
+    let states      = [];
+    let current     = null;
+    let previous    = null;
 
-    var getPrevious = function () {
+    let getPrevious = function () {
         return previous;
     };
 
-    var setPrevious = function (value) {
+    let setPrevious = function (value) {
         previous = value;
         return this;
     };
 
-    var getCurrent= function () {
+    let getCurrent= function () {
         return current;
     };
 
-    var setCurrent = function (value) {
+    let setCurrent = function (value) {
         current = value;
         return this;
     };
@@ -31,7 +31,7 @@ container.set('state', function(window) {
      * @param def
      * @returns {*}
      */
-    var getParam = function (key, def) {
+    let getParam = function (key, def) {
         if (key in state.params) {
             return state.params[key];
         }
@@ -46,7 +46,7 @@ container.set('state', function(window) {
      *
      * @returns {*}
      */
-    var getParams = function () {
+    let getParams = function () {
         return state.params;
     };
 
@@ -59,16 +59,16 @@ container.set('state', function(window) {
      * @param value
      * @returns {setParam}
      */
-    var setParam = function(key, value) {
+    let setParam = function(key, value) {
         state.params[key] = value;
         return this;
     };
 
-    var reset   = function () {
+    let reset   = function () {
         state.params = getJsonFromUrl(window.location.search);
     };
 
-    var getURL = function () {
+    let getURL = function () {
         return window.location.href;
     };
 
@@ -81,17 +81,17 @@ container.set('state', function(window) {
      * @param view object
      * @returns this
      */
-    var add = function(path, view) {
+    let add = function(path, view) {
 
         /**
          * Validation
          */
         if(typeof path !== 'string') {
-            throw new Error('var path must be of type string');
+            throw new Error('path must be of type string');
         }
 
         if(typeof view !== 'object') {
-            throw new Error('var view must be of type object');
+            throw new Error('view must be of type object');
         }
 
         states[states.length++] = {/* string */ path: path, /* object */ view: view};
@@ -116,13 +116,13 @@ container.set('state', function(window) {
      * @param location object
      * @return value object|null
      */
-    var match = function(location) {
-        var url = location.pathname;
+    let match = function(location) {
+        let url = location.pathname;
 
         states.sort(function(a, b){ return b.path.length - a.path.length;}); // order by length
 
         states.sort(function(a, b) {
-            var n = b.path.split('/').length - a.path.split('/').length;
+            let n = b.path.split('/').length - a.path.split('/').length;
 
             if(n !== 0) {
                 return n;
@@ -131,11 +131,11 @@ container.set('state', function(window) {
             return b.path.length - a.path.length;
         }); // order by number of paths parts
 
-        for (var i = 0; i < states.length; i++) {
-            var value   = states[i],
+        for (let i = 0; i < states.length; i++) {
+            let value   = states[i],
                 match   = new RegExp("^" + value.path.replace(/:[^\s/]+/g, '([\\w-]+)') + "$");
 
-            var found = url.match(match);
+            let found = url.match(match);
 
             if(found) {
                 previous = current;
@@ -154,7 +154,7 @@ container.set('state', function(window) {
      * @param URL string
      * @param replace bool
      */
-    var change = function(URL, replace) {
+    let change = function(URL, replace) {
 
         if(!replace) {
             window.history.pushState({}, '', URL);
@@ -166,7 +166,7 @@ container.set('state', function(window) {
         window.dispatchEvent(new PopStateEvent('popstate', {}));
     };
 
-    var reload = function () {
+    let reload = function () {
         change(window.location.href);
     };
 
@@ -180,18 +180,18 @@ container.set('state', function(window) {
      * @param URL string
      * @returns {*}
      */
-    var getJsonFromUrl = function (URL) {
-        var query;
+    let getJsonFromUrl = function (URL) {
+        let query;
 
         if(URL) {
-            var pos = location.href.indexOf('?');
+            let pos = location.href.indexOf('?');
             if(pos==-1) return [];
             query = location.href.substr(pos+1);
         } else {
             query = location.search.substr(1);
         }
 
-        var result = {};
+        let result = {};
 
         query.split('&').forEach(function(part) {
             if(!part) {
@@ -200,17 +200,17 @@ container.set('state', function(window) {
 
             part = part.split('+').join(' '); // replace every + with space, regexp-free version
 
-            var eq      = part.indexOf('=');
-            var key     = eq>-1 ? part.substr(0,eq) : part;
-            var val     = eq>-1 ? decodeURIComponent(part.substr(eq+1)) : '';
-            var from    = key.indexOf('[');
+            let eq      = part.indexOf('=');
+            let key     = eq>-1 ? part.substr(0,eq) : part;
+            let val     = eq>-1 ? decodeURIComponent(part.substr(eq+1)) : '';
+            let from    = key.indexOf('[');
 
             if(from==-1) {
                 result[decodeURIComponent(key)] = val;
             }
             else {
-                var to = key.indexOf(']');
-                var index = decodeURIComponent(key.substring(from+1,to));
+                let to = key.indexOf(']');
+                let index = decodeURIComponent(key.substring(from+1,to));
 
                 key = decodeURIComponent(key.substring(0,from));
 
@@ -230,7 +230,7 @@ container.set('state', function(window) {
         return result;
     };
 
-    var state = {
+    let state = {
         setParam: setParam,
         getParam: getParam,
         getParams: getParams,

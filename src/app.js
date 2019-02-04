@@ -5,7 +5,7 @@ container
     .set('element', window.document, true)
 ;
 
-var app = function(version) {
+let app = function(version) {
     return {
         run: function(window) {
             try {

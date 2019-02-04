@@ -3,7 +3,7 @@
  *
  * Uses as container for application services
  */
-var container = function() {
+let container = function() {
 
     let stock = [];
 

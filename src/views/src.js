@@ -11,7 +11,7 @@ container.get('view').add({
             element.style.opacity = '1';
         });
 
-        var src = expression.parse(element.dataset['lsSrc']);
+        let src = expression.parse(element.dataset['lsSrc']);
 
         if(src !== element.src && src !== '') {
             element.src = src;

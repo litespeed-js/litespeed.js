@@ -3,6 +3,8 @@ container.get('view').add({
     template: false,
     repeat: true,
     controller: function(element, expression, filter) {
+        console.warn('data-ls-print is deprecated');
+
         var def             = element.getAttribute('data-default') || '';
         var filterName      = element.getAttribute('data-filter') || '';
         var filterOptions   = JSON.parse(element.getAttribute('data-filter-options') || '{}');

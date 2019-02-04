@@ -4,9 +4,9 @@
  * Manage application scopes and different views
  */
 container.set('view', function(http, container) {
-    var stock = {};
+    let stock = {};
 
-    var execute = function(view, node, container) {
+    let execute = function(view, node, container) {
         container.set('element', node, true);
 
         container.resolve(view.controller);
@@ -31,10 +31,10 @@ container.set('view', function(http, container) {
         add: function(object) {
 
             if(typeof object !== 'object') {
-                throw new Error('var object must be of type object');
+                throw new Error('object must be of type object');
             }
 
-            var defaults = {
+            let defaults = {
                 'selector': '',
                 'controller': function () {},
                 'template': '',
@@ -42,7 +42,7 @@ container.set('view', function(http, container) {
                 'protected': false
             };
 
-            for (var prop in defaults) {
+            for (let prop in defaults) {
                 if (!defaults.hasOwnProperty(prop)) {
                     continue;
                 }
@@ -72,37 +72,37 @@ container.set('view', function(http, container) {
          * @returns view
          */
         render: function(element) {
-            var self    = this;
-            var list    = (element) ? element.childNodes : [];
+            let self    = this;
+            let list    = (element) ? element.childNodes : [];
 
             if(element.$lsSkip === true) {
                 list = [];
             }
 
             // Run on tree
-            for (var i = 0; i < list.length; i++) { // Loop threw all DOM children
-                var node = list[i];
+            for (let i = 0; i < list.length; i++) { // Loop threw all DOM children
+                let node = list[i];
 
                 if(1 !== node.nodeType) { // Skip text nodes
                     continue;
                 }
 
                 if(node.attributes && node.attributes.length) { // Loop threw child attributes
-                    for (var x = 0; x < node.attributes.length; x++) {
+                    for (let x = 0; x < node.attributes.length; x++) {
 
                         //if (node.$lsSkip === true) { // Stop render if comp has set $lsSkip
                         //    break;
                         //}
 
-                        var pointer = (!/Edge/.test(navigator.userAgent)) ? x : (node.attributes.length -1) - x;
-                        var length  = node.attributes.length;
-                        var attr    = node.attributes[pointer];
+                        let pointer = (!/Edge/.test(navigator.userAgent)) ? x : (node.attributes.length -1) - x;
+                        let length  = node.attributes.length;
+                        let attr    = node.attributes[pointer];
 
                         if(!stock[attr.nodeName]) {
                             continue; // No such view component
                         }
 
-                        var comp = stock[attr.nodeName];
+                        let comp = stock[attr.nodeName];
 
                         if (typeof comp.template === "function") { // If template is function and not string resolve it first
                             comp.template = container.resolve(comp.template);

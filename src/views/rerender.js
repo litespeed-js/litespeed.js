@@ -3,14 +3,14 @@ container.get('view').add({
     template: false,
     repeat: true,
     controller: function(element, view, http, expression, document, container) {
-        var events  = element.dataset['lsRerender'] || '';
-        var scope   = element.dataset['scope'] || '';
+        let events  = element.dataset['lsRerender'] || '';
+        let scope   = element.dataset['scope'] || '';
 
         scope = (scope) ? container.get(scope) : document;
 
         events = events.trim().split(',');
 
-        for (var i = 0; i < events.length; i++) {
+        for (let i = 0; i < events.length; i++) {
             if('' === events[i]) {
                 continue;
             }

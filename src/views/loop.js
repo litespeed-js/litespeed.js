@@ -4,7 +4,7 @@ container.get('view').add({
     repeat: true,
     nested: false,
     controller: function(element, view, container, window) {
-        var array = container.path(element.dataset['lsLoop']);
+        let array = container.path(element.dataset['lsLoop']);
 
         array = (!array) ? [] : array; // Cast null to empty array
 
@@ -20,13 +20,13 @@ container.get('view').add({
             throw new Error('Reference value must be array or object. ' + (typeof array) + ' given');
         }
 
-        var children = [];
+        let children = [];
 
         element.$lsSkip = true;
 
         element.style.visibility = (0 === array.length) ? 'hidden' : 'visible';
 
-        for (var prop in array) {
+        for (let prop in array) {
             if (!array.hasOwnProperty(prop)) {
                 continue
             }
@@ -39,7 +39,7 @@ container.get('view').add({
             element.appendChild(children[prop]);
 
             (function (index) {
-                var context = element.dataset['lsLoop'] + '.' + index;
+                let context = element.dataset['lsLoop'] + '.' + index;
 
                 container.set(element.dataset['lsAs'], container.path(context), true);
                 container.set('$index', index, true);
@@ -49,7 +49,7 @@ container.get('view').add({
 
             // Listen for DOM changes and add bind context + re-render changed elements
             children[prop].addEventListener("template-loaded", (function(prop) {
-                var callback = function(event) {
+                let callback = function(event) {
                     (function (index) {
                         container.set(element.dataset['lsAs'], container.path(element.dataset['lsLoop'] + '.' + index), true);
                         container.set('$index', index, true);

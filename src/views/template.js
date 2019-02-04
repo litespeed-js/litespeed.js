@@ -3,12 +3,12 @@ container.get('view').add({
     template: false,
     repeat: true,
     controller: function(element, view, http, expression, document) {
-        var template    = expression.parse(element.dataset['lsTemplate']);
-        var type        = element.dataset['type'] || 'url';
+        let template    = expression.parse(element.dataset['lsTemplate']);
+        let type        = element.dataset['type'] || 'url';
 
         element.innerHTML = '';
 
-        var parse = function (data, element) {
+        let parse = function (data, element) {
             element.innerHTML = data;
 
             view.render(element);
@@ -20,7 +20,7 @@ container.get('view').add({
         };
 
         if('script' === type) {
-            var inlineTemplate = document.getElementById(template);
+            let inlineTemplate = document.getElementById(template);
 
             if(inlineTemplate && inlineTemplate.innerHTML) {
                 parse(inlineTemplate.innerHTML, element);
