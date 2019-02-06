@@ -10,11 +10,15 @@ container.get('view').add({
 
         element.template    = (element.template) ? element.template : (element.children.length === 1) ? element.children[0].innerHTML : ''; // Save template for case we will need to re-render
 
-        if(!element.clone) {
-            element.clone = (element.children.length === 1) ? element.children[0] : window.document.createElement('li');
+        if(!element.backup) {
+            element.backup = (element.children.length === 1) ? element.children[0] : window.document.createElement('li');
         }
 
-        element.innerHTML   = '';
+        //element.innerHTML   = '';
+
+        while(element.hasChildNodes() ){
+            element.removeChild(element.lastChild);
+        }
 
         if(array instanceof Array && typeof array !== 'object') {
             throw new Error('Reference value must be array or object. ' + (typeof array) + ' given');
@@ -32,9 +36,9 @@ container.get('view').add({
             }
 
             // Create new child element and apply template
-            children[prop] = children[prop] || element.clone.cloneNode(true);
-            children[prop] = element.clone.cloneNode(true);
-            children[prop].innerHTML = element.template;
+            children[prop] = children[prop] || element.backup.cloneNode(true);
+            //children[prop] = element.backup.cloneNode(true);
+            //children[prop].innerHTML = element.template;
 
             element.appendChild(children[prop]);
 
@@ -48,7 +52,7 @@ container.get('view').add({
             })(prop);
 
             // Listen for DOM changes and add bind context + re-render changed elements
-            children[prop].addEventListener("template-loaded", (function(prop) {
+            /*children[prop].addEventListener("template-loaded", (function(prop) {
                 let callback = function(event) {
                     (function (index) {
                         container.set(element.dataset['lsAs'], container.path(element.dataset['lsLoop'] + '.' + index), true);
@@ -61,7 +65,7 @@ container.get('view').add({
                 };
 
                 return callback;
-            })(prop), false);
+            })(prop), false);*/
         }
     }
 });
