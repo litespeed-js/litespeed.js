@@ -8,14 +8,16 @@ container.get('view').add({
 
         scope = (scope) ? container.get(scope) : document;
 
-        events = events.trim().split(',');
+        events = events.split(',');
 
         for (let i = 0; i < events.length; i++) {
-            if('' === events[i]) {
+            let event = events[i].trim();
+
+            if('' === event) {
                 continue;
             }
 
-            scope.addEventListener(events[i], function () {
+            scope.addEventListener(event, function () {
                 view.render(element);
             })
         }
