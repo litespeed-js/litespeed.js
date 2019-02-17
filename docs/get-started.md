@@ -32,7 +32,7 @@ The first step to get started with Litespeed.js is to init the framework in your
 
                         let state   = window.Demo.container.get('state');
 
-                        state
+                        state // Add some basic routing rules
                             .add('/', {
                                 template: '/pages/index.html'
                             })
@@ -44,7 +44,7 @@ The first step to get started with Litespeed.js is to init the framework in your
                             })
                         ;
 
-                        window.Demo.run(window);
+                        window.Demo.run(window); // Watch the magic happens
                     };
 
                     head.appendChild(script);
@@ -59,8 +59,14 @@ The first step to get started with Litespeed.js is to init the framework in your
 
 This is a basic example that shows how to init a Litespeed.js app and set 3 different views for our main scope with their respective URL's.
 
-## Creating a New Service
+## Register a New Service
+
+// TODO
 
 ## Creating a New View Component
 
+// TODO
+
 ## Creating a New Filter
+
+// TODO
