@@ -42,6 +42,16 @@ container.get('view').add({
                 }
 
                 document.dispatchEvent(new CustomEvent('state-changed'));
+
+                /*let hash = window.location.hash.substr(1);
+
+                if(hash) {
+                    hash = document.getElementById(hash);
+
+                    if(hash) {
+                        hash.scrollIntoView({behavior: 'smooth'})
+                    }
+                }*/
             },
             findParent = function(tagName, el) {
                 if ((el.nodeName || el.tagName).toLowerCase() === tagName.toLowerCase()){
