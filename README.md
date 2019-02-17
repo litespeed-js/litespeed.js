@@ -2,9 +2,11 @@
 
 [![npm version](https://badge.fury.io/js/litespeed.js.svg)](https://badge.fury.io/js/litespeed.js)
 
-A simple javascript framework to build simple web applications. Litespeed is dependency free, easy to learn framework which gives you all tools needed to build a modern, fast and single page web application. 
+A simple javascript framework to build simple web applications. Litespeed is dependency free, **easy to learn** framework which gives you all tools needed to build a modern, fast and single page web application. 
 
 Litespeed is build using an [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) architecture design, with dependency injection service to provide easy access and dependency management between views and services.
+
+Litespeed.js makes very good use of both browser memory management, garbage collection and rendering to maximize application performance.
 
 - [Getting Started](#getting-started)
 - [Services](#services)
