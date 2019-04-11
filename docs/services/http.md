@@ -16,7 +16,7 @@ Currently the HTTP service uses the XMLHttpRequest API to handle all HTTP calls 
 - [addGlobalParam(key, value)](#addGlobalParam)
 - [addGlobalHeader(key, value)](#addGlobalHeader)
 
-### get(url)
+### get
 
 Make and HTTP GET request
 
