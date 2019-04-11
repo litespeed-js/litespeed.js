@@ -22,7 +22,7 @@ Add a new state to the app states list. When a the app init or when a URL change
 Param | Type | Description
 --- | --- | ---
 **path** | string | State URL path
-**view** | object | State [view object]((#/docs/services/view.md))
+**view** | object | State [view object]((/docs/services/view.md))
 
 #### Example
 ```js
@@ -40,6 +40,28 @@ Param | Type | Description
 --- | --- | ---
 **url** | string | New state URL
 **replace** | boolean | Add new state or replace current one
+
+#### Example
+```js
+state.change('/new-view', false);
+```
+
+### reload()
+
+The reload method reload current app state and re-render the [ls-scope](/docs/views/scope.md) view component 
+
+#### Example
+```js
+state.reload();
+```
+
+### match()
+
+The match method iterate over all the states that has been registered to the state service with the [add](#add) method and find the current state against the [location object](https://www.w3schools.com/jsref/obj_location.asp) received in the method call.   
+
+Param | Type | Description
+--- | --- | ---
+**location** | object | [location object](https://www.w3schools.com/jsref/obj_location.asp)
 
 #### Example
 ```js
