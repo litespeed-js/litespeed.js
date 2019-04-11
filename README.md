@@ -39,14 +39,14 @@ As of version 0.2.* litespeed.js weights only 6.3kb (minified and compressed)
 
 Service | Description | API & Examples
 --- | --- | ---
-**container** | Manage service registration and dependency injection internally. | [API & Examples](/docs/services/container.md)
-**cookie** | Manages user cookie, retrive and set cookies. | [API & Examples](/docs/services/cookie.md)
-**expression** | Parse template syntax expressions and execute them as JS code. | [API & Examples](/docs/services/expression.md)
-**filter** | Use predefined string filters or add custom filters. | [API & Examples](/docs/services/filter.md)
-**form** | Parse form elements to JSON data. | [API & Examples](#docs)
-**http** | Manage HTTP interactions with server side APIs. | [API & Examples](#docs)
-**state** | Manage state registration and routing. | [API & Examples](#docs)
-**view** | Handles views registration and rendering | [API & Examples](#docs)
+**container** | Manage service registration and dependency injection internally. | [API Refs &Examples](/docs/services/container.md)
+**cookie** | Manages user cookie, retrive and set cookies. | [API Refs &Examples](/docs/services/cookie.md)
+**expression** | Parse template syntax expressions and execute them as JS code. | [API Refs &Examples](/docs/services/expression.md)
+**filter** | Use predefined string filters or add custom filters. | [API Refs &Examples](/docs/services/filter.md)
+**form** | Parse form elements to JSON data. | [API Refs &Examples](#docs)
+**http** | Manage HTTP interactions with server side APIs. | [API Refs &Examples](#docs)
+**state** | Manage state registration and routing. | [API Refs &Examples](#docs)
+**view** | Handles views registration and rendering | [API Refs &Examples](#docs)
 
 ### Views
 
