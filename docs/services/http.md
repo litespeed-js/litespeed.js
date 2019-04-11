@@ -131,3 +131,33 @@ http.delete('https://example.com/resource')
         }
     );
 ```
+
+### addGlobalParam
+
+Add a global query param to all your HTTP requests. The parameter you will be adding using this method will be attached to any HTTP request sent using the HTTP service.
+
+Param | Type | Description
+--- | --- | ---
+**key** | string | Parameter name
+**value** | string | Parameter value
+
+#### Example
+
+```js
+http.addGlobalParam('version', 'beta');
+```
+
+### addGlobalHeader
+
+Add a global header to all your HTTP requests. The HEADER you will be adding using this method will be attached to any HTTP request sent using the HTTP service.
+
+Param | Type | Description
+--- | --- | ---
+**key** | string | Header name
+**value** | string | Header value
+
+#### Example
+
+```js
+http.addGlobalHeader('Content-type', 'application/json');
+```
