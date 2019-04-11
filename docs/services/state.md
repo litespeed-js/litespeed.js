@@ -10,13 +10,16 @@ The state service manages the application state registration and routing logic.
 - [reset()](#reset)
 - [change(url, replace)](#change)
 - [reload()](#reload)
-[//]: # (- [getURL()](#getURL))
+<!-- - [getURL()](#getURL) -->
 - [add(path, view)](#add)
 - [match(location)](#match)
 - [getCurrent()](#getCurrent)
 - [setCurrent()](#setCurrent)
 - [getPrevious()](#getPrevious)
 - [setPrevious()](#setPrevious)
+
+## Attributes
+
 - [params](params)
 
 ### set()
