@@ -53,7 +53,7 @@ This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/d
 #### Example
 
 ```js
-http.post('https://example.com', {'Content-type': 'application/json'}, '{name: "John", age: 31, city: "New York"}')
+http.post('https://example.com/resource', {'Content-type': 'application/json'}, '{name: "John", age: 31, city: "New York"}')
     .then(function (response) {
             // Handle Success
         }, function (error) {
@@ -77,7 +77,7 @@ This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/d
 #### Example
 
 ```js
-http.put('https://example.com', {'Content-type': 'application/json'}, '{name: "John", age: 31, city: "New York"}')
+http.put('https://example.com/resource', {'Content-type': 'application/json'}, '{name: "John", age: 31, city: "New York"}')
     .then(function (response) {
             // Handle Success
         }, function (error) {
@@ -101,7 +101,7 @@ This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/d
 #### Example
 
 ```js
-http.patch('https://example.com', {'Content-type': 'application/json'}, '{name: "John", age: 31, city: "New York"}')
+http.patch('https://example.com/resource', {'Content-type': 'application/json'}, '{name: "John", age: 31, city: "New York"}')
     .then(function (response) {
             // Handle Success
         }, function (error) {
@@ -117,15 +117,13 @@ Make and HTTP DELETE request
 Param | Type | Description
 --- | --- | ---
 **url** | string | HTTP URL to the resource you want to request
-**headers** | object | HTTP headers object combined from key and values
-**payload** | string | HTTP payload
 
 This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object.
 
 #### Example
 
 ```js
-http.delete('https://example.com', {'Content-type': 'application/json'}, '{name: "John", age: 31, city: "New York"}')
+http.delete('https://example.com/resource')
     .then(function (response) {
             // Handle Success
         }, function (error) {
