@@ -5,16 +5,9 @@ The first step to get started with Litespeed.js is to init the framework in your
 ```html
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Demo App</title>
-    </head>
-
+    <head></head>
     <body data-ls-init>
-
-        <main data-ls-scope="">
-            Loading...
-        </main>
+        <main data-ls-scope="">Loading...</main>
 
         <script>
             (function (window) {
