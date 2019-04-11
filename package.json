@@ -4,13 +4,13 @@
   "private": false,
   "main": "gulpfile.js",
   "description": "A simple javascript framework to build simple web applications.",
-  "homepage": "https://github.com/eldadfux/litespeed.js",
-  "bugs": "https://github.com/eldadfux/litespeed.js/issues",
+  "homepage": "https://github.com/litespeed-js/litespeed.js",
+  "bugs": "https://github.com/litespeed-js/litespeed.js/issues",
   "license": "MIT",
   "jsdelivr": "dist/litespeed.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eldadfux/litespeed.js.git"
+    "url": "https://github.com/litespeed-js/litespeed.js.git"
   },
   "keywords": [
     "litespeed",
