@@ -4,8 +4,8 @@ The cookie service allows to gain easy get and set access for client side cookie
 
 ## API
 
-- [set()](#set)
-- [get()](#get)
+- [set(name, value, days)](#set)
+- [get(name)](#get)
 
 ### set()
 
