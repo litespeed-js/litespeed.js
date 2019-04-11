@@ -83,3 +83,29 @@ Returns matching state or null if no state was found.
 ```js
 state.change('/new-view', false);
 ```
+
+### getCurrent()
+
+Get current app state object.   
+
+#### Return Value
+
+Returns current app state object.
+
+#### Example
+```js
+state.getCurrent();
+```
+
+### getPrevious()
+
+Get previous app state object.   
+
+#### Return Value
+
+Returns previous app state object.
+
+#### Example
+```js
+state.getPrevious();
+```
