@@ -24,6 +24,8 @@ Param | Type | Description
 --- | --- | ---
 **url** | string | HTTP URL to the resource you want to request
 
+This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object.
+
 #### Example
 
 ```js
@@ -36,26 +38,26 @@ http.get('https://example.com')
     );
 ```
 
-### apply()
+### post
 
-Applies a filter function on a given value
+Make and HTTP GET request
 
 Param | Type | Description
 --- | --- | ---
-**name** | string | Name of the filter
-**value** | mixed | Value to format
+**url** | string | HTTP URL to the resource you want to request
+**headers** | object | HTTP headers object combined from key and values
+**payload** | string | HTTP payload
+
+This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object.
 
 #### Example
 
 ```js
-let result = filter.apply('john doe', 'uppercase'); // JOHN DOE
+http.post('https://example.com', {'Content-type': 'application/json'}, '{name: "John", age: 31, city: "New York"}')
+    .then(function (response) {
+            // Handle Success
+        }, function (error) {
+            // Handle Error
+        }
+    );
 ```
-
-#### Predefined Filters
-
-Name | Description
---- | ---
-**uppercase** | Convert given string to upper case letters
-**lowercase** | Convert given string to lower case letters
-
-Think we should add more predefined filters? send us a pull request to review.
