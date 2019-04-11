@@ -68,7 +68,7 @@ Any service you register using the [container service](/docs/services/container.
 
 ## Dependency Injection
 
-Litespeed.js support an advanced dependency injection which allows your callback to get other Litespeed.js services available as argument.
+Litespeed.js support an advanced dependency injection which allows your closures to get other Litespeed.js services available to them as arguments.
 
 To enable service injection, name the services you need as arguments in closures when creating new services or view components.
 
