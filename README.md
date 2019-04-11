@@ -1,8 +1,6 @@
 <p align="center">
-    <img height="60" src="images/litespeed-js.png" alt="Logo">
+    <img height="45" src="images/litespeed-js.png" alt="Logo">
 </p>
-
-![Logo](images/litespeed-js.png)
 
 [![npm version](https://badge.fury.io/js/litespeed.js.svg)](https://badge.fury.io/js/litespeed.js)
 
