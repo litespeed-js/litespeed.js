@@ -23,6 +23,20 @@ container.set('state', function(window) {
     };
 
     /**
+     * Set Param
+     *
+     * Set a new key & value pair to current scope
+     *
+     * @param key
+     * @param value
+     * @returns {setParam}
+     */
+    let setParam = function(key, value) {
+        state.params[key] = value;
+        return this;
+    };
+
+    /**
      * Get Param
      *
      * Returns param value or default if not exists
@@ -51,25 +65,15 @@ container.set('state', function(window) {
     };
 
     /**
-     * Set Param
-     *
-     * Set a new key & value pair to current scope
-     *
-     * @param key
-     * @param value
-     * @returns {setParam}
+     * Return current state URL
+     * @returns {string}
      */
-    let setParam = function(key, value) {
-        state.params[key] = value;
-        return this;
+    let getURL = function () {
+        return window.location.href;
     };
 
     let reset   = function () {
         state.params = getJsonFromUrl(window.location.search);
-    };
-
-    let getURL = function () {
-        return window.location.href;
     };
 
     /**
@@ -234,11 +238,11 @@ container.set('state', function(window) {
         setParam: setParam,
         getParam: getParam,
         getParams: getParams,
-        reset: reset,
-        change: change,
-        reload: reload,
         getURL: getURL,
         add: add,
+        change: change,
+        reload: reload,
+        reset: reset,
         match: match,
         getCurrent: getCurrent,
         setCurrent: setCurrent,

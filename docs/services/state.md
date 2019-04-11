@@ -4,48 +4,44 @@ The state service manages the application state registration and routing logic.
 
 ## API
 
-- [setParam(key, value)](#setParam)
-- [getParam(key, def)](#getParam)
-- [getParams()](#getParams)
-- [reset()](#reset)
+- [add(path, view)](#add)
 - [change(url, replace)](#change)
 - [reload()](#reload)
-<!-- - [getURL()](#getURL) -->
-- [add(path, view)](#add)
 - [match(location)](#match)
 - [getCurrent()](#getCurrent)
-- [setCurrent()](#setCurrent)
 - [getPrevious()](#getPrevious)
-- [setPrevious()](#setPrevious)
 
 ## Attributes
 
 - [params](params)
 
-### set()
+### add()
 
-Set a new cookie
+Add a new state to the app states list. When a the app init or when a URL changes the [match](#match) method will check all states to find a state that matches the current URL.
 
 Param | Type | Description
 --- | --- | ---
-**name** | string | Name of the cookie
-**value** | string | Value of cookie to set
-**days** | numeric | Number of days for cookie to be set
+**path** | string | State URL path
+**view** | object | State [view object]((#/docs/services/view.md))
 
 #### Example
 ```js
-cookie.set('myCookieName', 'myCookieValue', 7 /* days */);
+state.add('/contact-us', {
+    'template': '/templates/contact-us.html',
+    'repeat': false,
+});
 ```
 
-### get()
+### change()
 
-Get cookie value by cookie name
+Change app current state. Use the replace param to control whether the new state should replace current state in History API or added as a new state. This mainly affects the behaviour of the browser back button. 
 
 Param | Type | Description
 --- | --- | ---
-**name** | string | Name of the cookie
+**url** | string | New state URL
+**replace** | boolean | Add new state or replace current one
 
 #### Example
 ```js
-let value = cookie.get('myCookieName'); // string value
+state.change('/new-view', false);
 ```
