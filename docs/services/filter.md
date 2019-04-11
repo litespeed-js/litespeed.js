@@ -6,8 +6,8 @@ The filters listed in the filters service are the ones used by the '[data-ls-ech
 
 ## API
 
-- [add()](#add)
-- [apply()](#apply)
+- [add(name, callback)](#add)
+- [apply(name, value)](#apply)
 
 ### add()
 
