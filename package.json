@@ -1,9 +1,9 @@
 {
   "name": "litespeed.js",
-  "version": "v0.2.4",
+  "version": "v0.2.5",
   "private": false,
   "main": "gulpfile.js",
-  "description": "A simple javascript framework to build simple web applications.",
+  "description": "Lite & fast micro javascript framework that is easy to learn",
   "homepage": "https://github.com/litespeed-js/litespeed.js",
   "bugs": "https://github.com/litespeed-js/litespeed.js/issues",
   "license": "MIT",
