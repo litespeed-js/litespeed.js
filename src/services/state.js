@@ -185,7 +185,7 @@ container.set('state', function(window) {
 
         if(URL) {
             let pos = location.href.indexOf('?');
-            if(pos==-1) return [];
+            if(pos===-1) return [];
             query = location.href.substr(pos+1);
         } else {
             query = location.search.substr(1);
@@ -205,7 +205,7 @@ container.set('state', function(window) {
             let val     = eq>-1 ? decodeURIComponent(part.substr(eq+1)) : '';
             let from    = key.indexOf('[');
 
-            if(from==-1) {
+            if(from===-1) {
                 result[decodeURIComponent(key)] = val;
             }
             else {
