@@ -24,6 +24,8 @@ Param | Type | Description
 --- | --- | ---
 **url** | string | HTTP URL to the resource you want to request
 
+#### Return Value
+
 This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object.
 
 #### Example
@@ -47,6 +49,8 @@ Param | Type | Description
 **url** | string | HTTP URL to the resource you want to request
 **headers** | object | HTTP headers object combined from key and values
 **payload** | string | HTTP payload
+
+#### Return Value
 
 This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object.
 
@@ -72,6 +76,8 @@ Param | Type | Description
 **headers** | object | HTTP headers object combined from key and values
 **payload** | string | HTTP payload
 
+#### Return Value
+
 This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object.
 
 #### Example
@@ -96,6 +102,8 @@ Param | Type | Description
 **headers** | object | HTTP headers object combined from key and values
 **payload** | string | HTTP payload
 
+#### Return Value
+
 This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object.
 
 #### Example
@@ -117,6 +125,8 @@ Make and HTTP DELETE request
 Param | Type | Description
 --- | --- | ---
 **url** | string | HTTP URL to the resource you want to request
+
+#### Return Value
 
 This method returns a Javascript [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object.
 
@@ -141,6 +151,10 @@ Param | Type | Description
 **key** | string | Parameter name
 **value** | string | Parameter value
 
+#### Return Value
+
+Items New elements of the Array.
+
 #### Example
 
 ```js
@@ -155,6 +169,10 @@ Param | Type | Description
 --- | --- | ---
 **key** | string | Header name
 **value** | string | Header value
+
+#### Return Value
+
+Items New elements of the Array.
 
 #### Example
 
