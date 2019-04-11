@@ -54,7 +54,9 @@ This is a basic example that shows how to init a Litespeed.js app and set 3 diff
 
 ## Register a New Service
 
-// TODO
+Services are where you handle your app logic. A service is any Javascript object, whether a native object, object you create or a 3rd party library, we really don't mind.
+
+Any service you register using the [container service](/docs/services/container.md) is automatically available to auto-discovery available using Litespeed dependency injection algorithm.  
 
 ## Creating a New View Component
 
@@ -63,3 +65,30 @@ This is a basic example that shows how to init a Litespeed.js app and set 3 diff
 ## Creating a New Filter
 
 // TODO
+
+## Dependency Injection
+
+Litespeed.js support an advanced dependency injection which allows your callback to get other Litespeed.js services available as argument.
+
+To enable service injection, name the services you need as arguments in closures when creating new services or view components.
+
+```js
+conatiner.set('user1', { // Creating our first service
+    'name': 'first member',
+    'email': 'one@example.com'
+}, true, true);
+
+conatiner.set('user2', { // Creating our second service
+    'name': 'second member',
+    'email': 'two@example.com'
+}, true, true);
+
+conatiner.set('team', function(user1, user2) {
+  // Hurray! both user1 and user2 services are magically available for us! 
+  return {
+      'user1': user1,
+      'user2': user2,
+  }
+}, true, true);
+
+``` 

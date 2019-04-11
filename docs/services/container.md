@@ -1,6 +1,6 @@
 # Container
 
-The container service allows to manage dependency injection across the application, have easy access to object or services and lazy-load, singleton or cache the creation of new service instances.
+The container service allows you to manage dependency injection across the application, have easy access to object or services and lazy-load, singleton or cache the creation of new service instances.
 
 ## API
 
@@ -16,7 +16,7 @@ Register a new service
 Param | Type | Description
 --- | --- | ---
 **name** | string | Name of the service
-**object** | object / callable | Service object or a resolvable callback function
+**object** | object / callable | Service object or a resolvable callback function. For [dependency injection](/docs/get-started.md#dependency-injection) pass a closure with your desired services as argument names.
 **singleton** | bool | Should object instance be singleton?
 **cache** | bool | Should service instance be cached in memory?
 
