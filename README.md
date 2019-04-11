@@ -1,4 +1,4 @@
-<p align="center">
+<p>
     <img height="45" src="images/litespeed-js.png" alt="Logo">
 </p>
 
