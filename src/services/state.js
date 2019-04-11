@@ -168,10 +168,12 @@ container.set('state', function(window) {
         }
 
         window.dispatchEvent(new PopStateEvent('popstate', {}));
+
+        return this;
     };
 
     let reload = function () {
-        change(window.location.href);
+        return change(window.location.href);
     };
 
     /**

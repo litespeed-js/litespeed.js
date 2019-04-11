@@ -10,16 +10,20 @@ Litespeed.js expression also supports 'mustache' or 'twig' like filters to give 
 
 ## API
 
-- [parse()](#parse)
+- [parse(string)](#parse)
 
 ### parse()
 
-Set a new cookie
+Parses a Litespeed.js expression.
 
 Param | Type | Description
 --- | --- | ---
-**string** | string | Name of the cookie
-**def** | string | Default value to print when reference results with null or undefined value, default to empty string **(optional)**
+**string** | string | Expression string. Use {{object.path}} to evaluate a service path or add a pipe to apply a filter {{object.path|uppercase}}.
+**def** | string | Default value to use when expression has evaluated with empty result **(optional)**
+
+#### Return Value
+
+Resulted expression string or def parameter value if empty result.
 
 #### Example
 

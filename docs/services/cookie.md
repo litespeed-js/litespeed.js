@@ -17,6 +17,10 @@ Param | Type | Description
 **value** | string | Value of cookie to set
 **days** | numeric | Number of days for cookie to be set
 
+#### Return Value
+
+Returns cookie object instance.
+
 #### Example
 ```js
 cookie.set('myCookieName', 'myCookieValue', 7 /* days */);
@@ -29,6 +33,10 @@ Get cookie value by cookie name
 Param | Type | Description
 --- | --- | ---
 **name** | string | Name of the cookie
+
+#### Return Value
+
+Value of requested cookie or null if no cookie was found.
 
 #### Example
 ```js

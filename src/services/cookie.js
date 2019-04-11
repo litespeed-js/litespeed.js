@@ -7,6 +7,8 @@ container.set('cookie', function(document) {
         if (parts.length === 2) {
             return parts.pop().split(";").shift();
         }
+
+        return null;
     }
 
     function set(name, value, days) {
@@ -17,6 +19,8 @@ container.set('cookie', function(document) {
         let expires = (0 < days ) ? 'expires=' + date.toUTCString() : 'expires=0';
 
         document.cookie = name + "=" + value + ";" + expires + ";path=/";
+
+        return this;
     }
 
     return {

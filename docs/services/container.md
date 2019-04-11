@@ -20,6 +20,10 @@ Param | Type | Description
 **singleton** | bool | Should object instance be singleton?
 **cache** | bool | Should service instance be cached in memory?
 
+#### Return Value
+
+Returns container object instance
+
 #### Example
 ```js
 container.set('myService', {
@@ -36,6 +40,10 @@ Param | Type | Description
 --- | --- | ---
 **name** | string | Name of the service
 
+#### Return Value
+
+Requested service object instance or null if no object was found.
+
 #### Example
 ```js
 let service = container.get('myService');
@@ -48,6 +56,10 @@ This is where the dependency 'magic' happens. This method receives a callable va
 Param | Type | Description
 --- | --- | ---
 **name** | callable | Function needed to be resolved with requested services
+
+#### Return Value
+
+Callback resolved value.
 
 #### Example
 ```js
@@ -64,6 +76,10 @@ Param | Type | Description
 --- | --- | ---
 **path** | string | Dot separated nested object path
 **value** | mixed | Value to be set in given path **(optional)**
+
+#### Return Value
+
+Value of the requested path or null if no path was found.
 
 #### Example
 ```js

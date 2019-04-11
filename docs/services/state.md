@@ -24,6 +24,10 @@ Param | Type | Description
 **path** | string | State URL path
 **view** | object | State [view object]((/docs/services/view.md))
 
+#### Return Value
+
+Returns state object instance.
+
 #### Example
 ```js
 state.add('/contact-us', {
@@ -41,6 +45,10 @@ Param | Type | Description
 **url** | string | New state URL
 **replace** | boolean | Add new state or replace current one
 
+#### Return Value
+
+Returns state object instance.
+
 #### Example
 ```js
 state.change('/new-view', false);
@@ -49,6 +57,10 @@ state.change('/new-view', false);
 ### reload()
 
 The reload method reload current app state and re-render the [ls-scope](/docs/views/scope.md) view component 
+
+#### Return Value
+
+Returns state object instance.
 
 #### Example
 ```js
@@ -62,6 +74,10 @@ The match method iterate over all the states that has been registered to the sta
 Param | Type | Description
 --- | --- | ---
 **location** | object | [location object](https://www.w3schools.com/jsref/obj_location.asp)
+
+#### Return Value
+
+Returns matching state or null if no state was found.
 
 #### Example
 ```js
