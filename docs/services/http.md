@@ -1,6 +1,6 @@
 # HTTP
 
-The HTTP service allows you to create HTTP calls and receive javascript promises to manage your call response results.
+The HTTP service allows you to create HTTP calls and receive Javascript promises to manage your call response results.
 
 All of Litespeed.js internal HTTP calls used by the framework are managed by the HTTP service.
 
