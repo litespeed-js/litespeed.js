@@ -4,11 +4,22 @@ container.get('view').add({
     controller: function(element, expression) {
         let trigger = expression.parse(element.dataset['lsTrigger']);
 
+        trigger = trigger.split(',');
+
         element.addEventListener('click', function () {
-            window.document.dispatchEvent(new CustomEvent(trigger, {
-                bubbles: false,
-                cancelable: true
-            }));
+            for (let i = 0; i < trigger.length; i++) {
+                let event = trigger[i].trim();
+
+                if ('' === event) {
+                    continue;
+                }
+
+                console.log(event);
+
+                window.document.dispatchEvent(new CustomEvent(event, {
+                    bubbles: false, cancelable: true
+                }));
+            }
         });
     }
 });

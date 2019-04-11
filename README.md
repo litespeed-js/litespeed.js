@@ -1,4 +1,4 @@
-# litespeed.js
+![Logo](images/litespeed-js.png)
 
 [![npm version](https://badge.fury.io/js/litespeed.js.svg)](https://badge.fury.io/js/litespeed.js)
 
