@@ -37,6 +37,6 @@ filter.add('uppercase', function (value) {
     return value.toUpperCase();
 });
 
-let name = expression.parse('hello {{user.name|uppercase}}'); // JOHN DOE
-let empty = expression.parse('hello {{user.age|uppercase}}', 30); // 30
+let name = expression.parse('hello {{user.name|uppercase}}'); // hello JOHN DOE
+let empty = expression.parse('your age is {{user.age|uppercase}}', 30); // your age is 30
 ```
