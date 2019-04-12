@@ -49,7 +49,9 @@ Service | Description | API & Examples
 
 ### Views
 
-TODO
+Service | Description | API & Examples
+--- | --- | ---
+**ls-init** | Start app DOM rendering and listen for URL changes to trigger state matching. | [API Refs & Examples](/docs/services/container.md)
 
 ## Contributing
 
