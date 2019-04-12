@@ -58,6 +58,22 @@ Services are where you handle your app logic. A service is any Javascript object
 
 Any service you register using the [container service](/docs/services/container.md) is automatically available to auto-discovery available using Litespeed dependency injection algorithm.  
 
+### Example
+
+```js
+window.Litespeed.container.set('timezone', function () {
+        return {
+            convert: function (unixTime) {
+                var timezoneMinutes = new Date().getTimezoneOffset();
+                timezoneMinutes = (timezoneMinutes === 0) ? 0 : -timezoneMinutes;
+
+                // Timezone difference in minutes such as 330 or -360 or 0
+                return parseInt(unixTime) + (timezoneMinutes * 60);
+            }
+        };
+    }, true);
+```
+    
 ## Creating a New View Component
 
 // TODO
@@ -72,18 +88,20 @@ Litespeed.js support an advanced dependency injection which allows your closures
 
 To enable service injection, name the services you need as arguments in closures when creating new services or view components.
 
+### Examples
+
 ```js
-conatiner.set('user1', { // Creating our first service
+window.Litespeed.conatiner.set('user1', { // Creating our first service
     'name': 'first member',
     'email': 'one@example.com'
 }, true, true);
 
-conatiner.set('user2', { // Creating our second service
+window.Litespeed.conatiner.set('user2', { // Creating our second service
     'name': 'second member',
     'email': 'two@example.com'
 }, true, true);
 
-conatiner.set('team', function(user1, user2) {
+window.Litespeed.conatiner.set('team', function(user1, user2) {
   // Hurray! both user1 and user2 services are magically available for us! 
   return {
       'user1': user1,
@@ -93,7 +111,7 @@ conatiner.set('team', function(user1, user2) {
 
 // And the same works with a view controller:
 
-conatiner.get('view')
+window.Litespeed.conatiner.get('view')
     .add({
         selector: 'data-test',
         repeat: true,
