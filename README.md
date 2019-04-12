@@ -58,7 +58,6 @@ Service | Description | API & Examples
 **ls-loop** | Iterate over a service or array and renders element for each iteration. | [API Refs & Examples](/docs/views/loop.md)
 **ls-options** |  | [API Refs & Examples](/docs/views/options.md)
 **ls-rerender** |  | [API Refs & Examples](/docs/views/rerender.md)
-**ls-selected** |  | [API Refs & Examples](/docs/views/selected.md)
 **ls-style** | Parses given Litespeed expression and append it to given element style. | [API Refs & Examples](/docs/views/style.md)
 **ls-template** | Render HTTP remote or inline script template to given element. | [API Refs & Examples](/docs/views/template.md)
 **ls-trigger** | Triggers a custom event on given element interaction event. | [API Refs & Examples](/docs/views/trigger.md)
