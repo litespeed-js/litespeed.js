@@ -56,7 +56,7 @@ Service | Description | API & Examples
 **ls-echo** | Outputs Litespeed expressions to DOM text or input values. | [API Refs & Examples](/docs/views/echo.md)
 **ls-hide** |  | [API Refs & Examples](/docs/views/hide.md)
 **ls-if** |  | [API Refs & Examples](/docs/views/if.md)
-**ls-loop** | Iterate over a service or array and renders given element template for each iteration. | [API Refs & Examples](/docs/views/loop.md)
+**ls-loop** | Iterate over a service or array and renders element for each iteration. | [API Refs & Examples](/docs/views/loop.md)
 **ls-options** |  | [API Refs & Examples](/docs/views/options.md)
 **ls-rerender** |  | [API Refs & Examples](/docs/views/rerender.md)
 **ls-selected** |  | [API Refs & Examples](/docs/views/selected.md)
