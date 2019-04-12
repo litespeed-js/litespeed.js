@@ -6,7 +6,6 @@
         <link rel="icon" type="image/png" href="/favicon.png">
         <link href="/styles/default.css" rel="stylesheet" />
         <link href="/styles/androidstudio.css" rel="stylesheet" />
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <meta name="description" content="Sample Litespeed.js application">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
 
@@ -18,11 +17,14 @@
     </head>
 
     <body data-ls-init data-first-from-server="false">
+
         <header class="header">
+            <div data-ls-attr="x=1,y,z"></div>
+
             <nav>
                 <ul>
                     <li>
-                        <a href="/" data-route>Home</a>
+                        <a href="/">Home</a>
                     </li>
                     <li>
                         <!--<a href="/getting-started.html">Getting Started</a>-->
@@ -35,12 +37,6 @@
                     </li>
                     <li>
                         <a href="/article.html">Blog</a>
-                    </li>
-                    <li>
-                        <!--<a href="/todo/add">Task Demo</a>-->
-                    </li>
-                    <li>
-                        <!--<span onclick="alert(0); window.location = '/todo/add';">Task Demo</span>-->
                     </li>
                 </ul>
             </nav>
@@ -66,8 +62,8 @@
                 "use strict";
 
                 document.addEventListener("DOMContentLoaded", function() {
-                    var head      = document.getElementsByTagName('head')[0];
-                    var script    = document.createElement('script');
+                    let head      = document.getElementsByTagName('head')[0];
+                    let script    = document.createElement('script');
                     script.type   = 'text/javascript';
                     script.async  = true;
                     script.src    = 'scripts/litespeed.js';
@@ -75,8 +71,7 @@
                     script.onload = function() {
                         window.Demo = app('v1.0.0'); // Init app and set cache buster value
 
-                        var state   = window.Demo.container.get('state');
-                        var view    = window.Demo.container.get('view');
+                        let state = window.Demo.container.get('state');
 
                         state
                             .add('/', {
@@ -102,18 +97,6 @@
                                     }, 10000);
                                 }
                             })
-                            .add('/todo/add', {
-                                controller: function (element, container) {
-                                    alert('exec');
-                                },
-                                state: false
-                            })
-                            .add('/todo/remove', {
-                                controller: function (element, container) {
-
-                                },
-                                state: false
-                            })
                         ;
 
                         window.Demo.container
@@ -137,16 +120,6 @@
                                 }
                             }, true)
                         ;
-
-                        view
-                            .add(
-                                {
-                                    selector: 'data-code',
-                                    controller: function(element) {
-                                        hljs.highlightBlock(element);
-                                    }
-                                }
-                            );
 
                         window.Demo.run(window);
                     };

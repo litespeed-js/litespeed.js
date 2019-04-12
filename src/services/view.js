@@ -87,16 +87,19 @@ container.set('view', function(http, container) {
                     continue;
                 }
 
-                if(node.attributes && node.attributes.length) { // Loop threw child attributes
-                    for (let x = 0; x < node.attributes.length; x++) {
+                let attrs = node.attributes;
+                let attrsLen = attrs.length;
+
+                if(attrs && attrsLen) { // Loop threw child attributes
+                    for (let x = 0; x < attrsLen; x++) {
 
                         //if (node.$lsSkip === true) { // Stop render if comp has set $lsSkip
                         //    break;
                         //}
 
-                        let pointer = (!/Edge/.test(navigator.userAgent)) ? x : (node.attributes.length -1) - x;
-                        let length  = node.attributes.length;
-                        let attr    = node.attributes[pointer];
+                        let pointer = (!/Edge/.test(navigator.userAgent)) ? x : (attrsLen -1) - x;
+                        let length  = attrsLen;
+                        let attr    = attrs[pointer];
 
                         if(!stock[attr.nodeName]) {
                             continue; // No such view component
@@ -113,7 +116,7 @@ container.set('view', function(http, container) {
                                 execute(comp, node, container);
                             })(comp, node, container);
 
-                            if(length !== node.attributes.length) {
+                            if(length !== attrsLen) {
                                 x--;
                             }
 
