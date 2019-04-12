@@ -29,7 +29,7 @@ Install with CDN:
 <script src="https://cdn.jsdelivr.net/npm/litespeed.js"></script>
 ```
 
-As of version 0.2.* litespeed.js weights only 8kb (minified and compressed)
+As of version 0.2.* litespeed.js weights only 4.9kb (minified and compressed)
 
 ## Docs
 
