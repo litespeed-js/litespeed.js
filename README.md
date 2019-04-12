@@ -51,7 +51,7 @@ Service | Description | API & Examples
 
 Service | Description | API & Examples
 --- | --- | ---
-**ls-init** | Starts app DOM rendering and listen for URL changes to trigger state matching. | [API Refs & Examples](/docs/view/init.md)
+**ls-init** | Starts DOM rendering and listen for URL changes. | [API Refs & Examples](/docs/view/init.md)
 **ls-scope** | Uses to define the routed element scope. | [API Refs & Examples](/docs/view/scope.md)
 **ls-echo** | Outputs Litespeed expressions to DOM text or input values. | [API Refs & Examples](/docs/views/echo.md)
 **ls-hide** |  | [API Refs & Examples](/docs/views/hide.md)
