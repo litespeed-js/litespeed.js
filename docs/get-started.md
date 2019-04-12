@@ -91,4 +91,15 @@ conatiner.set('team', function(user1, user2) {
   }
 }, true, true);
 
+// And the same works with a view controller:
+
+conatiner.get('view')
+    .add({
+        selector: 'data-test',
+        repeat: true,
+        controller: function(element, user1, user2, document) {
+            // Hurray! both element, user1 and user2 and document services are all magically available for us!
+        }
+    })
+
 ``` 
