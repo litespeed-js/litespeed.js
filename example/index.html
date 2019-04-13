@@ -18,9 +18,9 @@
 
     <body data-ls-init data-first-from-server="false">
         <div style="margin: 50px; padding: 50px; border-radius: 50px; border: solid 1px #f1f1f1;">
-            <h1 data-ls-bind="{{tasks.title}}">---</h1>
+            <h1 data-ls-bind="tasks.title">---</h1>
 
-            <input type="text" data-ls-bind="{{tasks.title}}" title="">
+            <input type="text" data-ls-bind="tasks.title" title="">
 
             <form data-tasks-add>
                 <h2>Add New Task</h2>
@@ -32,13 +32,24 @@
 
             <ul data-ls-loop="tasks.list" data-ls-as="task">
                 <li data-ls-attr="class=completed-{{task.completed}}">
-                    # <span data-ls-bind="{{task.content}}"></span> <button type="button" data-tasks-remove="{{task.id}}">Delete</button>
+                    <label>
+                        <input type="text" data-ls-bind="task.content" title="">
+                        <input class="toggle" type="checkbox" data-ls-bind="task.completed">
+                        <span data-ls-bind="task.content"></span> <button type="button" data-tasks-remove="{{task.id}}">Delete</button>
+                    </label>
                 </li>
             </ul>
 
+
+            <label>
+                <select data-ls-loop="tasks.list" data-ls-as="task">
+                    <option data-ls-attr="value=completed-{{task.completed}}" data-ls-bind="task.content"></option>
+                </select>
+            </label>
+
             <hr />
 
-            <strong data-ls-bind="{{tasks.list.length}} Items">0 Items</strong>
+            <strong><span data-ls-bind="tasks.list.length"></span> Items</strong>
 
             <hr />
 
@@ -105,7 +116,7 @@
                                     list: [
                                         {
                                             id: 0,
-                                            completed: false,
+                                            completed: true,
                                             show: true,
                                             content: 'This is just my first task',
                                         },

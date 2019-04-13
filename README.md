@@ -53,14 +53,11 @@ Service | Description | API & Examples
 --- | --- | ---
 **ls-init** | Starts DOM rendering and listen for URL changes. | [API Refs & Examples](/docs/view/init.md)
 **ls-scope** | Uses to define the routed element scope. | [API Refs & Examples](/docs/view/scope.md)
-**ls-echo** | Outputs Litespeed expressions to DOM text or input values. | [API Refs & Examples](/docs/views/echo.md)
+**ls-bind** | Binds data between your services to the DOM. | [API Refs & Examples](/docs/views/echo.md)
+**ls-attr** | Binds data between your services to your element attributes. | [API Refs & Examples](/docs/views/echo.md)
 **ls-if** | Hides element according to given expression evaluation | [API Refs & Examples](/docs/views/if.md)
 **ls-loop** | Iterate over a service or array and renders element for each iteration. | [API Refs & Examples](/docs/views/loop.md)
-**ls-options** |  | [API Refs & Examples](/docs/views/options.md)
-**ls-rerender** |  | [API Refs & Examples](/docs/views/rerender.md)
-**ls-style** | Parses given Litespeed expression and append it to given element style. | [API Refs & Examples](/docs/views/style.md)
 **ls-template** | Render HTTP remote or inline script template to given element. | [API Refs & Examples](/docs/views/template.md)
-**ls-trigger** | Triggers a custom event on given element interaction event. | [API Refs & Examples](/docs/views/trigger.md)
 
 ## Contributing
 

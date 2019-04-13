@@ -39,10 +39,16 @@ container.get('view').add({
 
                     container.set(element.dataset['lsAs'], container.path(context), true);
                     container.set('$index', index, true);
+                    container.set('$prefix', context, true);
+                    container.set('$as', element.dataset['lsAs'], true);
 
                     view.render(children[prop]);
                 })(prop);
             }
+
+            container.set('$index', null, true);
+            container.set('$prefix', '', true);
+            container.set('$as', '', true);
         };
 
         element.template = (element.template) ? element.template : (element.children.length === 1) ? element.children[0].innerHTML : ''; // Save template for case we will need to re-render
