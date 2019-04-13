@@ -59,8 +59,7 @@ container.get('view').add({
 
         echo();
 
-        document.addEventListener(expr.split('.')[0] + '.changed', function () {
-            echo();
-        });
+        document.addEventListener(expr + '.changed', echo);
+        document.addEventListener(expr + '.length.changed', echo);
     }
 });

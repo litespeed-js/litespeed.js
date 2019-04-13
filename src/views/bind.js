@@ -46,8 +46,7 @@ container.get('view').add({
                     element.value = value;
                 }
 
-                element.addEventListener('change', sync);
-                element.addEventListener('keyup', sync);
+                element.addEventListener('input', sync);
             }
             else {
                 if(element.innerText !== value) {
@@ -63,7 +62,8 @@ container.get('view').add({
 
         path = path.replace($as, $prefix);
 
-        document.addEventListener(path.split('.')[0] + '.changed', function () {
+        //document.addEventListener(path.split('.')[0] + '.changed', function () {
+        document.addEventListener(path + '.changed', function () {
             echo(container.path(path));
         });
 

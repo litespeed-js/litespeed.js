@@ -88,33 +88,34 @@ let container = function() {
 
             if(name !== 'window' && name !== 'document' && name !== 'element' && typeof instance === 'object' && instance !== null) {
                 instance = new Proxy(instance, {
-                    path: [],
-
                     name: service.name,
 
                     get: function(obj, prop) {
-                        this.path.push(prop);
+
+                        if(prop === "__name") {
+                            return this.name;
+                        }
 
                         if (typeof obj[prop] === 'object' && obj[prop] !== null) {
-                            return new Proxy(obj[prop], this)
+                            let handler = Object.assign({}, this);
+
+                            handler.name = handler.name + '.' + prop;
+
+                            return new Proxy(obj[prop], handler)
                         }
                         else {
                             return obj[prop];
                         }
-                    },
-                    set: function(obj, prop, value) {
-                        this.path.push(prop);
 
+                    },
+                    set: function(obj, prop, value, receiver) {
                         obj[prop] = value;
 
+                        let path = receiver.__name + '.' + prop;
 
-                        if(prop !== 'length') { // Skip duplicate triggers
-                            //console.log('triggered', this.name + '.changed', prop, value);
-                            //document.dispatchEvent(new CustomEvent(this.name + '.' + this.path.join('.') + '.changed'));
-                            document.dispatchEvent(new CustomEvent(this.name + '.changed'));
-                        }
+                        console.log('updated', path + '.changed', receiver, obj);
 
-                        this.path = [];
+                        document.dispatchEvent(new CustomEvent(path + '.changed'));
 
                         return true;
                     },
