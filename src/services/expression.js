@@ -5,6 +5,7 @@
  */
 container.set('expression', function(container, filter) {
     let reg = /(\{{.*?\}})/gi;
+    let paths = [];
 
     return {
 
@@ -15,6 +16,7 @@ container.set('expression', function(container, filter) {
          */
         parse: function(string, def) {
             def = def || '';
+            paths = [];
 
             return string.replace(reg, function(match)
                 {
@@ -29,6 +31,8 @@ container.set('expression', function(container, filter) {
                     let path = (reference[0] || '');
                     let result = container.path(path);
 
+                    paths.push(path);
+
                     result = (null === result || undefined === result) ? def : result;
 
                     result = (typeof result === 'object') ? JSON.stringify(result) : result;
@@ -42,6 +46,9 @@ container.set('expression', function(container, filter) {
                     return result;
                 }
             );
+        },
+        getPaths: function () {
+            return paths;
         }
     }
 }, true);

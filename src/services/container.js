@@ -84,7 +84,42 @@ let container = function() {
         }
 
         if(service.instance === null) {
-            let instance  = (typeof service.object === 'function') ? this.resolve(service.object) : service.object;
+            let instance = (typeof service.object === 'function') ? this.resolve(service.object) : service.object;
+
+            if(name !== 'window' && name !== 'document' && name !== 'element' && typeof instance === 'object' && instance !== null) {
+                instance = new Proxy(instance, {
+                    path: [],
+
+                    name: service.name,
+
+                    get: function(obj, prop) {
+                        this.path.push(prop);
+
+                        if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+                            return new Proxy(obj[prop], this)
+                        }
+                        else {
+                            return obj[prop];
+                        }
+                    },
+                    set: function(obj, prop, value) {
+                        this.path.push(prop);
+
+                        obj[prop] = value;
+
+
+                        if(prop !== 'length') { // Skip duplicate triggers
+                            //console.log('triggered', this.name + '.changed', prop, value);
+                            //document.dispatchEvent(new CustomEvent(this.name + '.' + this.path.join('.') + '.changed'));
+                            document.dispatchEvent(new CustomEvent(this.name + '.changed'));
+                        }
+
+                        this.path = [];
+
+                        return true;
+                    },
+                });
+            }
 
             if(service.singleton) {
                 service.instance = instance;

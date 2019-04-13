@@ -16,6 +16,102 @@ container.set('view', function(http, container) {
         }
     };
 
+    let parse = function (node, skip) {
+        if(node.attributes && skip !== true) {
+            let attrs = [];
+            let attrsLen = node.attributes.length;
+
+            for (let x = 0; x < attrsLen; x++) {
+                attrs.push(node.attributes[x].nodeName);
+            }
+
+            if(attrs && attrsLen) { // Loop threw child attributes
+
+                if(1 !== node.nodeType) { // Skip text nodes
+                    return;
+                }
+
+                for (let x = 0; x < attrsLen; x++) {
+
+                    if (node.$lsSkip === true) { // Stop render if comp has set $lsSkip
+                        break;
+                    }
+
+                    let pointer = (!/Edge/.test(navigator.userAgent)) ? x : (attrsLen -1) - x;
+                    let length  = attrsLen;
+                    let attr    = attrs[pointer];
+
+                    if(!stock[attr]) {
+                        continue; // No such view component
+                    }
+
+                    let comp = stock[attr];
+
+                    if (typeof comp.template === "function") { // If template is function and not string resolve it first
+                        comp.template = container.resolve(comp.template);
+                    }
+
+                    if(!comp.template) { // Execute with no template
+                        (function (comp, node, container) {
+                            execute(comp, node, container);
+                        })(comp, node, container);
+
+                        if(length !== attrsLen) {
+                            x--;
+                        }
+
+                        continue;
+                    }
+
+                    node.classList.remove('load-end');
+                    node.classList.add('load-start');
+
+                    node.$lsSkip = true;
+
+                    // Load new view template
+                    http.get(comp.template)
+                        .then(function(node, comp) {
+                                return function(data){
+                                    node.$lsSkip = false;
+
+                                    node.innerHTML = data;
+
+                                    node.classList.remove('load-start');
+                                    node.classList.add('load-end');
+
+                                    (function (comp, node, container) { // Execute after template has been loaded
+                                        execute(comp, node, container);
+                                    })(comp, node, container);
+
+                                    // re-render specific scope children after template is loaded
+                                    parse(node, true);
+                                }
+                            }(node, comp),
+                            function(error) {
+                                throw new Error('Failed to load comp template: ' + error.message);
+                            }
+                        );
+                }
+            }
+        }
+
+        if(true === node.$lsSkip) { // ELEMENT told not to render child nodes
+            return;
+        }
+
+        let list    = (node) ? node.childNodes : [];
+
+        if(node.$lsSkip === true) {
+            list = [];
+        }
+
+        // Run on tree
+        for (let i = 0; i < list.length; i++) { // Loop threw all DOM children
+            let child = list[i];
+            parse(child);
+        }
+    };
+
     return {
 
         stock: stock,
@@ -72,93 +168,7 @@ container.set('view', function(http, container) {
          * @returns view
          */
         render: function(element) {
-            let self    = this;
-            let list    = (element) ? element.childNodes : [];
-
-            if(element.$lsSkip === true) {
-                list = [];
-            }
-
-            // Run on tree
-            for (let i = 0; i < list.length; i++) { // Loop threw all DOM children
-                let node = list[i];
-
-                if(1 !== node.nodeType) { // Skip text nodes
-                    continue;
-                }
-
-                let attrs = node.attributes;
-                let attrsLen = attrs.length;
-
-                if(attrs && attrsLen) { // Loop threw child attributes
-                    for (let x = 0; x < attrsLen; x++) {
-
-                        //if (node.$lsSkip === true) { // Stop render if comp has set $lsSkip
-                        //    break;
-                        //}
-
-                        let pointer = (!/Edge/.test(navigator.userAgent)) ? x : (attrsLen -1) - x;
-                        let length  = attrsLen;
-                        let attr    = attrs[pointer];
-
-                        if(!stock[attr.nodeName]) {
-                            continue; // No such view component
-                        }
-
-                        let comp = stock[attr.nodeName];
-
-                        if (typeof comp.template === "function") { // If template is function and not string resolve it first
-                            comp.template = container.resolve(comp.template);
-                        }
-
-                        if(!comp.template) { // Execute with no template
-                            (function (comp, node, container) {
-                                execute(comp, node, container);
-                            })(comp, node, container);
-
-                            if(length !== attrsLen) {
-                                x--;
-                            }
-
-                            continue;
-                        }
-
-                        node.classList.remove('load-end');
-                        node.classList.add('load-start');
-
-                        node.$lsSkip = true;
-
-                        // Load new view template
-                        http.get(comp.template)
-                            .then(function(node, comp) {
-                                    return function(data){
-                                        node.$lsSkip = false;
-
-                                        node.innerHTML = data;
-
-                                        node.classList.remove('load-start');
-                                        node.classList.add('load-end');
-
-                                        (function (comp, node, container) { // Execute after template has been loaded
-                                            execute(comp, node, container);
-                                        })(comp, node, container);
-
-                                        // re-render specific scope children after template is loaded
-                                        self.render(node);
-                                    }
-                                }(node, comp),
-                                function(error) {
-                                    throw new Error('Failed to load comp template: ' + error.message);
-                                }
-                            );
-                    }
-                }
-
-                if(true !== node.$lsSkip) { // ELEMENT told not to render child nodes
-                    this.render(node);
-                }
-            }
-
+            parse(element);
             element.dispatchEvent(new window.Event('rendered', {bubbles: false}));
         }
     }
