@@ -3,7 +3,7 @@
  *
  * Manage application scopes and different views
  */
-container.set('expression', function(container, filter) {
+container.set('expression', function(container, filter, $as, $prefix) {
     let reg = /(\{{.*?\}})/gi;
     let paths = [];
 
@@ -14,7 +14,7 @@ container.set('expression', function(container, filter) {
          * @param def string
          * @returns {string}
          */
-        parse: function(string, def) {
+        parse: function(string, def, as, prefix) {
             def = def || '';
             paths = [];
 
@@ -29,9 +29,11 @@ container.set('expression', function(container, filter) {
                     reference = reference.split('|');
 
                     let path = (reference[0] || '');
-                    let result = container.path(path);
+                    let result = container.path(path, undefined, as, prefix);
 
-                    paths.push(path);
+                    if (!paths.includes(path)) {
+                        paths.push(path);
+                    }
 
                     result = (null === result || undefined === result) ? def : result;
 
@@ -49,6 +51,6 @@ container.set('expression', function(container, filter) {
         },
         getPaths: function () {
             return paths;
-        }
+        },
     }
 }, true);

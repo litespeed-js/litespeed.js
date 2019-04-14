@@ -78,7 +78,6 @@ container.get('view').add({
                 return false;
             }
 
-            console.log('match click');
             let route = state.match(target);
 
             if(null === route) { // No match. this link is not related to our app
@@ -108,7 +107,6 @@ container.get('view').add({
         });
 
         window.addEventListener('popstate', function() { // Handle back button behavior
-            console.log('match popstate');
             let route = state.match(window.location);
 
             if(state.getPrevious() && state.getPrevious().view && (state.getPrevious().view.scope !== route.view.scope)) {
@@ -119,7 +117,6 @@ container.get('view').add({
             init(route);
         });
 
-        console.log('match init');
         init(state.match(window.location)); // Handle first start
     }
 });

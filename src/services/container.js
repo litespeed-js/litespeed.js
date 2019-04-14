@@ -9,6 +9,8 @@ let container = function() {
 
     let cachePrefix  = 'none';
 
+    let memory = {};
+
     let setCachePrefix = function (prefix) {
         cachePrefix = prefix;
         return this;
@@ -51,8 +53,6 @@ let container = function() {
 
         return this;
     };
-
-    let memory = {};
 
     /**
      * Get Service
@@ -113,7 +113,7 @@ let container = function() {
 
                         let path = receiver.__name + '.' + prop;
 
-                        console.log('updated', path + '.changed', receiver, obj);
+                        console.log('updated', path + '.changed', value);
 
                         document.dispatchEvent(new CustomEvent(path + '.changed'));
 
@@ -149,10 +149,13 @@ let container = function() {
         }));
     };
 
-    let path = function(path, value) {
+    let path = function(path, value, as, prefix) {
+        as = (as) ? as : container.get('$as');
+        prefix = (prefix) ? prefix : container.get('$prefix');
+
         path = path
-            .split('.')
-        ;
+            .replace(as, prefix)
+            .split('.');
 
         let object = this.get(path.shift());
 
@@ -189,6 +192,14 @@ let container = function() {
         get: get,
         resolve: resolve,
         path: path,
+        bind: function(element, path, callback, as, prefix) {
+            as = (as) ? as : container.get('$as');
+            prefix = (prefix) ? prefix : container.get('$prefix');
+            document.addEventListener(path.replace(as, prefix) + '.changed', function () {
+                console.log('update callback triggered');
+                callback();
+            });
+        },
         setCachePrefix: setCachePrefix,
         getCachePrefix: getCachePrefix
     };

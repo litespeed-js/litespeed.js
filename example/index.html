@@ -31,26 +31,35 @@
             <hr />
 
             <ul data-ls-loop="tasks.list" data-ls-as="task">
-                <li data-ls-attr="class=completed-{{task.completed}}">
+                <li data-ls-attrs="class=completed-{{task.completed}}" data-ls-if="true == {{task.show}}">
                     <label>
-                        <input type="text" data-ls-bind="task.content" title="">
                         <input class="toggle" type="checkbox" data-ls-bind="task.completed">
                         <span data-ls-bind="task.content"></span> <button type="button" data-tasks-remove="{{$index}}">Delete</button>
                     </label>
+                    <div>
+                        <label>
+                            <input type="text" data-ls-bind="task.content" title="">
+                            <br />
+                            <br />
+                        </label>
+                    </div>
                 </li>
             </ul>
 
             <hr />
 
             <button type="button" data-tasks-complete="">Complete All</button>
+            <button type="button" data-tasks-show-all="">Show All</button>
+            <button type="button" data-tasks-show-completed="">Show Completed</button>
+            <button type="button" data-tasks-show-active="">Show Active</button>
 
             <hr />
 
-            <label>
+            <!--<label>
                 <select data-ls-loop="tasks.list" data-ls-as="task">
-                    <option data-ls-attr="value=completed-{{task.completed}}" data-ls-bind="task.content"></option>
+                    <option data-ls-attrs="value=completed-{{task.completed}}" data-ls-bind="task.content"></option>
                 </select>
-            </label>
+            </label>-->
 
             <hr />
 
@@ -61,7 +70,7 @@
             add delete button, mark as complete, mark all as complete, apply filters
         </div>
         <header class="header">
-            <div data-ls-attr="x=1,y,z"></div>
+            <!--<div data-ls-attrs="x=1,y,z"></div>-->
 
             <nav>
                 <ul>
@@ -123,19 +132,25 @@
                                             id: 0,
                                             completed: true,
                                             show: true,
-                                            content: 'This is just my first task',
+                                            content: 'Task number 1',
                                         },
                                         {
                                             id: 1,
                                             completed: false,
-                                            show: true,
-                                            content: 'This is just another test adding a second task',
+                                            show: false,
+                                            content: 'Task number 2',
                                         },
                                         {
                                             id: 2,
                                             completed: false,
                                             show: true,
-                                            content: 'What do you think about this test',
+                                            content: 'Task number 3',
+                                        },
+                                        {
+                                            id: 3,
+                                            completed: false,
+                                            show: true,
+                                            content: 'Task number 4',
                                         },
                                     ],
                                     add: function (task) {
@@ -148,6 +163,21 @@
                                     completeAll: function () {
                                         this.list.forEach(function(task) {
                                             task.completed = true;
+                                        });
+                                    },
+                                    showAll: function () {
+                                        this.list.forEach(function(task) {
+                                            task.show = true;
+                                        });
+                                    },
+                                    showCompleted: function () {
+                                        this.list.forEach(function(task) {
+                                            task.show = (task.completed === true);
+                                        });
+                                    },
+                                    showActive: function () {
+                                        this.list.forEach(function(task) {
+                                            task.show = (task.completed === false);
                                         });
                                     }
                                 }
@@ -183,9 +213,33 @@
                             })
                             .add({
                                 selector: 'data-tasks-complete',
-                                controller: function(element, tasks, expression) {
+                                controller: function(element, tasks) {
                                     element.addEventListener('click', function () {
                                         tasks.completeAll();
+                                    });
+                                }
+                            })
+                            .add({
+                                selector: 'data-tasks-show-all',
+                                controller: function(element, tasks) {
+                                    element.addEventListener('click', function () {
+                                        tasks.showAll();
+                                    });
+                                }
+                            })
+                            .add({
+                                selector: 'data-tasks-show-completed',
+                                controller: function(element, tasks) {
+                                    element.addEventListener('click', function () {
+                                        tasks.showCompleted();
+                                    });
+                                }
+                            })
+                            .add({
+                                selector: 'data-tasks-show-active',
+                                controller: function(element, tasks) {
+                                    element.addEventListener('click', function () {
+                                        tasks.showActive();
                                     });
                                 }
                             })

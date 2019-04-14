@@ -121,7 +121,6 @@ container.set('state', function(window) {
      * @return value object|null
      */
     let match = function(location) {
-        console.log('match', location);
         let url = location.pathname;
 
         states.sort(function(a, b){ return b.path.length - a.path.length;}); // order by length

@@ -1,10 +1,9 @@
 container.get('view').add({
     selector: 'data-ls-bind',
     controller: function(element, expression, container, $prefix, $as) {
-        let echo            = function(value) {
+        let echo            = function(value, bind = true) {
             if(
                 element.tagName === 'INPUT' ||
-                //element.tagName === 'OPTION' ||
                 element.tagName === 'SELECT' ||
                 element.tagName === 'BUTTON' ||
                 element.tagName === 'TEXTAREA'
@@ -31,10 +30,11 @@ container.get('view').add({
                             element.value = false;
                         }
 
-                        element.addEventListener('change', function () {
-                            console.log(element.checked, path);
-                            container.path(path, element.checked);
-                        });
+                        if(bind) {
+                            element.addEventListener('change', function () {
+                                container.path(path, element.checked, $as, $prefix);
+                            });
+                        }
                     }
 
                     return;
@@ -46,7 +46,9 @@ container.get('view').add({
                     element.value = value;
                 }
 
-                element.addEventListener('input', sync);
+                if(bind) {
+                    element.addEventListener('input', sync);
+                }
             }
             else {
                 if(element.innerText !== value) {
@@ -54,19 +56,19 @@ container.get('view').add({
                 }
             }
         };
-        let sync            = function () {
-            container.path(path, element.value);
-        };
+        let sync = (function (as, prefix) {
+            return function () {
+                container.path(path, element.value, as, prefix);
+            }
+        })($as, $prefix);
+
         let path            = element.dataset['lsBind'];
         let result          = container.path(path);
 
-        path = path.replace($as, $prefix);
-
-        //document.addEventListener(path.split('.')[0] + '.changed', function () {
-        document.addEventListener(path + '.changed', function () {
-            echo(container.path(path));
+        container.bind(element, path, function () {
+            echo(container.path(path, undefined, $as, $prefix), false);
         });
 
-        echo(result);
+        echo(result, true);
     }
 });

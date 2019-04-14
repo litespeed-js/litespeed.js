@@ -54,7 +54,7 @@ Service | Description | API & Examples
 **ls-init** | Starts DOM rendering and listen for URL changes. | [API Refs & Examples](/docs/view/init.md)
 **ls-scope** | Uses to define the routed element scope. | [API Refs & Examples](/docs/view/scope.md)
 **ls-bind** | Binds data between your services to the DOM. | [API Refs & Examples](/docs/views/echo.md)
-**ls-attr** | Binds data between your services to your element attributes. | [API Refs & Examples](/docs/views/echo.md)
+**ls-attrs** | Binds data between your services to your element attributes. | [API Refs & Examples](/docs/views/echo.md)
 **ls-if** | Hides element according to given expression evaluation | [API Refs & Examples](/docs/views/if.md)
 **ls-loop** | Iterate over a service or array and renders element for each iteration. | [API Refs & Examples](/docs/views/loop.md)
 **ls-template** | Render HTTP remote or inline script template to given element. | [API Refs & Examples](/docs/views/template.md)
