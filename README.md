@@ -26,7 +26,7 @@ npm install litespeed.js
 
 Install with CDN:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/litespeed.js@v0.2.6/dist/litespeed.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/litespeed.js@v0.2.6"></script>
 ```
 
 As of version 0.2.* litespeed.js weights only 4.9kb (minified and compressed)
