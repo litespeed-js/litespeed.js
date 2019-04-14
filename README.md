@@ -39,8 +39,8 @@ As of version 0.2.* litespeed.js weights only 4.9kb (minified and compressed)
 
 Service | Description | API & Examples
 --- | --- | ---
-**container** | Manage service registration and dependency injection internally. | [API Refs & Examples](/docs/services/container.md)
-**cookie** | Manages user cookie, retrive and set cookies. | [API Refs & Examples](/docs/services/cookie.md)
+**container** | Manage service registration, data binding and dependency injection internally. | [API Refs & Examples](/docs/services/container.md)
+**cookie** | Manages user cookie, retrieve and set cookies. | [API Refs & Examples](/docs/services/cookie.md)
 **expression** | Parse template syntax expressions and execute them as JS code. | [API Refs & Examples](/docs/services/expression.md)
 **filter** | Use predefined string filters or add custom filters. | [API Refs & Examples](/docs/services/filter.md)
 **http** | Manage HTTP interactions with server side APIs. | [API Refs & Examples](/docs/services/http.md)
