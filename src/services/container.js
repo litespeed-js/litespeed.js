@@ -113,7 +113,7 @@ let container = function() {
 
                         let path = receiver.__name + '.' + prop;
 
-                        console.log('updated', path + '.changed', value);
+                        //console.log('updated', path + '.changed', value);
 
                         document.dispatchEvent(new CustomEvent(path + '.changed'));
 
@@ -196,7 +196,7 @@ let container = function() {
             as = (as) ? as : container.get('$as');
             prefix = (prefix) ? prefix : container.get('$prefix');
             document.addEventListener(path.replace(as, prefix) + '.changed', function () {
-                console.log('update callback triggered');
+                //console.log('update callback triggered');
                 callback();
             });
         },
