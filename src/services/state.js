@@ -137,8 +137,9 @@ container.set('state', function(window) {
         }); // order by number of paths parts
 
         for (let i = 0; i < states.length; i++) {
-            let value   = states[i],
-                match   = new RegExp("^" + value.path.replace(/:[^\s/]+/g, '([\\w-]+)') + "$");
+            let value   = states[i];
+                value.path    = (value.path.substring(0, 1) !== '/') ? location.pathname + value.path : value.path; // Support for relative paths
+            let match   = new RegExp("^" + value.path.replace(/:[^\s/]+/g, '([\\w-]+)') + "$");
             let found = url.match(match);
 
             if(found) {

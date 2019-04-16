@@ -18,6 +18,10 @@ container.get('view').add({
 
                 state.reset();
 
+                if(null === route) {
+                    return; // no view found
+                }
+
                 // Merge
                 scope.protected     = (undefined !== route.view.protected) ? route.view.protected : false;
 
