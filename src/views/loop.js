@@ -4,7 +4,7 @@ container.get('view').add({
     repeat: false,
     nested: false,
     controller: function(element, view, container, window) {
-        let expr  = element.dataset['lsLoop'];
+        let expr  = element.getAttribute('data-ls-loop');
         let echo  = function() {
             let array = container.path(expr);
 
@@ -12,6 +12,8 @@ container.get('view').add({
 
             while(element.hasChildNodes() ) { // Clean DOM before loop starts
                 element.removeChild(element.lastChild);
+
+                element.lastChild = null;
             }
 
             if(array instanceof Array && typeof array !== 'object') {
@@ -37,10 +39,10 @@ container.get('view').add({
                 (function (index) {
                     let context = expr + '.' + index;
 
-                    container.set(element.dataset['lsAs'], container.path(context), true);
+                    container.set(element.getAttribute('data-ls-as'), container.path(context), true);
                     container.set('$index', index, true);
                     container.set('$prefix', context, true);
-                    container.set('$as', element.dataset['lsAs'], true);
+                    container.set('$as', element.getAttribute('data-ls-as'), true);
 
                     view.render(children[prop]);
                 })(prop);
@@ -59,7 +61,10 @@ container.get('view').add({
 
         echo();
 
-        document.addEventListener(expr + '.changed', echo);
-        document.addEventListener(expr + '.length.changed', echo);
+        container.bind(element, expr, echo);
+        container.bind(element, expr + '.length', echo);
+
+        //document.addEventListener(expr + '.changed', echo);
+        //document.addEventListener(expr + '.length.changed', echo);
     }
 });

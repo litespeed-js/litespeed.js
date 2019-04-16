@@ -20,6 +20,8 @@ container.get('view').add({
                 }
 
                 if('checkbox' === type) {
+                    value = JSON.parse(value);
+
                     if(typeof value === 'boolean') {
                         if(value === true) {
                             element.setAttribute('checked', 'checked');
@@ -32,7 +34,9 @@ container.get('view').add({
 
                         if(bind) {
                             element.addEventListener('change', function () {
-                                container.path(path, element.checked, $as, $prefix);
+                                for(let i = 0; i < paths.length; i++) {
+                                    container.path(paths[i], element.checked, $as, $prefix);
+                                }
                             });
                         }
                     }
@@ -58,16 +62,21 @@ container.get('view').add({
         };
         let sync = (function (as, prefix) {
             return function () {
-                container.path(path, element.value, as, prefix);
+                for(let i = 0; i < paths.length; i++) {
+                    container.path(paths[i], element.value, as, prefix);
+                }
             }
         })($as, $prefix);
 
-        let path            = element.dataset['lsBind'];
-        let result          = container.path(path);
+        let syntax          = element.getAttribute('data-ls-bind');
+        let result          = expression.parse(syntax, null, $as, $prefix);
+        let paths           = expression.getPaths();
 
-        container.bind(element, path, function () {
-            echo(container.path(path, undefined, $as, $prefix), false);
-        });
+        for(let i = 0; i < paths.length; i++) {
+            container.bind(element, paths[i], function () {
+                echo(expression.parse(syntax, null, $as, $prefix), false);
+            });
+        }
 
         echo(result, true);
     }

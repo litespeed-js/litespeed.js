@@ -3,8 +3,8 @@ container.get('view').add({
     template: false,
     repeat: true,
     controller: function(element, view, http, expression, document) {
-        let template    = expression.parse(element.dataset['lsTemplate']);
-        let type        = element.dataset['type'] || 'url';
+        let template    = expression.parse(element.getAttribute('data-ls-template'));
+        let type        = element.getAttribute('data-type') || 'url';
 
         element.innerHTML = '';
 

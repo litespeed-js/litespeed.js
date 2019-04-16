@@ -2,8 +2,8 @@ container.get('view').add({
     selector: 'data-ls-if',
     controller: function(element, expression, $as, $prefix) {
         let result  = '';
-        let syntax  = element.dataset['lsIf'] || '';
-        let debug   = element.dataset['debug'] || false;
+        let syntax  = element.getAttribute('data-ls-if') || '';
+        let debug   = element.getAttribute('data-debug') || false;
         let paths   = [];
         let check   = function () {
             if(debug) {

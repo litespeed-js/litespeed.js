@@ -74,6 +74,7 @@ container.set('state', function(window) {
 
     let reset   = function () {
         state.params = getJsonFromUrl(window.location.search);
+        state.hash = window.location.hash;
     };
 
     /**
@@ -249,7 +250,8 @@ container.set('state', function(window) {
         setCurrent: setCurrent,
         getPrevious: getPrevious,
         setPrevious: setPrevious,
-        params: getJsonFromUrl(window.location.search)
+        params: getJsonFromUrl(window.location.search),
+        hash: window.location.hash
     };
 
     return state;

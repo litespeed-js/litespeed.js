@@ -85,15 +85,22 @@ let container = function() {
 
         if(service.instance === null) {
             let instance = (typeof service.object === 'function') ? this.resolve(service.object) : service.object;
+            let skip     = false;
 
             if(name !== 'window' && name !== 'document' && name !== 'element' && typeof instance === 'object' && instance !== null) {
                 instance = new Proxy(instance, {
                     name: service.name,
 
+                    watch: function() {},
+
                     get: function(obj, prop) {
 
                         if(prop === "__name") {
                             return this.name;
+                        }
+
+                        if(prop === "__watch") {
+                            return this.watch;
                         }
 
                         if (typeof obj[prop] === 'object' && obj[prop] !== null) {
@@ -109,6 +116,14 @@ let container = function() {
 
                     },
                     set: function(obj, prop, value, receiver) {
+                        if(prop === "__name") {
+                            return this.name = value;
+                        }
+
+                        if(prop === "__watch") {
+                            return this.watch = value;
+                        }
+
                         obj[prop] = value;
 
                         let path = receiver.__name + '.' + prop;
@@ -116,6 +131,22 @@ let container = function() {
                         //console.log('updated', path + '.changed', value);
 
                         document.dispatchEvent(new CustomEvent(path + '.changed'));
+
+                        if(skip) { // Avoid endless loop, when watch callback triggers changes itself
+                            return true;
+                        }
+
+                        skip = true;
+
+                        container.set('$prop', prop, true);
+                        container.set('$value', value, true);
+
+                        container.resolve(this.watch);
+
+                        container.set('$prop', null, true);
+                        container.set('$value', null, true);
+
+                        skip = false;
 
                         return true;
                     },
@@ -195,10 +226,21 @@ let container = function() {
         bind: function(element, path, callback, as, prefix) {
             as = (as) ? as : container.get('$as');
             prefix = (prefix) ? prefix : container.get('$prefix');
-            document.addEventListener(path.replace(as, prefix) + '.changed', function () {
-                //console.log('update callback triggered');
+
+            let event = path.replace(as, prefix) + '.changed';
+            let printer = function () {
+                if(!document.body.contains(element)) { // Clean DOM
+                    console.log('cleaned dom');
+                    element = null;
+                    document.removeEventListener(event, printer, false);
+
+                    return false;
+                }
+
                 callback();
-            });
+            };
+
+            document.addEventListener(event, printer);
         },
         setCachePrefix: setCachePrefix,
         getCachePrefix: getCachePrefix

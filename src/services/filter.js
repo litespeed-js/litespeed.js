@@ -3,7 +3,7 @@
  *
  * Manage application scopes and different views
  */
-container.set('filter', function() {
+container.set('filter', function(container) {
     let filters = {};
 
     let add = function (name, callback) {
@@ -12,7 +12,8 @@ container.set('filter', function() {
     };
 
     let apply = function (value, name) {
-        return filters[name](value);
+        container.set('$value', value, true);
+        return container.resolve(filters[name]);
     };
 
     add('uppercase', function (value) {

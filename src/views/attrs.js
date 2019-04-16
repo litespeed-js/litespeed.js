@@ -1,7 +1,7 @@
 container.get('view').add({
     selector: 'data-ls-attrs',
     controller: function(element, expression, $as, $prefix) {
-        let attrs   = element.dataset['lsAttrs'].trim().split(',');
+        let attrs   = element.getAttribute('data-ls-attrs').trim().split(',');
         let paths   = [];
         let check   = function () {
             for(let i = 0; i < attrs.length; i++) {
