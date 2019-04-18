@@ -7,7 +7,7 @@ The first step to get started with Litespeed.js is to init the framework in your
 <html>
     <head></head>
     <body data-ls-init>
-        <main data-ls-scope="">Loading...</main>
+        <main data-ls-scope="">Loading your router state...</main>
 
         <script>
             (function (window) {
@@ -16,24 +16,18 @@ The first step to get started with Litespeed.js is to init the framework in your
                 document.addEventListener("DOMContentLoaded", function() {
                     let head      = document.getElementsByTagName('head')[0];
                     let script    = document.createElement('script');
-                    script.type   = 'text/javascript';
                     script.async  = true;
                     script.src    = 'scripts/litespeed.js';
 
                     script.onload = function() {
-                        window.Demo = app('v1.0.0'); // Init app and set your own cache buster value
+                        window.Demo = window.ls.app('v1.0.0'); // Init app and set your own cache buster value
 
-                        let state   = window.Demo.container.get('state');
-
-                        state // Add some basic routing rules
+                        window.Demo.container.get('router') // Add some basic routing rules
                             .add('/', {
                                 template: '/pages/index.html'
                             })
-                            .add('/pages/test-1', {
-                                template: '/pages/test-1.html'
-                            })
-                            .add('/pages/test-2', {
-                                template: '/pages/test-2.html'
+                            .add('/pages/page-1', {
+                                template: '/pages/page-1.html'
                             })
                         ;
 
@@ -52,7 +46,7 @@ The first step to get started with Litespeed.js is to init the framework in your
 
 This is a basic example that shows how to init a Litespeed.js app and set 3 different views for our main scope with their respective URL's.
 
-## Register a New Service
+## Create a New Service
 
 Services are where you handle your app logic. A service is any Javascript object, whether a native object, object you create or a 3rd party library, we really don't mind.
 
@@ -73,12 +67,37 @@ window.Litespeed.container.set('timezone', function () {
         };
     }, true);
 ```
-    
-## Creating a New View Component
+
+### APIs & Examples
+
+Service | Description | API & Examples
+--- | --- | ---
+**container** | Manage service registration, data binding and dependency injection internally. | [API Refs & Examples](/docs/services/container.md)
+**cookie** | Manages user cookie, retrieve and set cookies. | [API Refs & Examples](/docs/services/cookie.md)
+**expression** | Parse template syntax expressions and execute them as JS code. | [API Refs & Examples](/docs/services/expression.md)
+**filter** | Use predefined string filters or add custom filters. | [API Refs & Examples](/docs/services/filter.md)
+**http** | Manage HTTP interactions with server side APIs. | [API Refs & Examples](/docs/services/http.md)
+**router** | Manage state registration and routing. | [API Refs & Examples](/docs/services/router.md)
+**view** | Handles views registration and rendering | [API Refs & Examples](#/docs/services/view.md)
+
+## Create a New View Component
 
 // TODO
 
-## Creating a New Filter
+### APIs & Examples
+
+Service | Description | API & Examples
+--- | --- | ---
+**ls-init** | Starts DOM rendering and listen for URL changes. | [API Refs & Examples](/docs/view/init.md)
+**ls-scope** | Uses to define the routed element scope. | [API Refs & Examples](/docs/view/scope.md)
+**ls-bind** | Binds data between your services to the DOM. | [API Refs & Examples](/docs/views/echo.md)
+**ls-attrs** | Binds data between your services to your element attributes. | [API Refs & Examples](/docs/views/echo.md)
+**ls-if** | Hides element according to given expression evaluation | [API Refs & Examples](/docs/views/if.md)
+**ls-loop** | Iterate over a service or array and renders element for each iteration. | [API Refs & Examples](/docs/views/loop.md)
+**ls-template** | Render HTTP remote or inline script template to given element. | [API Refs & Examples](/docs/views/template.md)
+
+
+## Create a New Filter
 
 // TODO
 

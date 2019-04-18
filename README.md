@@ -10,10 +10,7 @@ The litespeed.js framework main features include an **[MVVM](https://en.wikipedi
 
 Litespeed.js makes very good use of both browser memory management, garbage collection and rendering to maximize your web application performance.
 
-- [Docs](#docs)
-    - [Getting Started](#getting-started)
-    - [Services](#services)
-    - [Views](#views)
+- [Documentation](/docs/get-started.md)
 - [Contributing](#contributing)
 - [Copyright and license](#copyright-and-license)
 
@@ -31,34 +28,6 @@ Install with CDN:
 ```
 
 As of version 0.2.* litespeed.js weights only 4.9kb (minified and compressed)
-
-## Docs
-
-* [Getting Started](/docs/get-started.md)
-
-### Services
-
-Service | Description | API & Examples
---- | --- | ---
-**container** | Manage service registration, data binding and dependency injection internally. | [API Refs & Examples](/docs/services/container.md)
-**cookie** | Manages user cookie, retrieve and set cookies. | [API Refs & Examples](/docs/services/cookie.md)
-**expression** | Parse template syntax expressions and execute them as JS code. | [API Refs & Examples](/docs/services/expression.md)
-**filter** | Use predefined string filters or add custom filters. | [API Refs & Examples](/docs/services/filter.md)
-**http** | Manage HTTP interactions with server side APIs. | [API Refs & Examples](/docs/services/http.md)
-**router** | Manage state registration and routing. | [API Refs & Examples](/docs/services/router.md)
-**view** | Handles views registration and rendering | [API Refs & Examples](#/docs/services/view.md)
-
-### Views
-
-Service | Description | API & Examples
---- | --- | ---
-**ls-init** | Starts DOM rendering and listen for URL changes. | [API Refs & Examples](/docs/view/init.md)
-**ls-scope** | Uses to define the routed element scope. | [API Refs & Examples](/docs/view/scope.md)
-**ls-bind** | Binds data between your services to the DOM. | [API Refs & Examples](/docs/views/echo.md)
-**ls-attrs** | Binds data between your services to your element attributes. | [API Refs & Examples](/docs/views/echo.md)
-**ls-if** | Hides element according to given expression evaluation | [API Refs & Examples](/docs/views/if.md)
-**ls-loop** | Iterate over a service or array and renders element for each iteration. | [API Refs & Examples](/docs/views/loop.md)
-**ls-template** | Render HTTP remote or inline script template to given element. | [API Refs & Examples](/docs/views/template.md)
 
 ## Contributing
 
