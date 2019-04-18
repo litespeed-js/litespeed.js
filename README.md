@@ -10,9 +10,10 @@ The litespeed.js framework main features include an **[MVVM](https://en.wikipedi
 
 Litespeed.js makes very good use of both browser memory management, garbage collection and rendering to maximize your web application performance.
 
-- [Getting Started](#getting-started)
-- [Services](#services)
-- [Views](#views)
+- [Docs](#docs)
+    - [Getting Started](#getting-started)
+    - [Services](#services)
+    - [Views](#views)
 - [Contributing](#contributing)
 - [Copyright and license](#copyright-and-license)
 
@@ -44,7 +45,7 @@ Service | Description | API & Examples
 **expression** | Parse template syntax expressions and execute them as JS code. | [API Refs & Examples](/docs/services/expression.md)
 **filter** | Use predefined string filters or add custom filters. | [API Refs & Examples](/docs/services/filter.md)
 **http** | Manage HTTP interactions with server side APIs. | [API Refs & Examples](/docs/services/http.md)
-**state** | Manage state registration and routing. | [API Refs & Examples](/docs/services/state.md)
+**router** | Manage state registration and routing. | [API Refs & Examples](/docs/services/router.md)
 **view** | Handles views registration and rendering | [API Refs & Examples](#/docs/services/view.md)
 
 ### Views
