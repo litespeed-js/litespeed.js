@@ -27,11 +27,11 @@ window.ls.container.get('view').add({
                     if(typeof value === 'boolean' || value === 'true' || value === 'false') {
                         if(value === true || value === 'true') {
                             element.setAttribute('checked', 'checked');
-                            element.value = true;
+                            element.checked = true;
                         }
                         else {
                             element.removeAttribute('checked');
-                            element.value = false;
+                            element.checked = false;
                         }
 
                         if(bind) {
