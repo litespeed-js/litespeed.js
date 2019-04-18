@@ -110,11 +110,11 @@
                     script.src    = 'scripts/litespeed.js';
 
                     script.onload = function() {
-                        window.Demo = app('v1.0.0'); // Init app and set cache buster value
+                        window.Demo = window.ls.app('v1.0.0'); // Init app and set cache buster value
 
-                        let state = window.Demo.container.get('state');
+                        let router = window.Demo.container.get('router');
 
-                        state
+                        router
                             .add('/', {
                                 template: '/pages/index.html'
                             })

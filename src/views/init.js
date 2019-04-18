@@ -1,6 +1,6 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-init',
-    controller: function(element, window, document, view, state) {
+    controller: function(element, window, document, view, router) {
         let firstFromServer = (element.getAttribute('data-first-from-server') === 'true');
         let scope   = {
                 selector: 'data-ls-scope',
@@ -16,7 +16,7 @@ window.ls.container.get('view').add({
                     window.document.body.scrollTo(0, 0);
                 }
 
-                state.reset();
+                router.reset();
 
                 if(null === route) {
                     return; // no view found
@@ -25,7 +25,7 @@ window.ls.container.get('view').add({
                 // Merge
                 scope.protected     = (undefined !== route.view.protected) ? route.view.protected : false;
 
-                if(scope.protected && (null === state.getPrevious())) { // Avoid protected link to be used for CSRF attacks
+                if(scope.protected && (null === router.getPrevious())) { // Avoid protected link to be used for CSRF attacks
                     throw new Error('CSRF protection');
                 }
 
@@ -35,10 +35,10 @@ window.ls.container.get('view').add({
 
                 document.dispatchEvent(new CustomEvent('state-change'));
 
-                if(firstFromServer && null === state.getPrevious()) { // Disable first view, so server could render it faster
+                if(firstFromServer && null === router.getPrevious()) { // Disable first view, so server could render it faster
                     scope.template  = '';
                 }
-                else if(null !== state.getPrevious()) {
+                else if(null !== router.getPrevious()) {
                     scope.nested = false; // Fix problem when re rendering previous page inline template before remote template loaded
                     view.render(element);
                 }
@@ -82,7 +82,7 @@ window.ls.container.get('view').add({
                 return false;
             }
 
-            let route = state.match(target);
+            let route = router.match(target);
 
             if(null === route) { // No match. this link is not related to our app
                 return false;
@@ -97,7 +97,7 @@ window.ls.container.get('view').add({
             route.view.state = (undefined === route.view.state) ? true : route.view.state;
 
             if(true === route.view.state) { // Refresh all window on scope change
-                if(state.getPrevious() && state.getPrevious().view && (state.getPrevious().view.scope !== route.view.scope)) {
+                if(router.getPrevious() && router.getPrevious().view && (router.getPrevious().view.scope !== route.view.scope)) {
                     window.location.href = target.href;
                     return false;
                 }
@@ -111,9 +111,9 @@ window.ls.container.get('view').add({
         });
 
         window.addEventListener('popstate', function() { // Handle back button behavior
-            let route = state.match(window.location);
+            let route = router.match(window.location);
 
-            if(state.getPrevious() && state.getPrevious().view && (state.getPrevious().view.scope !== route.view.scope)) {
+            if(router.getPrevious() && router.getPrevious().view && (router.getPrevious().view.scope !== route.view.scope)) {
                 window.location.reload();
                 return false;
             }
@@ -121,6 +121,6 @@ window.ls.container.get('view').add({
             init(route);
         });
 
-        init(state.match(window.location)); // Handle first start
+        init(router.match(window.location)); // Handle first start
     }
 });

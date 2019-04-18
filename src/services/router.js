@@ -1,4 +1,4 @@
-window.ls.container.set('state', function(window) {
+window.ls.container.set('router', function(window) {
 
     let states      = [];
     let current     = null;

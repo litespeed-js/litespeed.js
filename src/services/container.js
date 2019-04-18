@@ -200,7 +200,7 @@ window.ls.container = function() {
         prefix = (prefix) ? prefix : container.get('$prefix');
 
         path = path
-            .replace(as, prefix)
+            .replace(as + '.', prefix + '.')
             .split('.');
 
         let name    = path.shift();
@@ -243,7 +243,7 @@ window.ls.container = function() {
         as = (as) ? as : container.get('$as');
         prefix = (prefix) ? prefix : container.get('$prefix');
 
-        let event = path.replace(as, prefix) + '.changed';
+        let event = path.replace(as + '.', prefix + '.') + '.changed';
         let printer = function () {
             if(!document.body.contains(element)) { // Clean DOM
                 element = null;
