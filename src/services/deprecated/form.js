@@ -107,4 +107,4 @@ container.set('form', function() {
     return {
         'toJson': toJson
     }
-}, true);
+}, true, false, false);

@@ -1,4 +1,4 @@
-container.get('view').add({
+window.ls.container.get('view').add({
     selector: 'data-ls-init',
     controller: function(element, window, document, view, state) {
         let firstFromServer = (element.getAttribute('data-first-from-server') === 'true');

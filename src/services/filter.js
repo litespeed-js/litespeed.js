@@ -1,9 +1,4 @@
-/**
- * View
- *
- * Manage application scopes and different views
- */
-container.set('filter', function(container) {
+window.ls.container.set('filter', function(container) {
     let filters = {};
 
     let add = function (name, callback) {
@@ -12,7 +7,7 @@ container.set('filter', function(container) {
     };
 
     let apply = function (value, name) {
-        container.set('$value', value, true);
+        container.set('$value', value, true, false, false);
         return container.resolve(filters[name]);
     };
 
@@ -28,4 +23,4 @@ container.set('filter', function(container) {
         add: add,
         apply: apply
     }
-}, true);
+}, true, false, false);

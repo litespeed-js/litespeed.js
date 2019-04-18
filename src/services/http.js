@@ -1,4 +1,4 @@
-container.set('http', function(document) {
+window.ls.container.set('http', function(document) {
 
     let globalParams    = [],
         globalHeaders   = [];
@@ -110,4 +110,4 @@ container.set('http', function(document) {
             globalHeaders.push({key: key, value: value});
         }
     }
-}, true);
+}, true, false, false);

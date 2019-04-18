@@ -1,4 +1,4 @@
-container.set('cookie', function(document) {
+window.ls.container.set('cookie', function(document) {
 
     function get(name) {
         let value = "; " + document.cookie,
@@ -27,4 +27,4 @@ container.set('cookie', function(document) {
         'get': get,
         'set': set
     }
-}, true);
+}, true, false, false);

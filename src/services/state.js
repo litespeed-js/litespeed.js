@@ -1,4 +1,4 @@
-container.set('state', function(window) {
+window.ls.container.set('state', function(window) {
 
     let states      = [];
     let current     = null;
@@ -256,4 +256,4 @@ container.set('state', function(window) {
     };
 
     return state;
-}, true);
+}, true, false, false);

@@ -1,6 +1,6 @@
-container.get('view').add({
+window.ls.container.get('view').add({
     selector: 'data-ls-if',
-    controller: function(element, expression, $as, $prefix) {
+    controller: function(element, expression, container, $as, $prefix) {
         let result  = '';
         let syntax  = element.getAttribute('data-ls-if') || '';
         let debug   = element.getAttribute('data-debug') || false;

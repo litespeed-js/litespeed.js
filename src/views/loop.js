@@ -1,10 +1,11 @@
-container.get('view').add({
+window.ls.container.get('view').add({
     selector: 'data-ls-loop',
     template: false,
     repeat: false,
     nested: false,
     controller: function(element, view, container, window) {
         let expr  = element.getAttribute('data-ls-loop');
+        let as    = element.getAttribute('data-ls-as');
         let echo  = function() {
             let array = container.path(expr);
 
@@ -32,39 +33,32 @@ container.get('view').add({
                 }
 
                 // Create new child element and apply template
-                children[prop] = children[prop] || element.backup.cloneNode(true);
+                children[prop] = template.cloneNode(true);
 
                 element.appendChild(children[prop]);
 
                 (function (index) {
                     let context = expr + '.' + index;
 
-                    container.set(element.getAttribute('data-ls-as'), container.path(context), true);
-                    container.set('$index', index, true);
-                    container.set('$prefix', context, true);
-                    container.set('$as', element.getAttribute('data-ls-as'), true);
+                    container.set(as, container.path(context), true);
+                    container.set('$index', index, true, false, false);
+                    container.set('$prefix', context, true, false, false);
+                    container.set('$as', as, true, false, false);
 
                     view.render(children[prop]);
                 })(prop);
             }
 
-            container.set('$index', null, true);
-            container.set('$prefix', '', true);
-            container.set('$as', '', true);
+            container.set('$index', null, true, false, false);
+            container.set('$prefix', '', true, false, false);
+            container.set('$as', '', true, false, false);
         };
 
-        element.template = (element.template) ? element.template : (element.children.length === 1) ? element.children[0].innerHTML : ''; // Save template for case we will need to re-render
-
-        if(!element.backup) {
-            element.backup = (element.children.length === 1) ? element.children[0] : window.document.createElement('li');
-        }
+        let template = (element.children.length === 1) ? element.children[0] : window.document.createElement('li');
 
         echo();
 
         container.bind(element, expr, echo);
         container.bind(element, expr + '.length', echo);
-
-        //document.addEventListener(expr + '.changed', echo);
-        //document.addEventListener(expr + '.length.changed', echo);
     }
 });

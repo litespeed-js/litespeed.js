@@ -1,7 +1,7 @@
-container.get('view').add({
+window.ls.container.get('view').add({
     selector: 'data-ls-bind',
     controller: function(element, expression, container, $prefix, $as) {
-        let echo            = function(value, bind = true) {
+        let echo = function(value, bind = true) {
             if(
                 element.tagName === 'INPUT' ||
                 element.tagName === 'SELECT' ||
@@ -20,10 +20,12 @@ container.get('view').add({
                 }
 
                 if('checkbox' === type) {
-                    value = JSON.parse(value);
+                    //value = JSON.parse(value);
 
-                    if(typeof value === 'boolean') {
-                        if(value === true) {
+                    console.log('check', value);
+
+                    if(typeof value === 'boolean' || value === 'true' || value === 'false') {
+                        if(value === true || value === 'true') {
                             element.setAttribute('checked', 'checked');
                             element.value = true;
                         }
@@ -68,16 +70,16 @@ container.get('view').add({
             }
         })($as, $prefix);
 
-        let syntax          = element.getAttribute('data-ls-bind');
-        let result          = expression.parse(syntax, null, $as, $prefix);
-        let paths           = expression.getPaths();
+        let syntax = element.getAttribute('data-ls-bind');
+        let result = expression.parse(syntax, null, $as, $prefix);
+        let paths  = expression.getPaths();
+
+        echo(result, true);
 
         for(let i = 0; i < paths.length; i++) {
             container.bind(element, paths[i], function () {
                 echo(expression.parse(syntax, null, $as, $prefix), false);
             });
         }
-
-        echo(result, true);
     }
 });

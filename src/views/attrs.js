@@ -1,6 +1,6 @@
-container.get('view').add({
+window.ls.container.get('view').add({
     selector: 'data-ls-attrs',
-    controller: function(element, expression, $as, $prefix) {
+    controller: function(element, expression, container, $as, $prefix) {
         let attrs   = element.getAttribute('data-ls-attrs').trim().split(',');
         let paths   = [];
         let check   = function () {

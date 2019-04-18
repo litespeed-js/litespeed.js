@@ -1,9 +1,4 @@
-/**
- * View
- *
- * Manage application scopes and different views
- */
-container.set('expression', function(container, filter, $as, $prefix) {
+window.ls.container.set('expression', function(container, filter, $as, $prefix) {
     let reg = /(\{{.*?\}})/gi;
     let paths = [];
 
@@ -12,6 +7,8 @@ container.set('expression', function(container, filter, $as, $prefix) {
         /**
          * @param string string
          * @param def string
+         * @param as
+         * @param prefix
          * @returns {string}
          */
         parse: function(string, def, as, prefix) {
@@ -25,6 +22,7 @@ container.set('expression', function(container, filter, $as, $prefix) {
                         .replace('\']', '')  // Make syntax consistent using only dot nesting
                         .trim() // Clear whitespaces
                     ;
+
 
                     reference = reference.split('|');
 
@@ -53,4 +51,4 @@ container.set('expression', function(container, filter, $as, $prefix) {
             return paths;
         },
     }
-}, true);
+}, true, false, false);

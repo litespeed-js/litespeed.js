@@ -1,4 +1,4 @@
-container.get('view').add({
+window.ls.container.get('view').add({
     selector: 'data-ls-template',
     template: false,
     repeat: true,

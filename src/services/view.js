@@ -3,11 +3,11 @@
  *
  * Manage application scopes and different views
  */
-container.set('view', function(http, container) {
+window.ls.container.set('view', function(http, container) {
     let stock = {};
 
     let execute = function(view, node, container) {
-        container.set('element', node, true);
+        container.set('element', node, true, false, false);
 
         container.resolve(view.controller);
 
@@ -17,6 +17,7 @@ container.set('view', function(http, container) {
     };
 
     let parse = function (node, skip) {
+
         if(node.attributes && skip !== true) {
             let attrs = [];
             let attrsLen = node.attributes.length;
@@ -25,11 +26,13 @@ container.set('view', function(http, container) {
                 attrs.push(node.attributes[x].nodeName);
             }
 
-            if(attrs && attrsLen) { // Loop threw child attributes
+            if(1 !== node.nodeType) { // Skip text nodes
+                return;
+            }
 
-                if(1 !== node.nodeType) { // Skip text nodes
-                    return;
-                }
+            //console.log('in DOM?', document.body.contains(node), node, node.nodeType);
+
+            if(attrs && attrsLen) { // Loop threw child attributes
 
                 for (let x = 0; x < attrsLen; x++) {
 
@@ -172,4 +175,4 @@ container.set('view', function(http, container) {
             element.dispatchEvent(new window.Event('rendered', {bubbles: false}));
         }
     }
-}, true);
+}, true, false, false);
