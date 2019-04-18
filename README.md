@@ -8,7 +8,7 @@ Litespeed.js is a micro Javascript framework for building simple web application
 
 The litespeed.js framework main features include an **[MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)** architecture, built-in single page **routing**, easy to build **view components**, **dependency injection** service, **data binding**, and fully **valid and accessible HTML and DOM**.
 
-Litespeed.js makes very good use of both browser memory management, garbage collection and rendering to maximize your web application performance.
+Litespeed.js makes very good use of both browser memory management, garbage collection and rendering to maximize your web application performance. As of version 0.2.* litespeed.js weights only **4.9kb (minified and compressed)**
 
 - [Documentation](/docs/get-started.md)
 - [Contributing](#contributing)
@@ -27,7 +27,7 @@ Install with CDN:
 <script src="https://cdn.jsdelivr.net/npm/litespeed.js@v0.2.6"></script>
 ```
 
-As of version 0.2.* litespeed.js weights only 4.9kb (minified and compressed)
+Read our [Documentation](/docs/get-started.md) to learn how to use Litespeed.js APIs, services and view components.  
 
 ## Contributing
 
