@@ -98,8 +98,8 @@ init(route);return true;});window.addEventListener('popstate',function(){let rou
 init(route);});init(state.match(window.location));}});window.ls.container.get('view').add({selector:'data-ls-attrs',controller:function(element,expression,container,$as,$prefix){let attrs=element.getAttribute('data-ls-attrs').trim().split(',');let paths=[];let check=function(){for(let i=0;i<attrs.length;i++){let attr=attrs[i].split('=');let key=(attr[0])?expression.parse(attr[0],null,$as,$prefix):null;paths=paths.concat(expression.getPaths());let value=(attr[1])?expression.parse(attr[1],null,$as,$prefix):null;paths=paths.concat(expression.getPaths());if(!key){return null;}
 element.setAttribute(key,value);}};check();for(let i=0;i<paths.length;i++){container.bind(element,paths[i],check);}}});window.ls.container.get('view').add({selector:'data-ls-bind',controller:function(element,expression,container,$prefix,$as){let echo=function(value,bind=true){if(element.tagName==='INPUT'||element.tagName==='SELECT'||element.tagName==='BUTTON'||element.tagName==='TEXTAREA'){let type=element.getAttribute('type');if('radio'===type){if(value.toString()===element.value){element.setAttribute('checked','checked');}
 else{element.removeAttribute('checked');}}
-if('checkbox'===type){console.log('check',value);if(typeof value==='boolean'||value==='true'||value==='false'){if(value===true||value==='true'){element.setAttribute('checked','checked');element.value=true;}
-else{element.removeAttribute('checked');element.value=false;}
+if('checkbox'===type){console.log('check',value);if(typeof value==='boolean'||value==='true'||value==='false'){if(value===true||value==='true'){element.setAttribute('checked','checked');element.checked=true;}
+else{element.removeAttribute('checked');element.checked=false;}
 if(bind){element.addEventListener('change',function(){for(let i=0;i<paths.length;i++){container.path(paths[i],element.checked,$as,$prefix);}});}}
 return;}
 if(element.value!==value){element.value=value;}
