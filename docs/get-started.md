@@ -20,9 +20,8 @@ The first step to get started with Litespeed.js is to init the framework in your
                     script.src    = 'scripts/litespeed.js';
 
                     script.onload = function() {
-                        window.Demo = window.ls.app('v1.0.0'); // Init app and set your own cache buster value
 
-                        window.Demo.container.get('router') // Add some basic routing rules
+                        window.ls.router // Add some basic routing rules
                             .add('/', {
                                 template: '/pages/index.html'
                             })
