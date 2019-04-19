@@ -87,7 +87,7 @@ Service | Description | API & Examples
 
 Service | Description | API & Examples
 --- | --- | ---
-**ls-init** | Starts DOM rendering and listen for URL changes. | [API Refs & Examples](/docs/view/init.md)
+**ls-router** | Listen for app URL changes and renders the matching route on the DOM. | [API Refs & Examples](/docs/view/init.md)
 **ls-scope** | Uses to define the routed element scope. | [API Refs & Examples](/docs/view/scope.md)
 **ls-bind** | Binds data between your services to the DOM. | [API Refs & Examples](/docs/views/echo.md)
 **ls-attrs** | Binds data between your services to your element attributes. | [API Refs & Examples](/docs/views/echo.md)

@@ -1,15 +1,16 @@
 window.ls.container.get('view').add({
-    selector: 'data-ls-init',
+    selector: 'data-ls-router',
     controller: function(element, window, document, view, router) {
         let firstFromServer = (element.getAttribute('data-first-from-server') === 'true');
-        let scope   = {
+        let scope           = {
                 selector: 'data-ls-scope',
                 template: false,
                 repeat: true,
                 controller: function() {},
                 state: true
-            },
-            init    = function(route) {
+            };
+        let scopeElement    = document.createElement('div');
+        let init            = function(route) {
                 window.scrollTo(0, 0);
 
                 if(window.document.body.scrollTo) {
@@ -31,7 +32,6 @@ window.ls.container.get('view').add({
 
                 scope.template      = (undefined !== route.view.template) ? route.view.template : null;
                 scope.controller    = (undefined !== route.view.controller) ? route.view.controller : function() {};
-                scope.state         = (undefined !== route.view.state) ? route.view.state : true;
 
                 document.dispatchEvent(new CustomEvent('state-change'));
 
@@ -39,13 +39,12 @@ window.ls.container.get('view').add({
                     scope.template  = '';
                 }
                 else if(null !== router.getPrevious()) {
-                    scope.nested = false; // Fix problem when re rendering previous page inline template before remote template loaded
                     view.render(element);
                 }
 
                 document.dispatchEvent(new CustomEvent('state-changed'));
-            },
-            findParent = function(tagName, el) {
+            };
+        let findParent      = function(tagName, el) {
                 if ((el.nodeName || el.tagName).toLowerCase() === tagName.toLowerCase()){
                     return el;
                 }
@@ -56,6 +55,10 @@ window.ls.container.get('view').add({
                 }
                 return null;
             };
+
+        scopeElement.setAttribute('data-ls-scope', '');
+
+        element.insertBefore(scopeElement, element.firstChild);
 
         view.add(scope);
 
