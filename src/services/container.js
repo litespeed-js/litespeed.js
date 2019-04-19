@@ -99,10 +99,6 @@ window.ls.container = function() {
                     watch: function() {},
 
                     get: function(target, key) {
-                        if(key === 'title') {
-                            console.log('key', this.name + '.' + key, container.get('element'), document.body.contains(container.get('element')));
-                        }
-
                         if(key === "__name") {
                             return this.name;
                         }
@@ -139,10 +135,9 @@ window.ls.container = function() {
 
                         let path = receiver.__name + '.' + key;
 
-                        console.log('triggered', path + '.changed', key, value);
+                        //console.log('triggered', path + '.changed', key, value);
 
                         document.dispatchEvent(new CustomEvent(path + '.changed'));
-
 
                         if(skip) { // Avoid endless loop, when watch callback triggers changes itself
                             return true;

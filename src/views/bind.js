@@ -22,8 +22,6 @@ window.ls.container.get('view').add({
                 if('checkbox' === type) {
                     //value = JSON.parse(value);
 
-                    console.log('check', value);
-
                     if(typeof value === 'boolean' || value === 'true' || value === 'false') {
                         if(value === true || value === 'true') {
                             element.setAttribute('checked', 'checked');
