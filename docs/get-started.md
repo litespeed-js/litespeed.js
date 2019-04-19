@@ -1,13 +1,17 @@
-# Get Started
+# Documentation
 
-The first step to get started with Litespeed.js is to init the framework in your web project layout.
+This documentation should give you knowledge of Litespeed.js framework basic concepts and how to get started building you first app. 
+
+## Get Started
+
+The first step to get started with Litespeed.js is to init the framework in your web project HTML layout.
 
 ```html
 <!DOCTYPE html>
 <html>
     <head></head>
     <body>
-        <main data-ls-router>Loading your router state in this element...</main>
+        <main data-ls-router>Loading your router matching state in this element</main>
 
         <script>
             (function (window) {
@@ -30,7 +34,7 @@ The first step to get started with Litespeed.js is to init the framework in your
                             })
                         ;
 
-                        window.Demo.run(window); // Watch the magic happens
+                        window.ls.run(window); // Watch the magic happens
                     };
 
                     head.appendChild(script);
@@ -43,7 +47,7 @@ The first step to get started with Litespeed.js is to init the framework in your
 </html>
 ```
 
-This is a basic example that shows how to init a Litespeed.js app and set 3 different views for our main scope with their respective URL's.
+This is a basic example that shows how to init a Litespeed.js JS library asynchronously and set 3 different views for our main router scope with their respective URL paths.
 
 ## Create a New Service
 
