@@ -88,7 +88,6 @@ Service | Description | API & Examples
 Service | Description | API & Examples
 --- | --- | ---
 **ls-router** | Listen for app URL changes and renders the matching route on the DOM. | [API Refs & Examples](/docs/view/init.md)
-**ls-scope** | Uses to define the routed element scope. | [API Refs & Examples](/docs/view/scope.md)
 **ls-bind** | Binds data between your services to the DOM. | [API Refs & Examples](/docs/views/echo.md)
 **ls-attrs** | Binds data between your services to your element attributes. | [API Refs & Examples](/docs/views/echo.md)
 **ls-if** | Hides element according to given expression evaluation | [API Refs & Examples](/docs/views/if.md)
