@@ -7,28 +7,9 @@ window.ls.container
     .set('element', window.document, true, false, false)
 ;
 
-/*window.ls.app = function() {
-    return {
-        run: function(window) {
-            try {
-                // Trigger reclusive app rendering
-                this.view.render(window.document);
-            }
-            catch (error) {
-                let handler = window.ls.container.resolve(this.error);
-                handler(error);
-            }
-        },
-        error: function() {return function(error) {console.error('error', error.message, error.stack, error.toString());}},
-        container: window.ls.container,
-        view: window.ls.container.get('view')
-    }
-};*/
-
 window.ls.run = function (window) {
     try {
-        // Trigger reclusive app rendering
-        this.view.render(window.document);
+        this.view.render(window.document); // Start DOM rendering
     }
     catch (error) {
         let handler = window.ls.container.resolve(this.error);

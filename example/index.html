@@ -110,11 +110,7 @@
                     script.src    = 'scripts/litespeed.js';
 
                     script.onload = function() {
-                        window.Demo = window.ls.app('v1.0.0'); // Init app and set cache buster value
-
-                        let router = window.Demo.container.get('router');
-
-                        router
+                        window.ls.router
                             .add('/', {
                                 template: '/pages/index.html'
                             })
@@ -123,7 +119,7 @@
                             })
                         ;
 
-                        window.Demo.container
+                        window.ls.container
                             .set('tasks', function () {
                                 return {
                                     title: 'Task Title',
@@ -184,7 +180,7 @@
                             }, true)
                         ;
 
-                        window.Demo.container.get('view')
+                        window.ls.view
                             .add({
                                 selector: 'data-tasks-add',
                                 controller: function(element, tasks) {
@@ -245,7 +241,7 @@
                             })
                         ;
 
-                        window.Demo.run(window);
+                        window.ls.run(window);
                     };
 
                     head.appendChild(script);
