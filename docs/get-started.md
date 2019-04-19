@@ -6,8 +6,8 @@ The first step to get started with Litespeed.js is to init the framework in your
 <!DOCTYPE html>
 <html>
     <head></head>
-    <body data-ls-init>
-        <main data-ls-scope="">Loading your router state...</main>
+    <body>
+        <main data-ls-router>Loading your router state in this element...</main>
 
         <script>
             (function (window) {
@@ -87,7 +87,7 @@ Service | Description | API & Examples
 
 Service | Description | API & Examples
 --- | --- | ---
-**ls-router** | Listen for app URL changes and renders the matching route on the DOM. | [API Refs & Examples](/docs/view/init.md)
+**ls-router** | Listen for app URL changes and renders the matching route on the DOM. | [API Refs & Examples](/docs/view/router.md)
 **ls-bind** | Binds data between your services to the DOM. | [API Refs & Examples](/docs/views/echo.md)
 **ls-attrs** | Binds data between your services to your element attributes. | [API Refs & Examples](/docs/views/echo.md)
 **ls-if** | Hides element according to given expression evaluation | [API Refs & Examples](/docs/views/if.md)
