@@ -212,7 +212,7 @@ window.ls.container.set('router', function(window) {
             let val     = eq>-1 ? decodeURIComponent(part.substr(eq+1)) : '';
             let from    = key.indexOf('[');
 
-            if(from===-1) {
+            if(from === -1) {
                 result[decodeURIComponent(key)] = val;
             }
             else {
