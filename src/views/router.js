@@ -7,7 +7,6 @@ window.ls.container.get('view').add({
                 template: false,
                 repeat: true,
                 controller: function() {},
-                state: true
             };
         let scopeElement    = document.createElement('div');
         let init            = function(route) {
@@ -21,13 +20,6 @@ window.ls.container.get('view').add({
 
                 if(null === route) {
                     return; // no view found
-                }
-
-                // Merge
-                scope.protected     = (undefined !== route.view.protected) ? route.view.protected : false;
-
-                if(scope.protected && (null === router.getPrevious())) { // Avoid protected link to be used for CSRF attacks
-                    throw new Error('CSRF protection');
                 }
 
                 scope.template      = (undefined !== route.view.template) ? route.view.template : null;
@@ -114,14 +106,11 @@ window.ls.container.get('view').add({
         });
 
         window.addEventListener('popstate', function() { // Handle back button behavior
-            let route = router.match(window.location);
+            init(router.match(window.location));
+        });
 
-            if(router.getPrevious() && router.getPrevious().view && (router.getPrevious().view.scope !== route.view.scope)) {
-                window.location.reload();
-                return false;
-            }
-
-            init(route);
+        window.addEventListener('hashchange', function() { // Handle hash behavior
+            init(router.match(window.location));
         });
 
         init(router.match(window.location)); // Handle first start
