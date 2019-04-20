@@ -6,17 +6,17 @@ window.ls.container.set('filter', function(container) {
         return this;
     };
 
-    let apply = function (value, name) {
+    let apply = function (name, value) {
         container.set('$value', value, true, false, false);
         return container.resolve(filters[name]);
     };
 
-    add('uppercase', function (value) {
-        return value.toUpperCase();
+    add('uppercase', function ($value) {
+        return $value.toUpperCase();
     });
 
-    add('lowercase', function (value) {
-        return value.toLowerCase();
+    add('lowercase', function ($value) {
+        return $value.toLowerCase();
     });
 
     return {

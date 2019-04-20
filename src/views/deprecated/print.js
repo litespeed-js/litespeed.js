@@ -13,7 +13,7 @@ container.get('view').add({
         result = result || def;
 
         if(filterName) {
-            result = filter.apply(result, filterName, filterOptions);
+            result = filter.apply(filterName, result);
         }
 
         if(

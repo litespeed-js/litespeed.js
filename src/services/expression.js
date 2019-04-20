@@ -38,7 +38,7 @@ window.ls.container.set('expression', function(container, filter, $as, $prefix) 
 
                     if(reference.length >= 2) {
                         for(let i=1;i<reference.length;i++) {
-                            result = filter.apply(result, reference[i], {});
+                            result = filter.apply(reference[i], result);
                         }
                     }
 
