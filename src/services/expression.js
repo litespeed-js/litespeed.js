@@ -23,7 +23,6 @@ window.ls.container.set('expression', function(container, filter, $as, $prefix) 
                         .trim() // Clear whitespaces
                     ;
 
-
                     reference = reference.split('|');
 
                     let path = (reference[0] || '');
