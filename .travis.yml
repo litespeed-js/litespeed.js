@@ -1,0 +1,14 @@
+language: node_js
+
+node_js:
+- 9.10
+
+notifications:
+  email:
+  - eldad@appwrite.io
+
+install:
+- npm install
+
+script:
+- npm test
