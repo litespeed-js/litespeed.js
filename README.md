@@ -3,6 +3,7 @@
 </p>
 
 [![npm version](https://badge.fury.io/js/litespeed.js.svg)](https://badge.fury.io/js/litespeed.js)
+[![Build Status](https://travis-ci.org/litespeed-js/litespeed.js.svg?branch=master)](https://travis-ci.org/litespeed-js/litespeed.js)
 
 Litespeed.js is a micro Javascript framework for building simple web applications. Litespeed.js is dependency-free and **easy to learn** framework which allows you to extend your DOM functionality in a semantic and declarative way.
 
