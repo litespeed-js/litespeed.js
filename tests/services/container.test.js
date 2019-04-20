@@ -48,3 +48,11 @@ test('getting nested path from a service', () => {
         return container.path('tasks.config.theme.text');
     }()).toBe('#000');
 });
+
+test('callback resolver method', () => {
+    expect(function () {
+        return container.resolve(function (tasks) {
+            return tasks;
+        });
+    }()).toEqual(tasks);
+});

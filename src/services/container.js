@@ -23,14 +23,14 @@ window.ls.container = function() {
     };
 
     /**
-     * Register
+     * Set Service
      *
      * Adds a new service definition to application services stack.
      *
      * @param name string
      * @param object callback|object
      * @param singleton bool
-     * @param cache bool
+     * @param cache bool (experimental)
      * @param watch bool
      * @returns container
      */
@@ -173,6 +173,14 @@ window.ls.container = function() {
         return service.instance;
     };
 
+    /**
+     * Resolve Callback
+     *
+     * Resolves callback dependencies and passes them as arguments to given callback
+     *
+     * @returns {*}
+     * @param target callback
+     */
     let resolve = function(target) {
         if(!target) {
             return function () {
@@ -190,6 +198,18 @@ window.ls.container = function() {
         }));
     };
 
+    /**
+     * Get Path
+     *
+     * Return value from a service by a given path, nesting is supported by using the '.' delimiter.
+     * When passing a value parameter the given path will be set with the new value. Use 'as' and 'prefix' parameters to define the service namespace.
+     *
+     * @returns {*}
+     * @param path string
+     * @param value mixed
+     * @param as string
+     * @param prefix string
+     */
     let path = function(path, value, as, prefix) {
         as = (as) ? as : container.get('$as');
         prefix = (prefix) ? prefix : container.get('$prefix');
@@ -234,6 +254,19 @@ window.ls.container = function() {
         return result;
     };
 
+    /**
+     * Bind
+     *
+     * Binds an element to a path change. Every time a new value is set to given path the callback you passes to the function will be executed.
+     * Use 'as' and 'prefix' parameters to define the service namespace.
+     *
+     * @returns {*}
+     * @param element
+     * @param path string
+     * @param callback callback
+     * @param as string
+     * @param prefix string
+     */
     let bind = function(element, path, callback, as, prefix) {
         as = (as) ? as : container.get('$as');
         prefix = (prefix) ? prefix : container.get('$prefix');
