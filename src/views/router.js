@@ -1,5 +1,6 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-router',
+    repeat: false,
     controller: function(element, window, document, view, router) {
         let firstFromServer = (element.getAttribute('data-first-from-server') === 'true');
         let scope           = {
@@ -8,7 +9,6 @@ window.ls.container.get('view').add({
                 repeat: true,
                 controller: function() {},
             };
-        let scopeElement    = document.createElement('div');
         let init            = function(route) {
                 window.scrollTo(0, 0);
 
@@ -48,9 +48,7 @@ window.ls.container.get('view').add({
                 return null;
             };
 
-        scopeElement.setAttribute('data-ls-scope', '');
-
-        element.insertBefore(scopeElement, element.firstChild);
+        element.setAttribute('data-ls-scope', '');
 
         view.add(scope);
 
