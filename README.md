@@ -29,7 +29,7 @@ Install with CDN:
 <script src="https://cdn.jsdelivr.net/npm/litespeed.js@v0.2.9"></script>
 ```
 
-After adding the library to your project, go to our [Documentation](/docs/get-started.md) to learn how to use Litespeed.js APIs, services and view components.
+After adding the library to your project, go to our [documentation](/docs/get-started.md) to learn how to use Litespeed.js APIs, services and view components.
 
 You can also check out our demo TODO app which is a good way to understand the framework basic concepts.
 
