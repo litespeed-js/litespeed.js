@@ -5,12 +5,13 @@ window.ls.container.get('view').add({
         let paths   = [];
         let check   = function () {
             for(let i = 0; i < attrs.length; i++) {
-                let attr    = attrs[i].split('=');
-                let key     = (attr[0]) ? expression.parse(attr[0], null, $as, $prefix) : null;
+                let attr    = attrs[i];
+
+                let key = expression.parse(attr.substring(0, attr.indexOf('=')), null, $as, $prefix) || null;
 
                 paths = paths.concat(expression.getPaths());
 
-                let value   = (attr[1]) ? expression.parse(attr[1], null, $as, $prefix) : null;
+                let value = expression.parse(attr.substring(attr.indexOf('=') + 1), null, $as, $prefix) || null;
 
                 paths = paths.concat(expression.getPaths());
 
