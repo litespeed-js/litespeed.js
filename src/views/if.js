@@ -11,15 +11,19 @@ window.ls.container.get('view').add({
             }
 
             try {
-                result = !!(eval(expression.parse(syntax, 'undefined', $as, $prefix).replace(/(\r\n|\n|\r)/gm, ' '))); // Remove all line breaks to avoid evaluation error
+                result = !!(eval(expression.parse(syntax, 'undefined', $as, $prefix, true).replace(/(\r\n|\n|\r)/gm, ' '))); // Remove all line breaks to avoid evaluation error
             }
             catch (error) {
-                throw new Error('Failed to evaluate expression "' + syntax + '": ' + error);
+                throw new Error('Failed to evaluate expression "' + syntax + ' (' + result + ')": ' + error);
+            }
+
+            if(debug) {
+                console.info('debug-ls-if result:', result);
             }
 
             paths = expression.getPaths();
 
-            //element.$lsSkip = !result;
+            element.$lsSkip = !result;
 
             if(!result) {
                 element.style.visibility = 'hidden';

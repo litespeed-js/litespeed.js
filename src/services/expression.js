@@ -11,7 +11,7 @@ window.ls.container.set('expression', function(container, filter, $as, $prefix) 
          * @param prefix
          * @returns {string}
          */
-        parse: function(string, def, as, prefix) {
+        parse: function(string, def, as, prefix, cast = false) {
             def = def || '';
             paths = [];
 
@@ -35,6 +35,8 @@ window.ls.container.set('expression', function(container, filter, $as, $prefix) 
                     result = (null === result || undefined === result) ? def : result;
 
                     result = (typeof result === 'object') ? JSON.stringify(result) : result;
+
+                    result = (((typeof result === 'object') || (typeof result === 'string')) && cast) ? '\'' + result + '\'' : result; // Auto casting for vars
 
                     if(reference.length >= 2) {
                         for(let i=1;i<reference.length;i++) {
