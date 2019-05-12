@@ -52,4 +52,4 @@ window.ls.container.set('expression', function(container, filter, $as, $prefix) 
             return paths;
         },
     }
-}, true, false, false);
+}, true, false);

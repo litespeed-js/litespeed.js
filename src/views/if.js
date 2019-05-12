@@ -14,7 +14,7 @@ window.ls.container.get('view').add({
                 result = !!(eval(expression.parse(syntax, 'undefined', $as, $prefix, true).replace(/(\r\n|\n|\r)/gm, ' '))); // Remove all line breaks to avoid evaluation error
             }
             catch (error) {
-                throw new Error('Failed to evaluate expression "' + syntax + ' (' + result + ')": ' + error);
+                throw new Error('Failed to evaluate expression "' + syntax + ' (resulted with: "' + result + '")": ' + error);
             }
 
             if(debug) {

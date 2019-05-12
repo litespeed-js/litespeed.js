@@ -175,4 +175,4 @@ window.ls.container.set('view', function(http, container) {
             element.dispatchEvent(new window.Event('rendered', {bubbles: false}));
         }
     }
-}, true, false, false);
+}, true, false);

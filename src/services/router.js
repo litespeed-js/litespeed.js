@@ -256,4 +256,4 @@ window.ls.container.set('router', function(window) {
     };
 
     return state;
-}, true, false, false);
+}, true, true);

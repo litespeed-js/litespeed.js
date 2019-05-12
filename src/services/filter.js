@@ -23,4 +23,4 @@ window.ls.container.set('filter', function(container) {
         add: add,
         apply: apply
     }
-}, true, false, false);
+}, true, false);

@@ -27,4 +27,4 @@ window.ls.container.set('cookie', function(document) {
         'get': get,
         'set': set
     }
-}, true, false, false);
+}, true, false);

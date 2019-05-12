@@ -110,4 +110,4 @@ window.ls.container.set('http', function(document) {
             globalHeaders.push({key: key, value: value});
         }
     }
-}, true, false, false);
+}, true, false);

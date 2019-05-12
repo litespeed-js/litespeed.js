@@ -9,18 +9,7 @@ window.ls.container = function() {
 
     let stock = {};
 
-    let cachePrefix  = 'none';
-
-    let memory = {};
-
-    let setCachePrefix = function (prefix) {
-        cachePrefix = prefix;
-        return this;
-    };
-
-    let getCachePrefix = function () {
-        return cachePrefix;
-    };
+    let listeners = {};
 
     /**
      * Set Service
@@ -30,21 +19,16 @@ window.ls.container = function() {
      * @param name string
      * @param object callback|object
      * @param singleton bool
-     * @param cache bool (experimental)
      * @param watch bool
      * @returns container
      */
-    let set = function(name, object, singleton, cache = false, watch = true) {
+    let set = function(name, object, singleton, watch = true) {
         if(typeof name !== 'string') {
             throw new Error('var name must be of type string');
         }
 
         if(typeof singleton !== 'boolean') {
             throw new Error('var singleton "' + singleton + '" of service "' + name + '" must be of type boolean');
-        }
-
-        if(cache) {
-            window.localStorage.setItem(getCachePrefix() + '.' + name, JSON.stringify(object));
         }
 
         stock[name] = {
@@ -54,6 +38,14 @@ window.ls.container = function() {
             instance: null,
             watch: watch,
         };
+
+        let binds = listeners[name] || {};
+
+        for (let key in binds) {
+            if (binds.hasOwnProperty(key)) {
+                document.dispatchEvent(new CustomEvent(key));
+            }
+        }
 
         return this;
     };
@@ -69,108 +61,92 @@ window.ls.container = function() {
     let get = function(name) {
         let service = (undefined !== stock[name]) ? stock[name] : null;
 
-        if(null === service) {
-
-            if(memory[getCachePrefix() + '.' + name]) {
-                return memory[getCachePrefix() + '.' + name];
-            }
-
-            let cached = window.localStorage.getItem(getCachePrefix() + '.' + name);
-
-            if(cached) {
-                cached = JSON.parse(cached);
-                memory[getCachePrefix() + '.' + name] = cached;
-
-                return cached;
-            }
-
+        if(null == service) {
             return null;
         }
 
-        if(service.instance === null) {
-            let instance = (typeof service.object === 'function') ? this.resolve(service.object) : service.object;
-            let skip = false;
-
-            if(service.watch && name !== 'window' && name !== 'document' && name !== 'element' && typeof instance === 'object' && instance !== null) {
-
-                let handler = {
-                    name: service.name,
-
-                    watch: function() {},
-
-                    get: function(target, key) {
-                        if(key === "__name") {
-                            return this.name;
-                        }
-
-                        if(key === "__watch") {
-                            return this.watch;
-                        }
-
-                        if(key === "__proxy") {
-                            return true;
-                        }
-
-                        if (typeof target[key] === 'object' && target[key] !== null && !target[key].__proxy) {
-                            let handler = Object.assign({}, this);
-
-                            handler.name = handler.name + '.' + key;
-
-                            return new Proxy(target[key], handler)
-                        }
-                        else {
-                            return target[key];
-                        }
-                    },
-                    set: function(target, key, value, receiver) {
-                        if(key === "__name") {
-                            return this.name = value;
-                        }
-
-                        if(key === "__watch") {
-                            return this.watch = value;
-                        }
-
-                        target[key] = value;
-
-                        let path = receiver.__name + '.' + key;
-
-                        //console.log('triggered', path + '.changed', key, value);
-
-                        document.dispatchEvent(new CustomEvent(path + '.changed'));
-
-                        if(skip) { // Avoid endless loop, when watch callback triggers changes itself
-                            return true;
-                        }
-
-                        skip = true;
-
-                        container.set('$prop', key, true);
-                        container.set('$value', value, true);
-
-                        container.resolve(this.watch);
-
-                        container.set('$key', null, true);
-                        container.set('$value', null, true);
-
-                        skip = false;
-
-                        return true;
-                    },
-                };
-
-                instance = new Proxy(instance, handler);
-            }
-
-
-            if(service.singleton) {
-                service.instance = instance;
-            }
-
-            return instance;
+        if(service.instance) {
+            return service.instance;
         }
 
-        return service.instance;
+        let instance = (typeof service.object === 'function') ? this.resolve(service.object) : service.object;
+        let skip = false;
+
+        if(service.watch && name !== 'window' && name !== 'document' && name !== 'element' && typeof instance === 'object' && instance !== null) {
+            let handler = {
+                name: service.name,
+
+                watch: function() {},
+
+                get: function(target, key) {
+                    if(key === "__name") {
+                        return this.name;
+                    }
+
+                    if(key === "__watch") {
+                        return this.watch;
+                    }
+
+                    if(key === "__proxy") {
+                        return true;
+                    }
+
+                    if (typeof target[key] === 'object' && target[key] !== null && !target[key].__proxy) {
+                        let handler = Object.assign({}, this);
+
+                        handler.name = handler.name + '.' + key;
+
+                        return new Proxy(target[key], handler)
+                    }
+                    else {
+                        return target[key];
+                    }
+                },
+                set: function(target, key, value, receiver) {
+                    if(key === "__name") {
+                        return this.name = value;
+                    }
+
+                    if(key === "__watch") {
+                        return this.watch = value;
+                    }
+
+                    target[key] = value;
+
+                    let path = receiver.__name + '.' + key;
+
+                    //console.log('triggered', path + '.changed', key, value);
+
+                    document.dispatchEvent(new CustomEvent(path + '.changed'));
+
+                    if(skip) { // Avoid endless loop, when watch callback triggers changes itself
+                        return true;
+                    }
+
+                    skip = true;
+
+                    container.set('$prop', key, true);
+                    container.set('$value', value, true);
+
+                    container.resolve(this.watch);
+
+                    container.set('$key', null, true);
+                    container.set('$value', null, true);
+
+                    skip = false;
+
+                    return true;
+                },
+            };
+
+            instance = new Proxy(instance, handler);
+        }
+
+        if(service.singleton) {
+            service.instance = instance;
+        }
+
+        return instance;
     };
 
     /**
@@ -224,7 +200,7 @@ window.ls.container = function() {
 
         // Iterating path
         while (path.length > 1) {
-            if(undefined === object) {
+            if(!object) {
                 return null;
             }
 
@@ -232,19 +208,19 @@ window.ls.container = function() {
         }
 
         // Set new value
-        if(undefined !== value) {
+        if(value) {
             object[path.shift()] = value;
             return true;
         }
 
         // Return null when missing path
-        if(undefined === object) {
+        if(!object) {
             return null;
         }
 
         let shift = path.shift();
 
-        if(undefined === shift) {
+        if(!shift) {
             result = object;
         }
         else {
@@ -272,6 +248,12 @@ window.ls.container = function() {
         prefix = (prefix) ? prefix : container.get('$prefix');
 
         let event = path.replace(as + '.', prefix + '.') + '.changed';
+        let service = event.split('.').slice(0,1).pop();
+
+        listeners[service] = listeners[service] || {};
+
+        listeners[service][event] = true;
+
         let printer = function () {
             if(!document.body.contains(element)) { // Clean DOM
                 element = null;
@@ -294,8 +276,8 @@ window.ls.container = function() {
         resolve: resolve,
         path: path,
         bind: bind,
-        setCachePrefix: setCachePrefix,
-        getCachePrefix: getCachePrefix
+        stock: stock,
+        listeners: listeners,
     };
 
     set('container', container, true, false, false);
