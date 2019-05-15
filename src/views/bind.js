@@ -20,8 +20,6 @@ window.ls.container.get('view').add({
                 }
 
                 if('checkbox' === type) {
-                    //value = JSON.parse(value);
-
                     if(typeof value === 'boolean' || value === 'true' || value === 'false') {
                         if(value === true || value === 'true') {
                             element.setAttribute('checked', 'checked');
@@ -41,9 +39,7 @@ window.ls.container.get('view').add({
                         }
                     }
 
-                    return;
-
-                    // add support to checkbox array
+                    return; // add support to checkbox array
                 }
 
                 if (element.value !== value) {
@@ -52,6 +48,7 @@ window.ls.container.get('view').add({
 
                 if(bind) {
                     element.addEventListener('input', sync);
+                    element.addEventListener('change', sync);
                 }
             }
             else {
