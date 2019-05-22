@@ -2,6 +2,7 @@
     <img height="45" src="images/litespeed-js.png" alt="Logo">
 </p>
 
+![npm](https://img.shields.io/npm/dt/litespeed.js.svg)
 [![npm version](https://badge.fury.io/js/litespeed.js.svg)](https://badge.fury.io/js/litespeed.js)
 [![Build Status](https://travis-ci.org/litespeed-js/litespeed.js.svg?branch=master)](https://travis-ci.org/litespeed-js/litespeed.js)
 [![Chat With Us](https://img.shields.io/gitter/room/litespeed-js/community.svg)](https://gitter.im/litespeed-js/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
