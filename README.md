@@ -40,6 +40,8 @@ All code contributions - including those of people having commit access - must g
 
 Fork the project, create a feature branch, and send us a pull request.
 
+For security issues, please email security@appwrite.io instead of posting a public issue in GitHub.
+
 ## Copyright and license
 
 The MIT License (MIT) http://www.opensource.org/licenses/mit-license.php
