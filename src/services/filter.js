@@ -7,7 +7,7 @@ window.ls.container.set('filter', function(container) {
     };
 
     let apply = (name, value) => {
-        container.set('$value', value, true, false, false);
+        container.set('$value', value, true, false);
         return container.resolve(filters[name]);
     };
 
