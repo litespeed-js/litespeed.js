@@ -4,20 +4,38 @@ window.ls.container.set('router', function(window) {
     let current     = null;
     let previous    = null;
 
-    let getPrevious = function () {
-        return previous;
-    };
+    /**
+     * Get previous state scope
+     *
+     * @returns {*}
+     */
+    let getPrevious = () => previous;
 
-    let setPrevious = function (value) {
+    /**
+     * Get current state scope
+     *
+     * @returns {*}
+     */
+    let getCurrent= () => current;
+
+    /**
+     * Set previous state scope
+     *
+     * @param value
+     * @returns {*}
+     */
+    let setPrevious = (value) => {
         previous = value;
         return this;
     };
 
-    let getCurrent= function () {
-        return current;
-    };
-
-    let setCurrent = function (value) {
+    /**
+     * Set current state scope
+     *
+     * @param value
+     * @returns {*}
+     */
+    let setCurrent = (value) => {
         current = value;
         return this;
     };

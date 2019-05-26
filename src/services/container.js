@@ -159,9 +159,7 @@ window.ls.container = function() {
      */
     let resolve = function(target) {
         if(!target) {
-            return function () {
-
-            };
+            return () => {};
         }
 
         let self = this;
@@ -254,7 +252,7 @@ window.ls.container = function() {
 
         listeners[service][event] = true;
 
-        let printer = function () {
+        let printer = () => {
             if(!document.body.contains(element)) { // Clean DOM
                 element = null;
                 document.removeEventListener(event, printer, false);

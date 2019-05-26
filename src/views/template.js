@@ -8,7 +8,7 @@ window.ls.container.get('view').add({
 
         element.innerHTML = '';
 
-        let parse = function (data, element) {
+        let parse = (data, element) => {
             element.innerHTML = data;
 
             view.render(element);

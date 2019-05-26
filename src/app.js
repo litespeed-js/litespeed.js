@@ -2,12 +2,12 @@ window.ls = window.ls || {};
 
 // Register all core services
 window.ls.container
-    .set('window', window, true, false, false)
-    .set('document', window.document, true, false, false)
-    .set('element', window.document, true, false, false)
+    .set('window', window, true, false)
+    .set('document', window.document, true, false)
+    .set('element', window.document, true, false)
 ;
 
-window.ls.run = function (window) {
+window.ls.run = (window) => {
     try {
         this.view.render(window.document); // Start DOM rendering
     }
@@ -17,8 +17,8 @@ window.ls.run = function (window) {
     }
 };
 
-window.ls.error = function() {
-    return function(error) {
+window.ls.error = () => {
+    return error => {
         console.error('ls-error', error.message, error.stack, error.toString());
     }
 };

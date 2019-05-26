@@ -1,4 +1,4 @@
-window.ls.container.set('expression', function(container, filter, $as, $prefix) {
+window.ls.container.set('expression', function(container, filter) {
     let reg = /(\{{.*?\}})/gi;
     let paths = [];
 
@@ -7,15 +7,16 @@ window.ls.container.set('expression', function(container, filter, $as, $prefix) 
         /**
          * @param string string
          * @param def string
-         * @param as
-         * @param prefix
+         * @param as string
+         * @param prefix string
+         * @param cast bool
          * @returns {string}
          */
         parse: function(string, def, as, prefix, cast = false) {
             def = def || '';
             paths = [];
 
-            return string.replace(reg, function(match)
+            return string.replace(reg, match =>
                 {
                     let reference = match.substring(2, match.length -2)
                         .replace('[\'', '.')  // Make syntax consistent using only dot nesting
@@ -48,8 +49,6 @@ window.ls.container.set('expression', function(container, filter, $as, $prefix) 
                 }
             );
         },
-        getPaths: function () {
-            return paths;
-        },
+        getPaths: () => paths,
     }
 }, true, false);

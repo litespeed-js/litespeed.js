@@ -1,21 +1,21 @@
 window.ls.container.set('filter', function(container) {
     let filters = {};
 
-    let add = function (name, callback) {
+    let add = (name, callback) => {
         filters[name] = callback;
         return this;
     };
 
-    let apply = function (name, value) {
+    let apply = (name, value) => {
         container.set('$value', value, true, false, false);
         return container.resolve(filters[name]);
     };
 
-    add('uppercase', function ($value) {
+    add('uppercase', ($value) => {
         return $value.toUpperCase();
     });
 
-    add('lowercase', function ($value) {
+    add('lowercase', ($value) => {
         return $value.toLowerCase();
     });
 

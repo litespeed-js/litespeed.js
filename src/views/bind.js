@@ -31,7 +31,7 @@ window.ls.container.get('view').add({
                         }
 
                         if(bind) {
-                            element.addEventListener('change', function () {
+                            element.addEventListener('change', () => {
                                 for(let i = 0; i < paths.length; i++) {
                                     container.path(paths[i], element.checked, $as, $prefix);
                                 }
@@ -57,8 +57,8 @@ window.ls.container.get('view').add({
                 }
             }
         };
-        let sync = (function (as, prefix) {
-            return function () {
+        let sync = ((as, prefix) => {
+            return () => {
                 for(let i = 0; i < paths.length; i++) {
                     container.path(paths[i], element.value, as, prefix);
                 }
@@ -72,7 +72,7 @@ window.ls.container.get('view').add({
         echo(result, true);
 
         for(let i = 0; i < paths.length; i++) {
-            container.bind(element, paths[i], function () {
+            container.bind(element, paths[i], () => {
                 echo(expression.parse(syntax, null, $as, $prefix), false);
             });
         }

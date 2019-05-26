@@ -1,4 +1,4 @@
-window.ls.container.get('filter').add('escape', function (value) {
+window.ls.container.get('filter').add('escape', value => {
     if(typeof value !== 'string') {
         return value;
     }

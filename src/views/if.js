@@ -5,7 +5,7 @@ window.ls.container.get('view').add({
         let syntax  = element.getAttribute('data-ls-if') || '';
         let debug   = element.getAttribute('data-debug') || false;
         let paths   = [];
-        let check   = function () {
+        let check   = () => {
             if(debug) {
                 console.info('debug-ls-if', expression.parse(syntax, 'undefined', $as, $prefix));
             }

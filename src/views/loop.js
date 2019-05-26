@@ -37,7 +37,7 @@ window.ls.container.get('view').add({
 
                 element.appendChild(children[prop]);
 
-                (function (index) {
+                (index => {
                     let context = expr + '.' + index;
 
                     container.set(as, container.path(context), true);

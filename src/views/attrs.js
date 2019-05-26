@@ -3,7 +3,7 @@ window.ls.container.get('view').add({
     controller: function(element, expression, container, $as, $prefix) {
         let attrs   = element.getAttribute('data-ls-attrs').trim().split(',');
         let paths   = [];
-        let check   = function () {
+        let check   = () => {
             for(let i = 0; i < attrs.length; i++) {
                 let attr    = attrs[i];
 
