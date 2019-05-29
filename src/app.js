@@ -7,7 +7,7 @@ window.ls.container
     .set('element', window.document, true, false)
 ;
 
-window.ls.run = (window) => {
+window.ls.run = function (window) {
     try {
         this.view.render(window.document); // Start DOM rendering
     }

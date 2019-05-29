@@ -1,8 +1,8 @@
 window.ls.container.set('expression', function(container, filter) {
-    let reg = /(\{{.*?\}})/gi;
-    let paths = [];
+    let paths   = [];
 
     return {
+        regex: /(\{{.*?\}})/gi,
 
         /**
          * @param string string
@@ -16,7 +16,7 @@ window.ls.container.set('expression', function(container, filter) {
             def = def || '';
             paths = [];
 
-            return string.replace(reg, match =>
+            return string.replace(this.regex, match =>
                 {
                     let reference = match.substring(2, match.length -2)
                         .replace('[\'', '.')  // Make syntax consistent using only dot nesting

@@ -215,8 +215,6 @@ window.ls.container = function() {
 
         let args = getParams(target);
 
-        console.log('args', args);
-
         return target.apply(target, args.map(function(value) {
             return self.get(value.trim());
         }));
