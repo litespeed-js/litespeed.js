@@ -1,6 +1,6 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-if',
-    controller: function(element, expression, container, $as, $prefix) {
+    controller: function(element, expression, container, view, $as, $prefix) {
         let result  = '';
         let syntax  = element.getAttribute('data-ls-if') || '';
         let debug   = element.getAttribute('data-debug') || false;
@@ -23,6 +23,8 @@ window.ls.container.get('view').add({
 
             paths = expression.getPaths();
 
+            let prv = element.$lsSkip;
+
             element.$lsSkip = !result;
 
             if(!result) {
@@ -32,6 +34,10 @@ window.ls.container.get('view').add({
             else {
                 element.style.removeProperty('display');
                 element.style.removeProperty('visibility');
+            }
+
+            if(prv === true && element.$lsSkip === false) {
+                view.render(element)
             }
         };
 
