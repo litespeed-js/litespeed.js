@@ -29,15 +29,19 @@ window.ls.container.set('expression', function(container, filter) {
                     let path = (reference[0] || '');
                     let result = container.path(path, undefined, as, prefix);
 
-                    if (!paths.includes(path)) {
+                    if(!paths.includes(path)) {
                         paths.push(path);
                     }
 
-                    result = (null === result || undefined === result) ? def : result;
-
-                    result = (typeof result === 'object') ? JSON.stringify(result) : result;
-
-                    result = (((typeof result === 'object') || (typeof result === 'string')) && cast) ? '\'' + result + '\'' : result; // Auto casting for vars
+                    if(null === result || undefined === result) {
+                        result = def;
+                    }
+                    else if(typeof result === 'object') {
+                        result = JSON.stringify(result);
+                    }
+                    else if(((typeof result === 'object') || (typeof result === 'string')) && cast) { // Auto casting for vars
+                        result = '\'' + result + '\'';
+                    }
 
                     if(reference.length >= 2) {
                         for(let i=1;i<reference.length;i++) {
