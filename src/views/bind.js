@@ -38,8 +38,16 @@ window.ls.container.get('view').add({
                             });
                         }
                     }
+                    else {
+                        try {
+                            value = JSON.parse(value);
 
-                    return; // add support to checkbox array
+                            element.checked = (Array.isArray(value) && (value.indexOf(element.value) > -1));
+                        }
+                        catch {
+                            return null;
+                        }
+                    }
                 }
 
                 if (element.value !== value) {

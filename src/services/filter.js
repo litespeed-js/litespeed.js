@@ -1,12 +1,12 @@
 window.ls.container.set('filter', function(container) {
     let filters = {};
 
-    let add = (name, callback) => {
+    let add = function(name, callback) {
         filters[name] = callback;
         return this;
     };
 
-    let apply = (name, value) => {
+    let apply = function(name, value) {
         container.set('$value', value, true, false);
         return container.resolve(filters[name]);
     };
