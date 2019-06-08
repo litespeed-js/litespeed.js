@@ -27,7 +27,7 @@ npm install litespeed.js
 
 Install with CDN:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/litespeed.js@v0.2.9"></script>
+<script src="https://cdn.jsdelivr.net/npm/litespeed.js@v0.3.2"></script>
 ```
 
 After adding the library to your project, go to our [documentation](/docs/get-started.md) to learn how to use Litespeed.js APIs, services and view components.
