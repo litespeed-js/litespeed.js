@@ -52,6 +52,8 @@ window.ls.container.get('view').add({
             container.set('$index', null, true, false, false);
             container.set('$prefix', '', true, false, false);
             container.set('$as', '', true, false, false);
+
+            element.dispatchEvent(new Event('looped'));
         };
 
         let template = (element.children.length === 1) ? element.children[0] : window.document.createElement('li');

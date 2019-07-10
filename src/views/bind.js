@@ -79,6 +79,10 @@ window.ls.container.get('view').add({
 
         echo(result, true);
 
+        element.addEventListener('looped', function () { // Rebind after loop comp finish to render
+            echo(expression.parse(syntax, null, $as, $prefix), false);
+        });
+
         for(let i = 0; i < paths.length; i++) {
             container.bind(element, paths[i], () => {
                 echo(expression.parse(syntax, null, $as, $prefix), false);
