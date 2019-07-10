@@ -18,6 +18,10 @@ window.ls.container.set('view', function(http, container) {
 
     let parse = function (node, skip) {
 
+        if(node.tagName === 'SCRIPT') {
+            return;
+        }
+
         if(node.attributes && skip !== true) {
             let attrs = [];
             let attrsLen = node.attributes.length;

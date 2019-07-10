@@ -326,7 +326,7 @@ window.ls.container = function() {
         listeners: listeners,
     };
 
-    set('container', container, true, false, false);
+    set('container', container, true, false);
 
     return container;
 }();
