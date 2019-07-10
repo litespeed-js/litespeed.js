@@ -8,22 +8,16 @@ window.ls.container.get('view').add({
 
         element.innerHTML = '';
 
-        let parse = (data, element) => {
-            element.innerHTML = data;
-
-            view.render(element);
-
-            element.dispatchEvent(new CustomEvent('template-loaded', {
-                bubbles: true,
-                cancelable: false //TODO check if we need this set to false or true. might help improve performance
-            }));
-        };
-
         if('script' === type) {
             let inlineTemplate = document.getElementById(template);
 
             if(inlineTemplate && inlineTemplate.innerHTML) {
-                parse(inlineTemplate.innerHTML, element);
+                element.innerHTML = inlineTemplate.innerHTML;
+
+                element.dispatchEvent(new CustomEvent('template-loaded', {
+                    bubbles: true,
+                    cancelable: false //TODO check if we need this set to false or true. might help improve performance
+                }));
             }
             else {
                 element.innerHTML = '<span style="color: red">Missing template "' + template + '"</span>';
@@ -36,7 +30,14 @@ window.ls.container.get('view').add({
             .get(template)
             .then(function(element) {
                     return function (data) {
-                        parse(data, element);
+                        element.innerHTML = data;
+
+                        view.render(element);
+
+                        element.dispatchEvent(new CustomEvent('template-loaded', {
+                            bubbles: true,
+                            cancelable: false //TODO check if we need this set to false or true. might help improve performance
+                        }));
                     }
                 }(element),
                 function() {
