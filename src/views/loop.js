@@ -60,7 +60,6 @@ window.ls.container.get('view').add({
 
         echo();
 
-        container.bind(element, expr, echo);
         container.bind(element, expr + '.length', echo);
     }
 });
