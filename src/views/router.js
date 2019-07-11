@@ -1,54 +1,66 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-router',
     repeat: false,
-    controller: function(element, window, document, view, router) {
+    controller: function(element, window, document, view, router, tasks) {
         let firstFromServer = (element.getAttribute('data-first-from-server') === 'true');
-        let scope           = {
+        let scope = {
                 selector: 'data-ls-scope',
                 template: false,
                 repeat: true,
                 controller: function() {},
             };
-        let init            = function(route) {
-                window.scrollTo(0, 0);
+        let init = function(route) {
+            let count = parseInt(element.getAttribute('data-ls-scope-count') || 0);
 
-                if(window.document.body.scrollTo) {
-                    window.document.body.scrollTo(0, 0);
-                }
+            element.setAttribute('data-ls-scope-count', count + 1);
 
-                router.reset();
+            window.scrollTo(0, 0);
 
-                if(null === route) {
-                    return; // no view found
-                }
+            if(window.document.body.scrollTo) {
+                window.document.body.scrollTo(0, 0);
+            }
 
-                scope.template      = (undefined !== route.view.template) ? route.view.template : null;
-                scope.controller    = (undefined !== route.view.controller) ? route.view.controller : function() {};
+            router.reset();
 
-                document.dispatchEvent(new CustomEvent('state-change'));
+            if(null === route) {
+                return; // no view found
+            }
 
-                if(firstFromServer && null === router.getPrevious()) { // Disable first view, so server could render it faster
-                    scope.template  = '';
-                }
-                else if(null !== router.getPrevious()) {
-                    view.render(element);
-                }
+            scope.template      = (undefined !== route.view.template) ? route.view.template : null;
+            scope.controller    = (undefined !== route.view.controller) ? route.view.controller : function() {};
 
-                document.dispatchEvent(new CustomEvent('state-changed'));
-            };
-        let findParent      = function(tagName, el) {
+            document.dispatchEvent(new CustomEvent('state-change'));
+
+            if(firstFromServer && null === router.getPrevious()) { // Disable first view, so server could render it faster
+                scope.template  = '';
+            }
+            else if(count === 1) {
+                element.removeAttribute('data-ls-router');
+
+                view.render(element);
+            }
+            else if(null !== router.getPrevious()) {
+                view.render(element);
+            }
+
+            document.dispatchEvent(new CustomEvent('state-changed'));
+        };
+        let findParent = function(tagName, el) {
+            if ((el.nodeName || el.tagName).toLowerCase() === tagName.toLowerCase()){
+                return el;
+            }
+            while (el = el.parentNode){
                 if ((el.nodeName || el.tagName).toLowerCase() === tagName.toLowerCase()){
                     return el;
                 }
-                while (el = el.parentNode){
-                    if ((el.nodeName || el.tagName).toLowerCase() === tagName.toLowerCase()){
-                        return el;
-                    }
-                }
-                return null;
-            };
+            }
+            return null;
+        };
+
+        console.log('start');
 
         element.setAttribute('data-ls-scope', '');
+        element.setAttribute('data-ls-scope-count', 1);
 
         view.add(scope);
 

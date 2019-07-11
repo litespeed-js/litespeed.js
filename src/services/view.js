@@ -106,7 +106,7 @@ window.ls.container.set('view', function(http, container) {
             return;
         }
 
-        let list    = (node) ? node.childNodes : [];
+        let list = (node) ? node.childNodes : [];
 
         if(node.$lsSkip === true) {
             list = [];

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Litespeed.js</title>
+        <link rel="icon" type="image/png" href="/favicon.png">
+        <link href="/styles/default.css" rel="stylesheet" />
+        <link href="/styles/androidstudio.css" rel="stylesheet" />
+        <meta name="description" content="Sample Litespeed.js application">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+
+        <style>
+            [data-ls-placeholder] {
+                background: red;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div style="margin: 50px; padding: 50px; border-radius: 50px; border: solid 1px #f1f1f1;">
+            <h1 data-ls-bind="{{tasks.title}}">---</h1>
+
+            <input type="text" data-ls-bind="{{tasks.title}}" title="">
+
+            <form data-tasks-add>
+                <h2>Add New Task</h2>
+                <input name="task" type="text" autocomplete="off" required>
+                <button type="submit">Submit</button>
+            </form>
+
+            <hr />
+
+            <ul data-ls-loop="tasks.list" data-ls-as="task">
+                <li data-ls-attrs="class=completed-{{task.completed}}" data-ls-if="true == {{task.show}}">
+                    <label>
+                        <input class="toggle" type="checkbox" data-ls-bind="{{task.completed}}">
+                        <span data-ls-bind="{{task.title}}"></span> <button type="button" data-tasks-remove="{{$index}}">Delete</button>
+                    </label>
+                    <div>
+                        <label>
+                            <input type="text" data-ls-bind="{{task.title}}" title="">
+                            <br />
+                            <br />
+                        </label>
+                    </div>
+                </li>
+            </ul>
+
+            <hr />
+
+            <button type="button" data-tasks-complete="">Complete All</button>
+            <button type="button" data-tasks-show-all="">Show All</button>
+            <button type="button" data-tasks-show-completed="">Show Completed</button>
+            <button type="button" data-tasks-show-active="">Show Active</button>
+
+            <hr />
+
+            <!--<label>
+                <select data-ls-loop="tasks.list" data-ls-as="task">
+                    <option data-ls-attrs="value=completed-{{task.completed}}" data-ls-bind="{{task.title}}"></option>
+                </select>
+            </label>-->
+
+            <hr />
+
+            <strong><span data-ls-bind="{{tasks.list.length}}"></span> Items</strong>
+
+            <hr />
+
+            add delete button, mark as complete, mark all as complete, apply filters
+        </div>
+        <header class="header">
+            <!--<div data-ls-attrs="x=1,y,z"></div>-->
+
+            <nav>
+                <ul>
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li>
+                        <a href="/article.html">Blog</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <a href="/" title="Litespeed.js" alt="Litespeed.js">
+                <img src="/images/litespeed.png" alt="Litespeed.js" title="Litespeed.js" class="logo" height="70" />
+            </a>
+        </header>
+
+        <main data-ls-router data-first-from-server="false" style="min-height: 500px">
+            <div class="loader"></div>
+        </main>
+
+        <hr />
+
+        <footer>
+            © 2015-2016. Code licensed under an MIT License
+        </footer>
+
+        <script>
+            (function (window) {
+                "use strict";
+
+                document.addEventListener("DOMContentLoaded", function() {
+                    let head      = document.getElementsByTagName('head')[0];
+                    let script    = document.createElement('script');
+                    script.type   = 'text/javascript';
+                    script.async  = true;
+                    script.src    = 'scripts/litespeed.js';
+
+                    script.onload = function() {
+                        window.ls.router
+                            .add('/', {
+                                template: '/pages/index.html'
+                            })
+                            .add('/article.html', {
+                                template: '/pages/article.html'
+                            })
+                        ;
+
+                        window.ls.container
+                            .set('tasks', function () {
+                                return {
+                                    title: 'Task Title',
+                                    list: [
+                                        {
+                                            id: 0,
+                                            completed: true,
+                                            show: true,
+                                            title: 'Task number 1',
+                                        },
+                                        {
+                                            id: 1,
+                                            completed: false,
+                                            show: false,
+                                            title: 'Task number 2',
+                                        },
+                                        {
+                                            id: 2,
+                                            completed: false,
+                                            show: true,
+                                            title: 'Task number 3',
+                                        },
+                                        {
+                                            id: 3,
+                                            completed: false,
+                                            show: true,
+                                            title: 'Task number 4',
+                                        },
+                                    ],
+                                    add: function (task) {
+                                        task.id = this.list.length;
+                                        this.list.push(task);
+                                    },
+                                    remove: function (key) {
+                                        return this.list.splice(key, 1);
+                                    },
+                                    completeAll: function () {
+                                        this.list.forEach(function(task) {
+                                            task.completed = true;
+                                        });
+                                    },
+                                    showAll: function () {
+                                        this.list.forEach(function(task) {
+                                            task.show = true;
+                                        });
+                                    },
+                                    showCompleted: function () {
+                                        this.list.forEach(function(task) {
+                                            task.show = (task.completed === true);
+                                        });
+                                    },
+                                    showActive: function () {
+                                        this.list.forEach(function(task) {
+                                            task.show = (task.completed === false);
+                                        });
+                                    }
+                                }
+                            }, true)
+                        ;
+
+                        window.ls.view
+                            .add({
+                                selector: 'data-tasks-add',
+                                controller: function(element, tasks) {
+                                    element.addEventListener('submit', function () {
+                                        event.preventDefault();
+
+                                        tasks.add({
+                                            completed: false,
+                                            show: true,
+                                            title: element.task.value
+                                        });
+
+                                        element.reset();
+                                    });
+                                }
+                            })
+                            .add({
+                                selector: 'data-tasks-remove',
+                                controller: function(element, tasks, expression) {
+                                    let id = expression.parse(element.dataset['tasksRemove']);
+
+                                    element.addEventListener('click', function () {
+                                        tasks.remove(id);
+                                    });
+                                }
+                            })
+                            .add({
+                                selector: 'data-tasks-complete',
+                                controller: function(element, tasks) {
+                                    element.addEventListener('click', function () {
+                                        tasks.completeAll();
+                                    });
+                                }
+                            })
+                            .add({
+                                selector: 'data-tasks-show-all',
+                                controller: function(element, tasks) {
+                                    element.addEventListener('click', function () {
+                                        tasks.showAll();
+                                    });
+                                }
+                            })
+                            .add({
+                                selector: 'data-tasks-show-completed',
+                                controller: function(element, tasks) {
+                                    element.addEventListener('click', function () {
+                                        tasks.showCompleted();
+                                    });
+                                }
+                            })
+                            .add({
+                                selector: 'data-tasks-show-active',
+                                controller: function(element, tasks) {
+                                    element.addEventListener('click', function () {
+                                        tasks.showActive();
+                                    });
+                                }
+                            })
+                        ;
+
+                        window.ls.run(window);
+                    };
+
+                    head.appendChild(script);
+                });
+
+            }(window));
+        </script>
+    </body>
+</html>

@@ -1,253 +1,265 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Litespeed.js</title>
-        <link rel="icon" type="image/png" href="/favicon.png">
-        <link href="/styles/default.css" rel="stylesheet" />
-        <link href="/styles/androidstudio.css" rel="stylesheet" />
-        <meta name="description" content="Sample Litespeed.js application">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<head>
+    <meta charset="utf-8">
+    <title>Litespeed.js</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta name="description" content="Sample Litespeed.js application">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <link href="https://cdn.jsdelivr.net/npm/todomvc-app-css@2.2.0/index.css" rel="stylesheet" />
+</head>
 
-        <style>
-            [data-ls-placeholder] {
-                background: red;
-            }
-        </style>
-    </head>
-
-    <body>
-        <div style="margin: 50px; padding: 50px; border-radius: 50px; border: solid 1px #f1f1f1;">
-            <h1 data-ls-bind="{{tasks.title}}">---</h1>
-
-            <input type="text" data-ls-bind="{{tasks.title}}" title="">
-
+<body>
+    <section class="todoapp" data-ls-router>
+        <header class="header">
+            <h1>todos</h1>
             <form data-tasks-add>
-                <h2>Add New Task</h2>
-                <input name="task" type="text" autocomplete="off" required>
-                <button type="submit">Submit</button>
+                <input name="task" type="text" autocomplete="off" required class="new-todo" placeholder="What needs to be done?" autofocus>
             </form>
+        </header>
+        <section class="main" data-ls-if="0 < {{tasks.list.length}}">
+            <input id="toggle-all" class="toggle-all" type="checkbox" data-tasks-complete-all>
+            <label for="toggle-all">Mark all as complete</label>
 
-            <hr />
-
-            <ul data-ls-loop="tasks.list" data-ls-as="task">
-                <li data-ls-attrs="class=completed-{{task.completed}}" data-ls-if="true == {{task.show}}">
-                    <label>
+            <ul class="todo-list" data-ls-loop="tasks.list" data-ls-as="task">
+                <li data-ls-attrs="class={{task.completed|completed}}" data-tasks-edit="{{task.id}}" data-ls-if="true == {{task.completed|show}} && {{tasks.filter}}">
+                    <div class="view">
                         <input class="toggle" type="checkbox" data-ls-bind="{{task.completed}}">
-                        <span data-ls-bind="{{task.title}}"></span> <button type="button" data-tasks-remove="{{$index}}">Delete</button>
-                    </label>
-                    <div>
-                        <label>
-                            <input type="text" data-ls-bind="{{task.title}}" title="">
-                            <br />
-                            <br />
-                        </label>
+                        <label data-ls-bind="{{task.title}}"></label>
+                        <button type="button" class="destroy" data-tasks-remove="{{task.id}}"></button>
                     </div>
+                    <input name="edit" class="edit" data-ls-bind="{{task.title}}" title="">
                 </li>
             </ul>
-
-            <hr />
-
-            <button type="button" data-tasks-complete="">Complete All</button>
-            <button type="button" data-tasks-show-all="">Show All</button>
-            <button type="button" data-tasks-show-completed="">Show Completed</button>
-            <button type="button" data-tasks-show-active="">Show Active</button>
-
-            <hr />
-
-            <!--<label>
-                <select data-ls-loop="tasks.list" data-ls-as="task">
-                    <option data-ls-attrs="value=completed-{{task.completed}}" data-ls-bind="{{task.title}}"></option>
-                </select>
-            </label>-->
-
-            <hr />
-
-            <strong><span data-ls-bind="{{tasks.list.length}}"></span> Items</strong>
-
-            <hr />
-
-            add delete button, mark as complete, mark all as complete, apply filters
-        </div>
-        <header class="header">
-            <!--<div data-ls-attrs="x=1,y,z"></div>-->
-
-            <nav>
-                <ul>
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
-                    <li>
-                        <a href="/article.html">Blog</a>
-                    </li>
-                </ul>
-            </nav>
-
-            <a href="/" title="Litespeed.js" alt="Litespeed.js">
-                <img src="/images/litespeed.png" alt="Litespeed.js" title="Litespeed.js" class="logo" height="70" />
-            </a>
-        </header>
-
-        <main data-ls-router data-first-from-server="false" style="min-height: 500px">
-            <div class="loader"></div>
-        </main>
-
-        <hr />
-
-        <footer>
-            © 2015-2016. Code licensed under an MIT License
+        </section>
+        <footer class="footer">
+            <span class="todo-count"><strong data-ls-bind="{{tasks.remaining|pluralize}}"></strong></span>
+            <ul class="filters">
+                <li>
+                    <a href="" data-tasks-selected="">All</a>
+                </li>
+                <li>
+                    <a href="#active" data-tasks-selected="#active">Active</a>
+                </li>
+                <li>
+                    <a href="#completed" data-tasks-selected="#completed">Completed</a>
+                </li>
+            </ul>
+            <button data-ls-if="0 < ({{tasks.list.length}} - {{tasks.remaining}})" class="clear-completed" data-tasks-clear-completed>Clear completed</button>
         </footer>
+    </section>
+    <footer class="info">
+        <p>Double-click to edit a todo</p>
+        <p>Created by <a href="https://twitter.com/eldadfux">Eldad Fux</a></p>
+        <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+    </footer>
+    <script>
 
-        <script>
-            (function (window) {
-                "use strict";
+        (function (window) {
+            "use strict";
 
-                document.addEventListener("DOMContentLoaded", function() {
-                    let head      = document.getElementsByTagName('head')[0];
-                    let script    = document.createElement('script');
-                    script.type   = 'text/javascript';
-                    script.async  = true;
-                    script.src    = 'scripts/litespeed.js';
+            document.addEventListener("DOMContentLoaded", function() {
+                let head      = document.getElementsByTagName('head')[0];
+                let script    = document.createElement('script');
+                script.type   = 'text/javascript';
+                script.async  = true;
+                script.src    = 'scripts/litespeed.js';
 
-                    script.onload = function() {
-                        window.ls.router
-                            .add('/', {
-                                template: '/pages/index.html'
-                            })
-                            .add('/article.html', {
-                                template: '/pages/article.html'
-                            })
-                        ;
+                script.onload = function() {
+                    let ENTER_KEY = 'Enter', STORAGE_KEY = 'todos-litespeed-0.2';
 
-                        window.ls.container
-                            .set('tasks', function () {
-                                return {
-                                    title: 'Task Title',
-                                    list: [
-                                        {
-                                            id: 0,
-                                            completed: true,
-                                            show: true,
-                                            title: 'Task number 1',
-                                        },
-                                        {
-                                            id: 1,
-                                            completed: false,
-                                            show: false,
-                                            title: 'Task number 2',
-                                        },
-                                        {
-                                            id: 2,
-                                            completed: false,
-                                            show: true,
-                                            title: 'Task number 3',
-                                        },
-                                        {
-                                            id: 3,
-                                            completed: false,
-                                            show: true,
-                                            title: 'Task number 4',
-                                        },
-                                    ],
-                                    add: function (task) {
-                                        task.id = this.list.length;
-                                        this.list.push(task);
-                                    },
-                                    remove: function (key) {
-                                        return this.list.splice(key, 1);
-                                    },
-                                    completeAll: function () {
-                                        this.list.forEach(function(task) {
-                                            task.completed = true;
-                                        });
-                                    },
-                                    showAll: function () {
-                                        this.list.forEach(function(task) {
-                                            task.show = true;
-                                        });
-                                    },
-                                    showCompleted: function () {
-                                        this.list.forEach(function(task) {
-                                            task.show = (task.completed === true);
-                                        });
-                                    },
-                                    showActive: function () {
-                                        this.list.forEach(function(task) {
-                                            task.show = (task.completed === false);
-                                        });
+                    window.ls.router
+                        .add('/', { // Default
+                            controller: function (tasks) {
+                                tasks.showAll();
+                            }
+                        })
+                        .add('#completed', {
+                            controller: function (tasks) {
+                                tasks.showCompleted();
+                            }
+                        })
+                        .add('#active', {
+                            controller: function (tasks) {
+                                tasks.showActive();
+                            }
+                        })
+                    ;
+
+                    window.ls.container
+                        .set('tasks', function () {
+                            let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                            return {
+                                title: 'TODO App',
+                                filter: 'all',
+                                list: data,
+                                remaining: 0,
+                                add: function (task) {
+                                    task.id = this.list.length + Math.random().toString();
+                                    this.list.push(task);
+                                },
+                                remove: function (key) {
+                                    for(let i = 0; i < this.list.length; i++) {
+                                        if (this.list[i].id === key) {
+                                            return this.list.splice(i, 1);
+                                        }
                                     }
-                                }
-                            }, true)
-                        ;
+                                },
+                                toggle: function (value) {
+                                    let list = [];
 
-                        window.ls.view
-                            .add({
-                                selector: 'data-tasks-add',
-                                controller: function(element, tasks) {
-                                    element.addEventListener('submit', function () {
-                                        event.preventDefault();
+                                    this.list.forEach(function(task) {
+                                        let node = Object.assign({}, task);
+                                        node.completed = value;
+                                        list.push(node);
+                                    });
 
-                                        tasks.add({
-                                            completed: false,
-                                            show: true,
-                                            title: element.task.value
-                                        });
+                                    this.list = list;
+                                    list = null;
+                                },
+                                showAll: function () {
+                                    this.filter = 'all';
+                                },
+                                showCompleted: function () {
+                                    this.filter = 'completed';
+                                },
+                                showActive: function () {
+                                    this.filter = 'active';
+                                },
+                                clearCompleted: function () {
+                                    this.list = this.list.filter(function (task) {
+                                        return !task.completed;
+                                    })
+                                }
+                            }
+                        }, true)
+                    ;
 
-                                        element.reset();
-                                    });
-                                }
-                            })
-                            .add({
-                                selector: 'data-tasks-remove',
-                                controller: function(element, tasks, expression) {
-                                    let id = expression.parse(element.dataset['tasksRemove']);
+                    window.ls.container.get('tasks').__watch = function(tasks) {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks.list));
 
-                                    element.addEventListener('click', function () {
-                                        tasks.remove(id);
-                                    });
-                                }
-                            })
-                            .add({
-                                selector: 'data-tasks-complete',
-                                controller: function(element, tasks) {
-                                    element.addEventListener('click', function () {
-                                        tasks.completeAll();
-                                    });
-                                }
-                            })
-                            .add({
-                                selector: 'data-tasks-show-all',
-                                controller: function(element, tasks) {
-                                    element.addEventListener('click', function () {
-                                        tasks.showAll();
-                                    });
-                                }
-                            })
-                            .add({
-                                selector: 'data-tasks-show-completed',
-                                controller: function(element, tasks) {
-                                    element.addEventListener('click', function () {
-                                        tasks.showCompleted();
-                                    });
-                                }
-                            })
-                            .add({
-                                selector: 'data-tasks-show-active',
-                                controller: function(element, tasks) {
-                                    element.addEventListener('click', function () {
-                                        tasks.showActive();
-                                    });
-                                }
-                            })
-                        ;
+                        tasks.filter = tasks.filter + '';
 
-                        window.ls.run(window);
+                        tasks.remaining = tasks.list.filter(function (task) {return (!task.completed)}).length;
                     };
 
-                    head.appendChild(script);
-                });
+                    window.ls.filter
+                        .add('show', function ($value, tasks) {
+                            $value = ($value === true || $value === 'true');
 
-            }(window));
-        </script>
-    </body>
+                            switch (tasks.filter) {
+                                case 'completed':
+                                    return $value;
+                                case 'active':
+                                    return !$value;
+                            }
+
+                            return true;
+                        })
+                        .add('completed', function ($value) {
+                            return ($value) ? 'completed' : '';
+                        })
+                        .add('pluralize', function ($value) {
+                            return $value + ' ' + (('1' === $value) ? 'item' : 'items') + ' left';
+                        })
+                    ;
+
+                    window.ls.view
+                        .add({
+                            selector: 'data-tasks-add',
+                            controller: function(element, tasks) {
+                                element.addEventListener('submit', function (event) {
+                                    event.preventDefault();
+                                    tasks.add({completed: false, title: element.task.value});
+                                    element.reset();
+                                });
+                            }
+                        })
+                        .add({
+                            selector: 'data-tasks-remove',
+                            controller: function(element, tasks, expression) {
+                                let id = expression.parse(element.dataset['tasksRemove']);
+                                element.addEventListener('click', function () {
+                                    tasks.remove(id);
+                                });
+                            }
+                        })
+                        .add({
+                            selector: 'data-tasks-complete-all',
+                            controller: function(element, tasks) {
+                                element.addEventListener('click', function () {
+                                    tasks.toggle(element.checked);
+                                });
+                            }
+                        })
+                        .add({
+                            selector: 'data-tasks-clear-completed',
+                            controller: function(element, tasks) {
+                                element.addEventListener('click', function () {
+                                    tasks.clearCompleted();
+                                });
+                            }
+                        })
+                        .add({
+                            selector: 'data-tasks-edit',
+                            controller: function(element, tasks, expression) {
+                                let id = expression.parse(element.dataset['tasksEdit']);
+                                let input = element.getElementsByClassName('edit')[0];
+
+                                element.addEventListener('dblclick', function () {
+                                    if(element.classList.contains('editing')) {
+                                        element.classList.remove('editing');
+                                    }
+                                    else {
+                                        element.classList.add('editing');
+
+                                        input.focus();
+                                    }
+                                });
+
+                                input.addEventListener('blur', function () {
+                                    element.classList.remove('editing');
+                                });
+
+                                input.addEventListener('keydown', function (e) {
+                                    if (e.code === ENTER_KEY) {
+                                        element.classList.remove('editing');
+                                    }
+
+                                    if(input.value === '') {
+                                        tasks.remove(id);
+                                    }
+                                });
+                            }
+                        })
+                        .add({
+                            selector: 'data-tasks-selected',
+                            controller: function(element, router) {
+                                let filter = element.dataset['tasksSelected'] || '';
+
+                                let check = function () {
+                                    if(filter === router.hash) {
+                                        element.classList.add('selected');
+                                    }
+                                    else {
+                                        element.classList.remove('selected');
+                                    }
+                                };
+
+                                document.addEventListener('state-changed', check);
+
+                                check();
+                            }
+                        })
+                    ;
+
+                    window.ls.run(window);
+                };
+
+                head.appendChild(script);
+            });
+
+        }(window));
+    </script>
+</body>
 </html>
