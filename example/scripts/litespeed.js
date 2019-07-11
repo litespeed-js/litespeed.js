@@ -74,11 +74,11 @@ return value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').rep
 catch(error){let handler=window.ls.container.resolve(this.error);handler(error);}};window.ls.error=()=>{return error=>{console.error('ls-error',error.message,error.stack,error.toString());}};window.ls.router=window.ls.container.get('router');window.ls.view=window.ls.container.get('view');window.ls.filter=window.ls.container.get('filter');window.ls.container.get('view').add({selector:'data-ls-router',repeat:false,controller:function(element,window,document,view,router,tasks){let firstFromServer=(element.getAttribute('data-first-from-server')==='true');let scope={selector:'data-ls-scope',template:false,repeat:true,controller:function(){},};let init=function(route){let count=parseInt(element.getAttribute('data-ls-scope-count')||0);element.setAttribute('data-ls-scope-count',count+1);window.scrollTo(0,0);if(window.document.body.scrollTo){window.document.body.scrollTo(0,0);}
 router.reset();if(null===route){return;}
 scope.template=(undefined!==route.view.template)?route.view.template:null;scope.controller=(undefined!==route.view.controller)?route.view.controller:function(){};document.dispatchEvent(new CustomEvent('state-change'));if(firstFromServer&&null===router.getPrevious()){scope.template='';}
-else if(count===1){element.removeAttribute('data-ls-router');view.render(element);}
+else if(count===1){view.render(element);}
 else if(null!==router.getPrevious()){view.render(element);}
 document.dispatchEvent(new CustomEvent('state-changed'));};let findParent=function(tagName,el){if((el.nodeName||el.tagName).toLowerCase()===tagName.toLowerCase()){return el;}
 while(el=el.parentNode){if((el.nodeName||el.tagName).toLowerCase()===tagName.toLowerCase()){return el;}}
-return null;};console.log('start');element.setAttribute('data-ls-scope','');element.setAttribute('data-ls-scope-count',1);view.add(scope);document.addEventListener('click',function(event){let target=findParent('a',event.target);if(!target){return false;}
+return null;};element.removeAttribute('data-ls-router');element.setAttribute('data-ls-scope','');element.setAttribute('data-ls-scope-count',1);view.add(scope);document.addEventListener('click',function(event){let target=findParent('a',event.target);if(!target){return false;}
 if(!target.href){return false;}
 if((event.metaKey)){return false;}
 if((target.hasAttribute('target'))&&('_blank'===target.getAttribute('target'))){return false;}

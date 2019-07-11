@@ -35,8 +35,6 @@ window.ls.container.get('view').add({
                 scope.template  = '';
             }
             else if(count === 1) {
-                element.removeAttribute('data-ls-router');
-
                 view.render(element);
             }
             else if(null !== router.getPrevious()) {
@@ -57,8 +55,9 @@ window.ls.container.get('view').add({
             return null;
         };
 
-        console.log('start');
+        element.removeAttribute('data-ls-router'); // Avoid re-rendering loop
 
+        // Count number of scopes changed to adjust routing logic
         element.setAttribute('data-ls-scope', '');
         element.setAttribute('data-ls-scope-count', 1);
 
