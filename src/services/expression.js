@@ -29,6 +29,8 @@ window.ls.container.set('expression', function(container, filter) {
                     let path = (reference[0] || '');
                     let result = container.path(path, undefined, as, prefix);
 
+                    path = (path.indexOf('.') > -1) ? path.replace(as + '.', prefix + '.') : path.replace(as, prefix);
+
                     if(!paths.includes(path)) {
                         paths.push(path);
                     }

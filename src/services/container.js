@@ -236,8 +236,7 @@ window.ls.container = function() {
         as = (as) ? as : container.get('$as');
         prefix = (prefix) ? prefix : container.get('$prefix');
 
-        path = path
-            .replace(as + '.', prefix + '.')
+        path = ((path.indexOf('.') > -1) ? path.replace(as + '.', prefix + '.') : path.replace(as, prefix))
             .split('.');
 
         let name    = path.shift();
@@ -293,7 +292,7 @@ window.ls.container = function() {
         as = (as) ? as : container.get('$as');
         prefix = (prefix) ? prefix : container.get('$prefix');
 
-        let event = path.replace(as + '.', prefix + '.') + '.changed';
+        let event = ((path.indexOf('.') > -1) ? path.replace(as + '.', prefix + '.') : path.replace(as, prefix)) + '.changed';
         let service = event.split('.').slice(0,1).pop();
 
         listeners[service] = listeners[service] || {};
