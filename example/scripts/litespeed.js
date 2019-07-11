@@ -19,7 +19,7 @@ while(match=REGEX_PARAMETERS_VALUES.exec(functionAsString)){params.push(match[1]
 return params;}
 let args=getParams(target);return target.apply(target,args.map(function(value){return self.get(value.trim());}));};let path=function(path,value,as,prefix){as=(as)?as:container.get('$as');prefix=(prefix)?prefix:container.get('$prefix');path=((path.indexOf('.')>-1)?path.replace(as+'.',prefix+'.'):path.replace(as,prefix)).split('.');let name=path.shift();let object=this.get(name);let result=null;while(path.length>1){if(!object){return null;}
 object=object[path.shift()];}
-if(value){object[path.shift()]=value;return true;}
+if(value!==null&&value!==undefined){object[path.shift()]=value;return true;}
 if(!object){return null;}
 let shift=path.shift();if(!shift){result=object;}
 else{return object[shift];}
@@ -65,10 +65,10 @@ part=part.split('+').join(' ');let eq=part.indexOf('=');let key=eq>-1?part.subst
 else{let to=key.indexOf(']');let index=decodeURIComponent(key.substring(from+1,to));key=decodeURIComponent(key.substring(0,from));if(!result[key]){result[key]=[];}
 if(!index){result[key].push(val);}
 else{result[key][index]=val;}}});return result;};let state={setParam:setParam,getParam:getParam,getParams:getParams,getURL:getURL,add:add,change:change,reload:reload,reset:reset,match:match,getCurrent:getCurrent,setCurrent:setCurrent,getPrevious:getPrevious,setPrevious:setPrevious,params:getJsonFromUrl(window.location.search),hash:window.location.hash};return state;},true,true);window.ls.container.set('expression',function(container,filter){let paths=[];return{regex:/(\{{.*?\}})/gi,parse:function(string,def,as,prefix,cast=false){def=def||'';paths=[];return string.replace(this.regex,match=>{let reference=match.substring(2,match.length-2).replace('[\'','.').replace('\']','').trim();reference=reference.split('|');let path=(reference[0]||'');let result=container.path(path,undefined,as,prefix);path=(path.indexOf('.')>-1)?path.replace(as+'.',prefix+'.'):path.replace(as,prefix);if(!paths.includes(path)){paths.push(path);}
+if(reference.length>=2){for(let i=1;i<reference.length;i++){result=filter.apply(reference[i],result);}}
 if(null===result||undefined===result){result=def;}
 else if(typeof result==='object'){result=JSON.stringify(result);}
 else if(((typeof result==='object')||(typeof result==='string'))&&cast){result='\''+result+'\'';}
-if(reference.length>=2){for(let i=1;i<reference.length;i++){result=filter.apply(reference[i],result);}}
 return result;});},getPaths:()=>paths,}},true,false);window.ls.container.set('filter',function(container){let filters={};let add=function(name,callback){filters[name]=callback;return this;};let apply=function(name,value){container.set('$value',value,true,false);return container.resolve(filters[name]);};add('uppercase',($value)=>{return $value.toUpperCase();});add('lowercase',($value)=>{return $value.toLowerCase();});return{add:add,apply:apply}},true,false);window.ls.container.get('filter').add('escape',value=>{if(typeof value!=='string'){return value;}
 return value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/\'/g,'&#39;').replace(/\//g,'&#x2F;');});window.ls=window.ls||{};window.ls.container.set('window',window,true,false).set('document',window.document,true,false).set('element',window.document,true,false);window.ls.run=function(window){try{this.view.render(window.document);}
 catch(error){let handler=window.ls.container.resolve(this.error);handler(error);}};window.ls.error=()=>{return error=>{console.error('ls-error',error.message,error.stack,error.toString());}};window.ls.router=window.ls.container.get('router');window.ls.view=window.ls.container.get('view');window.ls.filter=window.ls.container.get('filter');window.ls.container.get('view').add({selector:'data-ls-router',repeat:false,controller:function(element,window,document,view,router){let firstFromServer=(element.getAttribute('data-first-from-server')==='true');let scope={selector:'data-ls-scope',template:false,repeat:true,controller:function(){},};let init=function(route){window.scrollTo(0,0);if(window.document.body.scrollTo){window.document.body.scrollTo(0,0);}
@@ -90,14 +90,15 @@ init(route);return true;});window.addEventListener('popstate',function(){init(ro
 element.setAttribute(key,value);}};check();for(let i=0;i<paths.length;i++){container.bind(element,paths[i],check);}}});window.ls.container.get('view').add({selector:'data-ls-bind',controller:function(element,expression,container,$prefix,$as){let echo=function(value,bind=true){if(element.tagName==='INPUT'||element.tagName==='SELECT'||element.tagName==='BUTTON'||element.tagName==='TEXTAREA'){let type=element.getAttribute('type');if('radio'===type){if(value.toString()===element.value){element.setAttribute('checked','checked');}
 else{element.removeAttribute('checked');}}
 if('checkbox'===type){if(typeof value==='boolean'||value==='true'||value==='false'){if(value===true||value==='true'){element.setAttribute('checked','checked');element.checked=true;}
-else{element.removeAttribute('checked');element.checked=false;}
-if(bind){element.addEventListener('change',()=>{for(let i=0;i<paths.length;i++){container.path(paths[i],element.checked,$as,$prefix);}});}}
+else{element.removeAttribute('checked');element.checked=false;}}
 else{try{value=JSON.parse(value);element.checked=(Array.isArray(value)&&(value.indexOf(element.value)>-1));}
-catch{return null;}}}
+catch{return null;}}
+if(bind){element.addEventListener('change',()=>{console.log(paths,element,element.checked);for(let i=0;i<paths.length;i++){container.path(paths[i],element.checked,$as,$prefix);console.log(container.path(paths[i],undefined,$as,$prefix));}});}
+return;}
 if(element.value!==value){element.value=value;}
 if(bind){element.addEventListener('input',sync);element.addEventListener('change',sync);}}
-else{if(element.innerText!==value){element.innerHTML=value;}}};let sync=((as,prefix)=>{return()=>{for(let i=0;i<paths.length;i++){container.path(paths[i],element.value,as,prefix);}}})($as,$prefix);let syntax=element.getAttribute('data-ls-bind');let result=expression.parse(syntax,null,$as,$prefix);let paths=expression.getPaths();echo(result,true);element.addEventListener('looped',function(){echo(expression.parse(syntax,null,$as,$prefix),false);});for(let i=0;i<paths.length;i++){container.bind(element,paths[i],()=>{echo(expression.parse(syntax,null,$as,$prefix),false);});}}});window.ls.container.get('view').add({selector:'data-ls-if',controller:function(element,expression,container,view,$as,$prefix){let result='';let syntax=element.getAttribute('data-ls-if')||'';let debug=element.getAttribute('data-debug')||false;let paths=[];let check=()=>{if(debug){console.info('debug-ls-if',expression.parse(syntax.replace(/(\r\n|\n|\r)/gm,' '),'undefined',$as,$prefix,true));}
-try{result=(eval(expression.parse(syntax.replace(/(\r\n|\n|\r)/gm,' '),'undefined',$as,$prefix,true)));}
+else{if(element.innerText!==value){element.innerHTML=value;}}};let sync=((as,prefix)=>{return()=>{for(let i=0;i<paths.length;i++){container.path(paths[i],element.value,as,prefix);}}})($as,$prefix);let syntax=element.getAttribute('data-ls-bind');let result=expression.parse(syntax,null,$as,$prefix);let paths=expression.getPaths();echo(result,true);element.addEventListener('looped',function(){echo(expression.parse(syntax,null,$as,$prefix),false);});for(let i=0;i<paths.length;i++){container.bind(element,paths[i],()=>{echo(expression.parse(syntax,null,$as,$prefix),false);});}}});window.ls.container.get('view').add({selector:'data-ls-if',controller:function(element,expression,container,view,$as,$prefix){let result='';let syntax=element.getAttribute('data-ls-if')||'';let debug=element.getAttribute('data-debug')||false;let paths=[];let check=()=>{if(debug){console.info('debug-ls-if','!!('+expression.parse(syntax.replace(/(\r\n|\n|\r)/gm,' '),'undefined',$as,$prefix,true)+')');}
+try{result=(eval('!!('+expression.parse(syntax.replace(/(\r\n|\n|\r)/gm,' '),'undefined',$as,$prefix,true)+')'));}
 catch(error){throw new Error('Failed to evaluate expression "'+syntax+' (resulted with: "'+result+'")": '+error);}
 if(debug){console.info('debug-ls-if result:',result);}
 paths=expression.getPaths();let prv=element.$lsSkip;element.$lsSkip=!result;if(!result){element.style.visibility='hidden';element.style.display='none';}
