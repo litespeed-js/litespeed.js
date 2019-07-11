@@ -35,6 +35,12 @@ window.ls.container.set('expression', function(container, filter) {
                         paths.push(path);
                     }
 
+                    if(reference.length >= 2) {
+                        for(let i=1;i<reference.length;i++) {
+                            result = filter.apply(reference[i], result);
+                        }
+                    }
+
                     if(null === result || undefined === result) {
                         result = def;
                     }
@@ -43,12 +49,6 @@ window.ls.container.set('expression', function(container, filter) {
                     }
                     else if(((typeof result === 'object') || (typeof result === 'string')) && cast) { // Auto casting for vars
                         result = '\'' + result + '\'';
-                    }
-
-                    if(reference.length >= 2) {
-                        for(let i=1;i<reference.length;i++) {
-                            result = filter.apply(reference[i], result);
-                        }
                     }
 
                     return result;
