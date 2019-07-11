@@ -29,14 +29,6 @@ window.ls.container.get('view').add({
                             element.removeAttribute('checked');
                             element.checked = false;
                         }
-
-                        if(bind) {
-                            element.addEventListener('change', () => {
-                                for(let i = 0; i < paths.length; i++) {
-                                    container.path(paths[i], element.checked, $as, $prefix);
-                                }
-                            });
-                        }
                     }
                     else {
                         try {
@@ -48,6 +40,18 @@ window.ls.container.get('view').add({
                             return null;
                         }
                     }
+
+                    if(bind) {
+                        element.addEventListener('change', () => {
+                            console.log(paths, element, element.checked);
+                            for(let i = 0; i < paths.length; i++) {
+                                container.path(paths[i], element.checked, $as, $prefix);
+                                console.log(container.path(paths[i], undefined, $as, $prefix));
+                            }
+                        });
+                    }
+
+                    return;
                 }
 
                 if (element.value !== value) {
