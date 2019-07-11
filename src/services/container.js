@@ -253,7 +253,7 @@ window.ls.container = function() {
         }
 
         // Set new value
-        if(value) {
+        if(value !== null && value !== undefined) { // Allow false or empty as legitimate input values
             object[path.shift()] = value;
             return true;
         }
