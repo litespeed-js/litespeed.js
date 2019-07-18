@@ -39,6 +39,10 @@ window.ls.container = function() {
             watch: watch,
         };
 
+        if(!watch) {
+            return this;
+        }
+
         let binds = listeners[name] || {};
 
         for (let key in binds) {

@@ -11,6 +11,8 @@ window.ls.container.get('view').add({
 
             array = (!array) ? [] : array; // Cast null to empty array
 
+            let watch = !!(array && array.__proxy);
+
             while(element.hasChildNodes() ) { // Clean DOM before loop starts
                 element.removeChild(element.lastChild);
 
@@ -40,10 +42,10 @@ window.ls.container.get('view').add({
                 (index => {
                     let context = expr + '.' + index;
 
-                    container.set(as, container.path(context), true);
-                    container.set('$index', index, true, false, false);
-                    container.set('$prefix', context, true, false, false);
-                    container.set('$as', as, true, false, false);
+                    container.set(as, container.path(context), true, watch);
+                    container.set('$index', index, true, false);
+                    container.set('$prefix', context, true, false);
+                    container.set('$as', as, true, false);
 
                     view.render(children[prop]);
                 })(prop);
