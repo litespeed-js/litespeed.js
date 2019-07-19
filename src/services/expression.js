@@ -45,7 +45,7 @@ window.ls.container.set('expression', function(container, filter) {
                         result = def;
                     }
                     else if(typeof result === 'object') {
-                        result = JSON.stringify(result);
+                        result = JSON.stringify(result, null, 4);
                     }
                     else if(((typeof result === 'object') || (typeof result === 'string')) && cast) { // Auto casting for vars
                         result = '\'' + result + '\'';
