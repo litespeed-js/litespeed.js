@@ -93,7 +93,7 @@ element.setAttribute(key,value);}};check();for(let i=0;i<paths.length;i++){conta
 else{element.removeAttribute('checked');}}
 if('checkbox'===type){if(typeof value==='boolean'||value==='true'||value==='false'){if(value===true||value==='true'){element.setAttribute('checked','checked');element.checked=true;}
 else{element.removeAttribute('checked');element.checked=false;}}
-else{try{value=JSON.parse(value);element.checked=(Array.isArray(value)&&(value.indexOf(element.value)>-1));}
+else{try{value=JSON.parse(value);element.checked=(Array.isArray(value)&&(value.indexOf(element.value)>-1));value=element.value;}
 catch{return null;}}
 if(bind){element.addEventListener('change',()=>{console.log(paths,element,element.checked);for(let i=0;i<paths.length;i++){container.path(paths[i],element.checked,$as,$prefix);console.log(container.path(paths[i],undefined,$as,$prefix));}});}
 return;}

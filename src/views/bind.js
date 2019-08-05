@@ -35,6 +35,8 @@ window.ls.container.get('view').add({
                             value = JSON.parse(value);
 
                             element.checked = (Array.isArray(value) && (value.indexOf(element.value) > -1));
+
+                            value = element.value;
                         }
                         catch {
                             return null;
