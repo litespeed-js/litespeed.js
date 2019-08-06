@@ -17,6 +17,20 @@ window.ls.container.get('view').add({
                     else {
                         element.removeAttribute('checked');
                     }
+
+                    if(bind) {
+                        element.addEventListener('change', () => {
+                            for(let i = 0; i < paths.length; i++) {
+                                if(element.checked) {
+                                    value = element.value;
+                                }
+
+                                container.path(paths[i], value, $as, $prefix);
+                            }
+                        });
+                    }
+
+                    return;
                 }
 
                 if('checkbox' === type) {
@@ -45,10 +59,19 @@ window.ls.container.get('view').add({
 
                     if(bind) {
                         element.addEventListener('change', () => {
-                            console.log(paths, element, element.checked);
                             for(let i = 0; i < paths.length; i++) {
-                                container.path(paths[i], element.checked, $as, $prefix);
-                                console.log(container.path(paths[i], undefined, $as, $prefix));
+                                let value = container.path(paths[i], undefined, $as, $prefix);
+                                let index = value.indexOf(element.value);
+
+                                if(element.checked  && index < 0) {
+                                    value.push(element.value);
+                                }
+
+                                if(!element.checked && index > -1) {
+                                    value.splice(index, 1);
+                                }
+
+                                container.path(paths[i], value, $as, $prefix);
                             }
                         });
                     }
