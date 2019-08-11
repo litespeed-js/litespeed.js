@@ -58,9 +58,9 @@ return def;};let getParams=function(){return state.params;};let getURL=function(
 if(typeof view!=='object'){throw new Error('view must be of type object');}
 states[states.length++]={path:path,view:view};return this;};let match=function(location){let url=location.pathname+((location.hash)?location.hash:'');states.sort(function(a,b){return b.path.length-a.path.length;});states.sort(function(a,b){let n=b.path.split('/').length-a.path.split('/').length;if(n!==0){return n;}
 return b.path.length-a.path.length;});for(let i=0;i<states.length;i++){let value=states[i];value.path=(value.path.substring(0,1)!=='/')?location.pathname+value.path:value.path;let match=new RegExp("^"+value.path.replace(/:[^\s/]+/g,'([\\w-]+)')+"$");let found=url.match(match);if(found){previous=current;current=value;return value;}}
-return null};let change=function(URL,replace){if(!replace){window.history.pushState({},'',URL);}
+return null};let change=function(URL,replace){if(!replace){window.history.pushState({},'',URL);window.dispatchEvent(new PopStateEvent('popstate',{}));}
 else{window.history.replaceState({},'',URL);}
-window.dispatchEvent(new PopStateEvent('popstate',{}));return this;};let reload=function(){return change(window.location.href);};let getJsonFromUrl=function(URL){let query;if(URL){let pos=location.href.indexOf('?');if(pos===-1)return[];query=location.href.substr(pos+1);}else{query=location.search.substr(1);}
+return this;};let reload=function(){return change(window.location.href);};let getJsonFromUrl=function(URL){let query;if(URL){let pos=location.href.indexOf('?');if(pos===-1)return[];query=location.href.substr(pos+1);}else{query=location.search.substr(1);}
 let result={};query.split('&').forEach(function(part){if(!part){return;}
 part=part.split('+').join(' ');let eq=part.indexOf('=');let key=eq>-1?part.substr(0,eq):part;let val=eq>-1?decodeURIComponent(part.substr(eq+1)):'';let from=key.indexOf('[');if(from===-1){result[decodeURIComponent(key)]=val;}
 else{let to=key.indexOf(']');let index=decodeURIComponent(key.substring(from+1,to));key=decodeURIComponent(key.substring(0,from));if(!result[key]){result[key]=[];}
