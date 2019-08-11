@@ -181,12 +181,11 @@ window.ls.container.set('router', function(window) {
 
         if(!replace) {
             window.history.pushState({}, '', URL);
+            window.dispatchEvent(new PopStateEvent('popstate', {}));
         }
         else {
             window.history.replaceState({}, '', URL);
         }
-
-        window.dispatchEvent(new PopStateEvent('popstate', {}));
 
         return this;
     };
