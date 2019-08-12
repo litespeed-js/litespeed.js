@@ -1,6 +1,68 @@
 window.ls.container.set('router', function(window) {
 
+    /**
+     * Takes a valid URL and return a JSON based object with all params.
+     * This function support URL array syntax (x[]=1)
+     *
+     * As published at StackOverflow:
+     * @see http://stackoverflow.com/a/8486188
+     *
+     * @param URL string
+     * @returns {*}
+     */
+    let getJsonFromUrl = function (URL) {
+        let query;
+
+        if(URL) {
+            let pos = location.href.indexOf('?');
+            if(pos===-1) return [];
+            query = location.href.substr(pos+1);
+        } else {
+            query = location.search.substr(1);
+        }
+
+        let result = {};
+
+        query.split('&').forEach(function(part) {
+            if(!part) {
+                return;
+            }
+
+            part = part.split('+').join(' '); // replace every + with space, regexp-free version
+
+            let eq      = part.indexOf('=');
+            let key     = eq>-1 ? part.substr(0,eq) : part;
+            let val     = eq>-1 ? decodeURIComponent(part.substr(eq+1)) : '';
+            let from    = key.indexOf('[');
+
+            if(from === -1) {
+                result[decodeURIComponent(key)] = val;
+            }
+            else {
+                let to = key.indexOf(']');
+                let index = decodeURIComponent(key.substring(from+1,to));
+
+                key = decodeURIComponent(key.substring(0,from));
+
+                if(!result[key]) {
+                    result[key] = [];
+                }
+
+                if(!index) {
+                    result[key].push(val);
+                }
+                else {
+                    result[key][index] = val;
+                }
+            }
+        });
+
+        return result;
+    };
+
     let states      = [];
+    let params      = getJsonFromUrl(window.location.search);
+    let hash        = window.location.hash;
     let current     = null;
     let previous    = null;
 
@@ -50,7 +112,7 @@ window.ls.container.set('router', function(window) {
      * @returns {setParam}
      */
     let setParam = function(key, value) {
-        state.params[key] = value;
+        params[key] = value;
         return this;
     };
 
@@ -64,8 +126,8 @@ window.ls.container.set('router', function(window) {
      * @returns {*}
      */
     let getParam = function (key, def) {
-        if (key in state.params) {
-            return state.params[key];
+        if (key in params) {
+            return params[key];
         }
 
         return def;
@@ -79,7 +141,7 @@ window.ls.container.set('router', function(window) {
      * @returns {*}
      */
     let getParams = function () {
-        return state.params;
+        return params;
     };
 
     /**
@@ -88,11 +150,6 @@ window.ls.container.set('router', function(window) {
      */
     let getURL = function () {
         return window.location.href;
-    };
-
-    let reset   = function () {
-        state.params = getJsonFromUrl(window.location.search);
-        state.hash = window.location.hash;
     };
 
     /**
@@ -181,12 +238,13 @@ window.ls.container.set('router', function(window) {
 
         if(!replace) {
             window.history.pushState({}, '', URL);
-            window.dispatchEvent(new PopStateEvent('popstate', {}));
         }
         else {
             window.history.replaceState({}, '', URL);
         }
-
+        
+        window.dispatchEvent(new PopStateEvent('popstate', {}));
+        
         return this;
     };
 
@@ -194,67 +252,7 @@ window.ls.container.set('router', function(window) {
         return change(window.location.href);
     };
 
-    /**
-     * Takes a valid URL and return a JSON based object with all params.
-     * This function support URL array syntax (x[]=1)
-     *
-     * As published at StackOverflow:
-     * @see http://stackoverflow.com/a/8486188
-     *
-     * @param URL string
-     * @returns {*}
-     */
-    let getJsonFromUrl = function (URL) {
-        let query;
-
-        if(URL) {
-            let pos = location.href.indexOf('?');
-            if(pos===-1) return [];
-            query = location.href.substr(pos+1);
-        } else {
-            query = location.search.substr(1);
-        }
-
-        let result = {};
-
-        query.split('&').forEach(function(part) {
-            if(!part) {
-                return;
-            }
-
-            part = part.split('+').join(' '); // replace every + with space, regexp-free version
-
-            let eq      = part.indexOf('=');
-            let key     = eq>-1 ? part.substr(0,eq) : part;
-            let val     = eq>-1 ? decodeURIComponent(part.substr(eq+1)) : '';
-            let from    = key.indexOf('[');
-
-            if(from === -1) {
-                result[decodeURIComponent(key)] = val;
-            }
-            else {
-                let to = key.indexOf(']');
-                let index = decodeURIComponent(key.substring(from+1,to));
-
-                key = decodeURIComponent(key.substring(0,from));
-
-                if(!result[key]) {
-                    result[key] = [];
-                }
-
-                if(!index) {
-                    result[key].push(val);
-                }
-                else {
-                    result[key][index] = val;
-                }
-            }
-        });
-
-        return result;
-    };
-
-    let state = {
+    return {
         setParam: setParam,
         getParam: getParam,
         getParams: getParams,
@@ -262,15 +260,16 @@ window.ls.container.set('router', function(window) {
         add: add,
         change: change,
         reload: reload,
-        reset: reset,
         match: match,
         getCurrent: getCurrent,
         setCurrent: setCurrent,
         getPrevious: getPrevious,
         setPrevious: setPrevious,
-        params: getJsonFromUrl(window.location.search),
-        hash: window.location.hash
+        params: params,
+        hash: hash,
+        reset: function () {
+            this.params = getJsonFromUrl(window.location.search);
+            this.hash = window.location.hash;
+        }
     };
-
-    return state;
 }, true, true);
