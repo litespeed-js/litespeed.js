@@ -113,9 +113,14 @@ window.ls.container.get('view').add({
         });
 
         for(let i = 0; i < paths.length; i++) {
-            container.bind(element, paths[i], () => {
-                echo(expression.parse(syntax, null, $as, $prefix), false);
-            });
+            let path = paths[i].split('.');
+
+            while(path.length) {
+                container.bind(element, path.join('.'), () => {
+                    echo(expression.parse(syntax, null, $as, $prefix), false);
+                });
+                path.pop();
+            }
         }
     }
 });
