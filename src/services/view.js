@@ -7,7 +7,7 @@ window.ls.container.set('view', function(http, container) {
     let stock = {};
 
     let execute = function(view, node, container) {
-        container.set('element', node, true, false, false);
+        container.set('element', node, true, false);
 
         container.resolve(view.controller);
 

@@ -4,6 +4,8 @@ window.ls.container.get('view').add({
         let attrs   = element.getAttribute('data-ls-attrs').trim().split(',');
         let paths   = [];
         let check   = () => {
+            container.set('element', element, true, false);
+
             for(let i = 0; i < attrs.length; i++) {
                 let attr    = attrs[i];
 
@@ -29,7 +31,12 @@ window.ls.container.get('view').add({
         check();
 
         for(let i = 0; i < paths.length; i++) {
-            container.bind(element, paths[i], check);
+            let path = paths[i].split('.');
+            
+            while(path.length) {
+                container.bind(element, path.join('.'), check);
+                path.pop();
+            }
         }
     }
 });

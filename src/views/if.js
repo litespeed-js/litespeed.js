@@ -44,7 +44,12 @@ window.ls.container.get('view').add({
         check();
 
         for(let i = 0; i < paths.length; i++) {
-            container.bind(element, paths[i], check);
+            let path = paths[i].split('.');
+            
+            while(path.length) {
+                container.bind(element, path.join('.'), check);
+                path.pop();
+            }
         }
     }
 });

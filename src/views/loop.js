@@ -63,5 +63,12 @@ window.ls.container.get('view').add({
         echo();
 
         container.bind(element, expr + '.length', echo);
+
+        let path = (expr + '.length').split('.');
+        
+        while(path.length) {
+            container.bind(element, path.join('.'), echo);
+            path.pop();
+        }
     }
 });
