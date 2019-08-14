@@ -47,7 +47,7 @@ window.ls.container.get('view').add({
             let path = paths[i].split('.');
             
             while(path.length) {
-                container.bind(element, path.join('.'), check);
+                container.bind(element, path.join('.'), check, $as, $prefix);
                 path.pop();
             }
         }
