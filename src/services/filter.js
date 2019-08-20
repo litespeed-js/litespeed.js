@@ -12,10 +12,18 @@ window.ls.container.set('filter', function(container) {
     };
 
     add('uppercase', ($value) => {
+        if (typeof $value !== 'string') {
+            return $value;
+        }
+
         return $value.toUpperCase();
     });
 
     add('lowercase', ($value) => {
+        if (typeof $value !== 'string') {
+            return $value;
+        }
+        
         return $value.toLowerCase();
     });
 
