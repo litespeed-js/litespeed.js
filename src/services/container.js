@@ -256,9 +256,11 @@ window.ls.container = function() {
             object = object[path.shift()];
         }
 
+        let shift = path.shift();
+
         // Set new value
-        if(value !== null && value !== undefined) { // Allow false or empty as legitimate input values
-            object[path.shift()] = value;
+        if(value !== null && value !== undefined && object && shift && object[shift]) { // Allow false or empty as legitimate input values
+            object[shift] = value;
             return true;
         }
 
@@ -266,8 +268,6 @@ window.ls.container = function() {
         if(!object) {
             return null;
         }
-
-        let shift = path.shift();
 
         if(!shift) {
             result = object;
