@@ -81,6 +81,7 @@ window.ls.container.get('view').add({
 
                 if (element.value !== value) {
                     element.value = value;
+                    element.dispatchEvent(new Event('change'));
                 }
 
                 if(bind) {
@@ -103,10 +104,13 @@ window.ls.container.get('view').add({
         })($as, $prefix);
 
         let syntax = element.getAttribute('data-ls-bind');
+        let unsync = (!!element.getAttribute('data-unsync')) || false;
         let result = expression.parse(syntax, null, $as, $prefix);
         let paths  = expression.getPaths();
 
-        echo(result, true);
+        console.log('bind unsync', unsync, !unsync);
+
+        echo(result, !unsync);
 
         element.addEventListener('looped', function () { // Rebind after loop comp finish to render
             echo(expression.parse(syntax, null, $as, $prefix), false);
