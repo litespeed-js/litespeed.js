@@ -24,6 +24,9 @@ window.ls.container.get('view').add({
             }
 
             let children = [];
+            let originalIndex = container.get('$index') || null;
+            let originalPrefix = container.get('$prefix') || null;
+            let originalAs = container.get('$as') || null;
 
             element.$lsSkip = true;
 
@@ -51,9 +54,9 @@ window.ls.container.get('view').add({
                 })(prop);
             }
 
-            container.set('$index', null, true, false, false);
-            container.set('$prefix', '', true, false, false);
-            container.set('$as', '', true, false, false);
+            container.set('$index', originalIndex, true, false);
+            container.set('$prefix', originalPrefix, true, false);
+            container.set('$as', originalAs, true, false);
 
             element.dispatchEvent(new Event('looped'));
         };

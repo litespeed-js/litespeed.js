@@ -90,7 +90,7 @@ window.ls.container.get('view').add({
                 }
             }
             else {
-                if(element.innerText !== value) {
+                if(element.textContent != value) {
                     element.innerHTML = value;
                 }
             }
@@ -107,8 +107,6 @@ window.ls.container.get('view').add({
         let unsync = (!!element.getAttribute('data-unsync')) || false;
         let result = expression.parse(syntax, null, $as, $prefix);
         let paths  = expression.getPaths();
-
-        console.log('bind unsync', unsync, !unsync);
 
         echo(result, !unsync);
 
