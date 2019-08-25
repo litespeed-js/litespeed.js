@@ -1,7 +1,7 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-router',
     repeat: false,
-    controller: function(element, window, document, view, router, tasks) {
+    controller: function(element, window, document, view, router) {
         let firstFromServer = (element.getAttribute('data-first-from-server') === 'true');
         let scope = {
                 selector: 'data-ls-scope',

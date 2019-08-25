@@ -197,7 +197,7 @@ window.ls.container.set('router', function(window) {
      * @return value object|null
      */
     let match = function(location) {
-        let url = location.pathname + ((location.hash) ? location.hash : '');
+        let url = location.pathname;
 
         states.sort(function(a, b){ return b.path.length - a.path.length;}); // order by length
 
@@ -212,10 +212,10 @@ window.ls.container.set('router', function(window) {
         }); // order by number of paths parts
 
         for (let i = 0; i < states.length; i++) {
-            let value   = states[i];
-                value.path    = (value.path.substring(0, 1) !== '/') ? location.pathname + value.path : value.path; // Support for relative paths
-            let match   = new RegExp("^" + value.path.replace(/:[^\s/]+/g, '([\\w-]+)') + "$");
-            let found = url.match(match);
+            let value       = states[i];
+                value.path  = (value.path.substring(0, 1) !== '/') ? location.pathname + value.path : value.path; // Support for relative paths
+            let match       = new RegExp("^" + value.path.replace(/:[^\s/]+/g, '([\\w-]+)') + "$");
+            let found       = url.match(match);
 
             if(found) {
                 previous = current;
