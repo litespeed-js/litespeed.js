@@ -98,6 +98,10 @@ window.ls.container.get('view').add({
         let sync = ((as, prefix) => {
             return () => {
                 for(let i = 0; i < paths.length; i++) {
+                    if('{{' + paths[i] + '}}' !== syntax) { // Sync only direct path
+                        continue;
+                    }
+
                     container.path(paths[i], element.value, as, prefix);
                 }
             }
