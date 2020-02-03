@@ -16,7 +16,7 @@ window.ls.container.set('view', function(http, container) {
         }
     };
 
-    let parse = function (node, skip) {
+    let parse = function (node, skip, callback) {
 
         if(node.tagName === 'SCRIPT') {
             return;
@@ -67,6 +67,10 @@ window.ls.container.set('view', function(http, container) {
                             x--;
                         }
 
+                        if(callback) {
+                            callback();
+                        }
+
                         continue;
                     }
 
@@ -92,6 +96,10 @@ window.ls.container.set('view', function(http, container) {
 
                                     // re-render specific scope children after template is loaded
                                     parse(node, true);
+
+                                    if(callback) {
+                                        callback();
+                                    }
                                 }
                             }(node, comp),
                             function(error) {
@@ -174,8 +182,8 @@ window.ls.container.set('view', function(http, container) {
          * @param element
          * @returns view
          */
-        render: function(element) {
-            parse(element);
+        render: function(element, callback) {
+            parse(element, false, callback);
             element.dispatchEvent(new window.Event('rendered', {bubbles: false}));
         }
     }

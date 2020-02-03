@@ -35,13 +35,15 @@ window.ls.container.get('view').add({
                 scope.template  = '';
             }
             else if(count === 1) {
-                view.render(element);
+                view.render(element, function() {
+                    document.dispatchEvent(new CustomEvent('state-changed'));
+                });
             }
             else if(null !== router.getPrevious()) {
-                view.render(element);
+                view.render(element, function() {
+                    document.dispatchEvent(new CustomEvent('state-changed'));
+                });
             }
-
-            document.dispatchEvent(new CustomEvent('state-changed'));
         };
         let findParent = function(tagName, el) {
             if ((el.nodeName || el.tagName).toLowerCase() === tagName.toLowerCase()){
