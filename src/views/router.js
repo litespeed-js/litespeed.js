@@ -33,6 +33,7 @@ window.ls.container.get('view').add({
 
             if(firstFromServer && null === router.getPrevious()) { // Disable first view, so server could render it faster
                 scope.template  = '';
+                document.dispatchEvent(new CustomEvent('state-changed'));
             }
             else if(count === 1) {
                 view.render(element, function() {
