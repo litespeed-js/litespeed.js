@@ -1,6 +1,7 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-bind',
     controller: function(element, expression, container, $prefix, $as) {
+        let debug = element.getAttribute('data-debug') || false;
         let echo = function(value, bind = true) {
             if(
                 element.tagName === 'INPUT' ||
@@ -97,9 +98,33 @@ window.ls.container.get('view').add({
         };
         let sync = ((as, prefix) => {
             return () => {
+                let parsedSyntax = ((syntax.indexOf('.') > -1)
+                    ? syntax.replace(as + '.', prefix + '.')
+                    : syntax.replace(as, prefix));
+
+                if(debug) {
+                    console.info('debug-ls-bind', 'sync-path', paths);
+                    console.info('debug-ls-bind', 'sync-syntax', syntax);
+                    console.info('debug-ls-bind', 'sync-syntax-parsed', parsedSyntax);
+                    console.info('debug-ls-bind', 'sync-as', $as);
+                    console.info('debug-ls-bind', 'sync-prefix', $prefix);
+                    console.info('debug-ls-bind', 'sync-value',element.value);
+                }
+
                 for(let i = 0; i < paths.length; i++) {
-                    if('{{' + paths[i] + '}}' !== syntax) { // Sync only direct path
+                    if('{{' + paths[i] + '}}' !== parsedSyntax) { // Sync only direct path
+                        if(debug) {
+                            console.info('debug-ls-bind', 'sync-skipped-path', paths[i]);
+                            console.info('debug-ls-bind', 'sync-skipped-syntax', syntax);
+                            console.info('debug-ls-bind', 'sync-skipped-syntax-parsed', parsedSyntax);
+                        }
+
                         continue;
+                    }
+
+                    if(debug) {
+                        console.info('debug-ls-bind', 'sync-loop-path', paths[i]);
+                        console.info('debug-ls-bind', 'sync-loop-syntax', parsedSyntax);
                     }
 
                     container.path(paths[i], element.value, as, prefix);
@@ -120,6 +145,13 @@ window.ls.container.get('view').add({
 
         for(let i = 0; i < paths.length; i++) {
             let path = paths[i].split('.');
+
+            if(debug) {
+                console.info('debug-ls-bind', 'bind-path', path);
+                console.info('debug-ls-bind', 'bind-syntax', syntax);
+                console.info('debug-ls-bind', 'bind-as', $as);
+                console.info('debug-ls-bind', 'bind-prefix', $prefix);
+            }
 
             while(path.length) {
                 container.bind(element, path.join('.'), () => {
