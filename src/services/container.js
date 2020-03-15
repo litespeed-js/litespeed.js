@@ -236,7 +236,8 @@ window.ls.container = function() {
      * @param as string
      * @param prefix string
      */
-    let path = function(path, value, as, prefix) {
+    let path = function(path, value, as, prefix, type) {
+        type = (type) ? type : 'assign';
         as = (as) ? as : container.get('$as');
         prefix = (prefix) ? prefix : container.get('$prefix');
 
@@ -244,7 +245,7 @@ window.ls.container = function() {
             .split('.');
 
         let name    = path.shift();
-        let object  = this.get(name);
+        let object  = container.get(name);
         let result  = null;
 
         // Iterating path
@@ -264,7 +265,28 @@ window.ls.container = function() {
             && object
             && shift
             && (object[shift] !== undefined || object[shift] !== null)) {
-            object[shift] = value;
+
+            switch(type) {
+                case 'append':
+                    if(!Array.isArray(object[shift])) {
+                        object[shift] = [];
+                    }
+        
+                    object[shift].push(value);
+                    break;
+
+                case 'prepend':
+                    if(!Array.isArray(object[shift])) {
+                        object[shift] = [];
+                    }
+
+                    object[shift].unshift(value);
+                    break;
+
+                default:
+                    object[shift] = value;
+            }
+
             return true;
         }
 
