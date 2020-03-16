@@ -11,6 +11,8 @@ window.ls.container = function() {
 
     let listeners = {};
 
+    let namespaces = {};
+
     /**
      * Set Service
      *
@@ -119,8 +121,6 @@ window.ls.container = function() {
 
                     let path = receiver.__name + '.' + key;
 
-                    //console.log('triggered', path + '.changed', key, value);
-
                     document.dispatchEvent(new CustomEvent(path + '.changed'));
 
                     if(skip) { // Avoid endless loop, when watch callback triggers changes itself
@@ -228,21 +228,16 @@ window.ls.container = function() {
      * Get Path
      *
      * Return value from a service by a given path, nesting is supported by using the '.' delimiter.
-     * When passing a value parameter the given path will be set with the new value. Use 'as' and 'prefix' parameters to define the service namespace.
+     * When passing a value parameter the given path will be set with the new value.
      *
      * @returns {*}
      * @param path string
      * @param value mixed
-     * @param as string
-     * @param prefix string
      */
-    let path = function(path, value, as, prefix, type) {
+    let path = function(path, value, type) {
         type = (type) ? type : 'assign';
-        as = (as) ? as : container.get('$as');
-        prefix = (prefix) ? prefix : container.get('$prefix');
 
-        path = ((path.indexOf('.') > -1) ? path.replace(as + '.', prefix + '.') : path.replace(as, prefix))
-            .split('.');
+        path = container.scope(path).split('.');
 
         let name    = path.shift();
         let object  = container.get(name);
@@ -309,41 +304,60 @@ window.ls.container = function() {
      * Bind
      *
      * Binds an element to a path change. Every time a new value is set to given path the callback you passes to the function will be executed.
-     * Use 'as' and 'prefix' parameters to define the service namespace.
      *
      * @returns {*}
      * @param element
      * @param path string
      * @param callback callback
-     * @param as string
-     * @param prefix string
      */
-    let bind = function(element, path, callback, as, prefix) {
-        as = (as) ? as : container.get('$as');
-        prefix = (prefix) ? prefix : container.get('$prefix');
-
-        let event = ((path.indexOf('.') > -1) ? path.replace(as + '.', prefix + '.') : path.replace(as, prefix)) + '.changed';
+    let bind = function(element, path, callback) {
+        let event = container.scope(path) + '.changed';
         let service = event.split('.').slice(0,1).pop();
+        let debug = element.getAttribute('data-debug') || false;
 
         listeners[service] = listeners[service] || {};
 
         listeners[service][event] = true;
 
-        let printer = () => {
-            if(!document.body.contains(element)) { // Clean DOM
-                element = null;
-                document.removeEventListener(event, printer, false);
-
-                return false;
+        let printer = (function(x) {
+            return function() {
+                if(!document.body.contains(element)) { // Clean DOM
+                    element = null;
+                    document.removeEventListener(event, printer, false);
+                    
+                    return false;
+                }
+    
+                let oldNamespaces = namespaces;
+    
+                namespaces = x;
+                
+                callback();
+                
+                namespaces = oldNamespaces;
             }
-
-            //console.log('registered', event, element);
-
-            callback();
-        };
+        }(Object.assign({}, namespaces)));
 
         document.addEventListener(event, printer);
     };
+
+    let addNamespace = function(key, scope) {
+        namespaces[key] = scope;
+        return this;
+    }
+
+    let removeNamespace = function(key) {
+        delete namespaces[key];
+        return this;
+    }
+
+    let scope = function(path) {
+        for (let [key, value] of Object.entries(namespaces)) {
+            path = (path.indexOf('.') > -1) ? path.replace(key + '.', value + '.') : path.replace(key, value);
+        }
+
+        return path;
+    }
 
     let container = {
         set: set,
@@ -351,8 +365,12 @@ window.ls.container = function() {
         resolve: resolve,
         path: path,
         bind: bind,
+        scope: scope,
+        addNamespace: addNamespace,
+        removeNamespace: removeNamespace,
         stock: stock,
         listeners: listeners,
+        namespaces: namespaces,
     };
 
     set('container', container, true, false);

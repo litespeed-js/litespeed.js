@@ -7,12 +7,10 @@ window.ls.container.set('expression', function(container, filter) {
         /**
          * @param string string
          * @param def string
-         * @param as string
-         * @param prefix string
          * @param cast bool
          * @returns {string}
          */
-        parse: function(string, def, as, prefix, cast = false) {
+        parse: function(string, def, cast = false) {
             def = def || '';
             paths = [];
 
@@ -27,9 +25,9 @@ window.ls.container.set('expression', function(container, filter) {
                     reference = reference.split('|');
 
                     let path = (reference[0] || '');
-                    let result = container.path(path, undefined, as, prefix);
+                    let result = container.path(path);
 
-                    path = (path.indexOf('.') > -1) ? path.replace(as + '.', prefix + '.') : path.replace(as, prefix);
+                    path = container.scope(path);
 
                     if(!paths.includes(path)) {
                         paths.push(path);

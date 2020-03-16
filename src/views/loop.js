@@ -6,6 +6,7 @@ window.ls.container.get('view').add({
     controller: function(element, view, container, window) {
         let expr  = element.getAttribute('data-ls-loop');
         let as    = element.getAttribute('data-ls-as');
+        let debug = element.getAttribute('data-debug') || false;
         let echo  = function() {
             let array = container.path(expr);
 
@@ -24,9 +25,6 @@ window.ls.container.get('view').add({
             }
 
             let children = [];
-            let originalIndex = container.get('$index') || null;
-            let originalPrefix = container.get('$prefix') || null;
-            let originalAs = container.get('$as') || null;
 
             element.$lsSkip = true;
 
@@ -45,18 +43,23 @@ window.ls.container.get('view').add({
                 (index => {
                     let context = expr + '.' + index;
 
+                    container.addNamespace(as, context);
+                    
+                    if(debug) {
+                        console.info('debug-ls-loop', 'index', index);
+                        console.info('debug-ls-loop', 'context', context);
+                        console.info('debug-ls-loop', 'context-path', container.path(context).name);
+                        console.info('debug-ls-loop', 'namespaces', container.namespaces);
+                    }
+
                     container.set(as, container.path(context), true, watch);
                     container.set('$index', index, true, false);
-                    container.set('$prefix', context, true, false);
-                    container.set('$as', as, true, false);
 
                     view.render(children[prop]);
+
+                    container.removeNamespace(as);
                 })(prop);
             }
-
-            container.set('$index', originalIndex, true, false);
-            container.set('$prefix', originalPrefix, true, false);
-            container.set('$as', originalAs, true, false);
 
             element.dispatchEvent(new Event('looped'));
         };

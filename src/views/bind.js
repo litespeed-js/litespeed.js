@@ -1,6 +1,6 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-bind',
-    controller: function(element, expression, container, $prefix, $as) {
+    controller: function(element, expression, container) {
         let debug = element.getAttribute('data-debug') || false;
         let echo = function(value, bind = true) {
             if(
@@ -26,7 +26,7 @@ window.ls.container.get('view').add({
                                     value = element.value;
                                 }
 
-                                container.path(paths[i], value, $as, $prefix);
+                                container.path(paths[i], value);
                             }
                         });
                     }
@@ -61,7 +61,7 @@ window.ls.container.get('view').add({
                     if(bind) {
                         element.addEventListener('change', () => {
                             for(let i = 0; i < paths.length; i++) {
-                                let value = container.path(paths[i], undefined, $as, $prefix);
+                                let value = container.path(paths[i]);
                                 let index = value.indexOf(element.value);
 
                                 if(element.checked  && index < 0) {
@@ -72,7 +72,7 @@ window.ls.container.get('view').add({
                                     value.splice(index, 1);
                                 }
 
-                                container.path(paths[i], value, $as, $prefix);
+                                container.path(paths[i], value);
                             }
                         });
                     }
@@ -96,18 +96,12 @@ window.ls.container.get('view').add({
                 }
             }
         };
-        let sync = ((as, prefix) => {
+        let sync = (() => {
             return () => {
-                let parsedSyntax = ((syntax.indexOf('.') > -1)
-                    ? syntax.replace(as + '.', prefix + '.')
-                    : syntax.replace(as, prefix));
-
                 if(debug) {
                     console.info('debug-ls-bind', 'sync-path', paths);
                     console.info('debug-ls-bind', 'sync-syntax', syntax);
                     console.info('debug-ls-bind', 'sync-syntax-parsed', parsedSyntax);
-                    console.info('debug-ls-bind', 'sync-as', $as);
-                    console.info('debug-ls-bind', 'sync-prefix', $prefix);
                     console.info('debug-ls-bind', 'sync-value',element.value);
                 }
 
@@ -127,20 +121,21 @@ window.ls.container.get('view').add({
                         console.info('debug-ls-bind', 'sync-loop-syntax', parsedSyntax);
                     }
 
-                    container.path(paths[i], element.value, as, prefix);
+                    container.path(paths[i], element.value);
                 }
             }
-        })($as, $prefix);
+        })();
 
         let syntax = element.getAttribute('data-ls-bind');
+        let parsedSyntax = container.scope(syntax);
         let unsync = (!!element.getAttribute('data-unsync')) || false;
-        let result = expression.parse(syntax, null, $as, $prefix);
+        let result = expression.parse(syntax);
         let paths  = expression.getPaths();
 
         echo(result, !unsync);
 
         element.addEventListener('looped', function () { // Rebind after loop comp finish to render
-            echo(expression.parse(syntax, null, $as, $prefix), false);
+            echo(expression.parse(parsedSyntax), false);
         });
 
         for(let i = 0; i < paths.length; i++) {
@@ -149,13 +144,11 @@ window.ls.container.get('view').add({
             if(debug) {
                 console.info('debug-ls-bind', 'bind-path', path);
                 console.info('debug-ls-bind', 'bind-syntax', syntax);
-                console.info('debug-ls-bind', 'bind-as', $as);
-                console.info('debug-ls-bind', 'bind-prefix', $prefix);
             }
 
             while(path.length) {
                 container.bind(element, path.join('.'), () => {
-                    echo(expression.parse(syntax, null, $as, $prefix), false);
+                    echo(expression.parse(parsedSyntax), false);
                 });
                 path.pop();
             }
