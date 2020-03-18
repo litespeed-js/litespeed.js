@@ -37,7 +37,6 @@ test('basic binding after service title change', () => {
 test('basic binding after service object change', () => {
     expect(function () {
         instance.author = {name: 'EF'}
-        console.log(container.listeners)
         return element2.value;
     }()).toEqual('EF');
 });

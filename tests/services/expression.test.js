@@ -47,7 +47,7 @@ test('expression parsing - not found (null default)', () => {
 test('expression parsing - not found (with casting)', () => {
     expect(function () {
         return expression.parse('{{tasks.title}}', '', null, null, true)
-    }()).toBe("'" + tasks.title + "'");
+    }()).toBe(tasks.title);
 });
 
 test('expression parsing - customize regex', () => {
