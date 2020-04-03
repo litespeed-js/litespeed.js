@@ -3,8 +3,8 @@ window.ls.container.get('view').add({
     template: false,
     repeat: false,
     nested: false,
-    controller: function(element, view, container, window) {
-        let expr  = element.getAttribute('data-ls-loop');
+    controller: function(element, view, container, window, expression) {
+        let expr  = expression.parse(element.getAttribute('data-ls-loop'));
         let as    = element.getAttribute('data-ls-as');
         let debug = element.getAttribute('data-debug') || false;
         let echo  = function() {
