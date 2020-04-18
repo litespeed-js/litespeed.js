@@ -48,10 +48,13 @@ window.ls.container.set('expression', function(container, filter) {
                     else if(((typeof result === 'object') || (typeof result === 'string')) && cast) { // Auto casting for vars
                         result = '\'' + result + '\'';
                     }
-
+  
                     return result;
                 }
-            );
+            )
+            .replace(/\\{/g, "{")
+            .replace(/\\}/g, "}")
+            ;
         },
         getPaths: () => paths,
     }
