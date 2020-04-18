@@ -6,9 +6,11 @@ window.ls.container.get('view').add({
     controller: function(element, view, container, window, expression) {
         let expr  = expression.parse(element.getAttribute('data-ls-loop'));
         let as    = element.getAttribute('data-ls-as');
+        let limit = parseInt(expression.parse(element.getAttribute('data-limit') || '') || -1);
         let debug = element.getAttribute('data-debug') || false;
         let echo  = function() {
             let array = container.path(expr);
+            let counter = 0;
 
             array = (!array) ? [] : array; // Cast null to empty array
 
@@ -31,6 +33,13 @@ window.ls.container.get('view').add({
             element.style.visibility = (0 === array.length) ? 'hidden' : 'visible';
 
             for (let prop in array) {
+
+                if(counter == limit) {
+                    break;
+                }
+
+                counter++;
+
                 if (!array.hasOwnProperty(prop)) {
                     continue;
                 }
