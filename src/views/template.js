@@ -1,10 +1,11 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-template',
     template: false,
-    repeat: true,
+    repeat: false,
     controller: function(element, view, http, expression, document, container) {
         let template    = element.getAttribute('data-ls-template') || '';
         let type        = element.getAttribute('data-type') || 'url';
+        let debug       = element.getAttribute('data-debug') || false;
         let paths       = [];
         let check       = function(init = false) {
             let source = expression.parse(template);
@@ -23,7 +24,9 @@ window.ls.container.get('view').add({
                     }));
                 }
                 else {
-                    element.innerHTML = '<span style="color: red">Missing template "' + source + '"</span>';
+                    if(debug) {
+                        console.error('Missing template "' + source + '"');
+                    }
                 }
 
                 if(!init) {
