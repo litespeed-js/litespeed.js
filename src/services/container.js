@@ -278,6 +278,14 @@ window.ls.container = function() {
                     object[shift].unshift(value);
                     break;
 
+                case 'splice':
+                    if(!Array.isArray(object[shift])) {
+                        object[shift] = [];
+                    }
+
+                    object[shift].splice(value,1);
+                    break;
+
                 default:
                     object[shift] = value;
             }
