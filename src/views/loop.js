@@ -6,6 +6,7 @@ window.ls.container.get('view').add({
     controller: function(element, view, container, window, expression) {
         let expr  = expression.parse(element.getAttribute('data-ls-loop'));
         let as    = element.getAttribute('data-ls-as');
+        let key    = element.getAttribute('data-ls-key') || '$index';
         let limit = parseInt(expression.parse(element.getAttribute('data-limit') || '') || -1);
         let debug = element.getAttribute('data-debug') || false;
         let echo  = function() {
@@ -62,7 +63,7 @@ window.ls.container.get('view').add({
                     }
 
                     container.set(as, container.path(context), true, watch);
-                    container.set('$index', index, true, false);
+                    container.set(key, index, true, false);
 
                     view.render(children[prop]);
 
