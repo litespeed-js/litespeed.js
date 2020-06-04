@@ -19,7 +19,7 @@ Litespeed.js makes very good use of both browser memory management, garbage coll
 - 4.9kb (minified and compressed)
 - No Tooling Required
 - Loves and Embrace HTML
-- MVVC
+- MVVM
 - Built-in Router
 
 ## Resources
