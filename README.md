@@ -13,7 +13,7 @@ The litespeed.js framework main features include an **[MVVM](https://en.wikipedi
 
 Litespeed.js makes very good use of both browser memory management, garbage collection and rendering to maximize your web application performance. As of version 0.2.* litespeed.js weights only **4.9kb (minified and compressed)**
 
-**Main Features:**
+## Main Features
 
 - Zero Dependencies
 - 4.9kb (minified and compressed)
@@ -21,6 +21,8 @@ Litespeed.js makes very good use of both browser memory management, garbage coll
 - Loves and Embrace HTML
 - MVVC
 - Built-in Router
+
+## Resources
 
 - [Documentation](/docs/get-started.md)
 - [Contributing](#contributing)
