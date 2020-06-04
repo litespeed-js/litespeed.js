@@ -24,7 +24,7 @@ window.ls.container.set('expression', function(container, filter) {
 
                     reference = reference.split('|');
 
-                    let path = (reference[0] || '');
+                    let path = container.scope((reference[0] || ''));
                     let result = container.path(path);
 
                     path = container.scope(path);
