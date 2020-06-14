@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Litespeed.js</title>
+        <link rel="icon" type="image/png" href="/favicon.png">
+        <link href="/styles/default.css" rel="stylesheet" />
+        <link href="/styles/androidstudio.css" rel="stylesheet" />
+        <meta name="description" content="Sample Litespeed.js application">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+
+        <style>
+            body {
+                padding: 50px;
+            }
+
+            [data-ls-placeholder] {
+                background: red;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1 data-ls-bind="{{tasks.title}}">Memory Leaks</h1>
+
+        <!-- <ul id="list" data-ls-loop="tasks.list" data-ls-as="task">
+            <li>
+                <h2 data-ls-bind="{{task.title}}"></h2>
+                <p data-ls-bind="{{task.desc}}"></p>
+            </li>
+        </ul> -->
+
+        <script>
+            (function (window) {
+                "use strict";
+
+                document.addEventListener("DOMContentLoaded", function() {
+                    let head      = document.getElementsByTagName('head')[0];
+                    let script    = document.createElement('script');
+                    script.type   = 'text/javascript';
+                    script.async  = true;
+                    script.src    = 'scripts/litespeed.js';
+
+                    script.onload = function() {
+
+                        let count = 0;
+                        let offest = 25;
+                        let list = document.getElementById('list');
+
+                        window.ls.container
+                            .set('tasks', function () {
+                                return {
+                                    title: 'Task Title',
+                                    list: [],
+                                };
+                            }, true)
+                        ;
+
+                        function setTitle() {
+                            console.log('Title ' + count);
+                            
+                            let temp = window.ls.container.get('tasks');
+                                                        
+                            for (let index = count; index < count + offest; index++) {
+                                temp.title = 'New title #'+index;
+                            }
+
+                            count += offest;
+                        }
+
+                        function setTasks() {
+                            console.log('Tasks ' + count);
+                            
+                            let temp = window.ls.container.get('tasks');
+                            
+                            temp.list = [];
+
+                            for (let index = count; index < count + offest; index++) {
+                                temp.list.push({title: 'Pushed title ' + index, desc: 'This is my hello world test x' + index});
+                            }
+
+                            count += offest;
+
+                            //window.ls.view.render(list);
+                        }
+
+                        // setTasks();
+
+                        // setInterval(function () {
+                        //     setTasks();
+                        // }, 5000);
+
+                        setTitle();
+
+                        setInterval(function () {
+                            setTitle();
+                        }, 3000);
+
+                        window.ls.view
+                            .add({
+                                selector: 'data-tasks-show-active',
+                                controller: function(element, tasks) {
+                                    element.addEventListener('click', function () {
+                                        tasks.showActive();
+                                    });
+                                }
+                            })
+                        ;
+
+                        window.ls.run(window);
+                    };
+
+                    head.appendChild(script);
+                });
+
+            }(window));
+        </script>
+    </body>
+</html>
