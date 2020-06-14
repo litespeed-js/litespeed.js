@@ -1,7 +1,6 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-loop',
     template: false,
-    repeat: false,
     nested: false,
     controller: function(element, view, container, window, expression) {
         let expr  = expression.parse(element.getAttribute('data-ls-loop'));

@@ -1,7 +1,6 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-template',
     template: false,
-    repeat: false,
     controller: function(element, view, http, expression, document, container) {
         let template    = element.getAttribute('data-ls-template') || '';
         let type        = element.getAttribute('data-type') || 'url';

@@ -1,6 +1,5 @@
 window.ls.container.get('view').add({
     selector: 'data-ls-router',
-    repeat: false,
     controller: function(element, window, document, view, router) {
         let firstFromServer = (element.getAttribute('data-first-from-server') === 'true');
         let scope = {
@@ -30,7 +29,7 @@ window.ls.container.get('view').add({
             scope.controller    = (undefined !== route.view.controller) ? route.view.controller : function() {};
 
             document.dispatchEvent(new CustomEvent('state-change'));
-
+            
             if(firstFromServer && null === router.getPrevious()) { // Disable first view, so server could render it faster
                 scope.template  = '';
                 document.dispatchEvent(new CustomEvent('state-changed'));
@@ -41,6 +40,16 @@ window.ls.container.get('view').add({
                 });
             }
             else if(null !== router.getPrevious()) {
+                // console.info('Clean DOM View');
+                
+                // let new_element = element.cloneNode(true);
+                
+                // element.parentNode.replaceChild(new_element, element);
+
+                // element = new_element;
+
+                // console.info('empty element', element);
+
                 view.render(element, function() {
                     document.dispatchEvent(new CustomEvent('state-changed'));
                 });
