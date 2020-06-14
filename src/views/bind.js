@@ -92,7 +92,7 @@ window.ls.container.get('view').add({
             }
             else {
                 if(element.textContent != value) {
-                    element.innerHTML = value;
+                    element.textContent = value;
                 }
             }
         };
