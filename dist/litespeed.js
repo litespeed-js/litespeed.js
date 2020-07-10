@@ -38,7 +38,7 @@ if(typeof url!=='string'){throw new Error('var url must be of type string');}
 if(typeof headers!=='object'){throw new Error('var headers must be of type object');}
 if(typeof url!=='string'){throw new Error('var url must be of type string');}
 for(i=0;i<globalParams.length;i++){url=addParam(url,globalParams[i].key,globalParams[i].value);}
-return new Promise(function(resolve,reject){let xmlhttp=new XMLHttpRequest();xmlhttp.open(method,url,true);xmlhttp.setRequestHeader('Ajax','1');for(i=0;i<globalHeaders.length;i++){xmlhttp.setRequestHeader(globalHeaders[i].key,globalHeaders[i].value);}
+return new Promise(function(resolve,reject){let xmlhttp=new XMLHttpRequest();xmlhttp.open(method,url,true);for(i=0;i<globalHeaders.length;i++){xmlhttp.setRequestHeader(globalHeaders[i].key,globalHeaders[i].value);}
 for(let key in headers){if(headers.hasOwnProperty(key)){xmlhttp.setRequestHeader(key,headers[key]);}}
 xmlhttp.onload=function(){if(4===xmlhttp.readyState&&200===xmlhttp.status){resolve(xmlhttp.response);}
 else{document.dispatchEvent(new CustomEvent('http-'+method.toLowerCase()+'-'+xmlhttp.status));reject(new Error(xmlhttp.statusText));}};if(progress){xmlhttp.addEventListener('progress',progress);xmlhttp.upload.addEventListener('progress',progress,false);}
