@@ -49,8 +49,6 @@ window.ls.container.set('http', function(document) {
 
                 xmlhttp.open(method, url, true);
 
-                xmlhttp.setRequestHeader('Ajax', '1');
-
                 for (i = 0; i < globalHeaders.length; i++) { // Add global headers to request
                     xmlhttp.setRequestHeader(globalHeaders[i].key, globalHeaders[i].value);
                 }
