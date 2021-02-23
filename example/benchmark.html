@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Litespeed.js</title>
+        <title>Benchmark #2</title>
         <link rel="icon" type="image/png" href="/favicon.png">
         <link href="/styles/default.css" rel="stylesheet" />
         <link href="/styles/androidstudio.css" rel="stylesheet" />
@@ -21,7 +21,7 @@
     </head>
 
     <body>
-        <h1 data-ls-bind="{{tasks.title}}">Memory Leaks</h1>
+        <h1 xdata-ls-bind="{{tasks.title}}" id="title">Memory Leaks</h1>
 
         <!-- <ul id="list" data-ls-loop="tasks.list" data-ls-as="task">
             <li>
@@ -44,7 +44,7 @@
                     script.onload = function() {
 
                         let count = 0;
-                        let offest = 25;
+                        let offest = 300;
                         let list = document.getElementById('list');
 
                         window.ls.container
@@ -62,7 +62,8 @@
                             let temp = window.ls.container.get('tasks');
                                                         
                             for (let index = count; index < count + offest; index++) {
-                                temp.title = 'New title #'+index;
+                                //temp.title = 'New title #'+index;
+                                document.getElementById('title').textContent = 'New title #'+index;
                             }
 
                             count += offest;

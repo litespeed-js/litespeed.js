@@ -30,7 +30,7 @@ window.ls.container.get('view').add({
 
             element.$lsSkip = true;
 
-            element.style.visibility = (0 === array.length) ? 'hidden' : 'visible';
+            element.style.visibility = (0 === array.length && element.style.visibility == '') ? 'hidden' : 'visible';
 
             for (let prop in array) {
 
