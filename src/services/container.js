@@ -97,6 +97,10 @@ window.ls.container = function() {
                         return true;
                     }
 
+                    if(key !== 'constructor' && typeof target[key] === 'function') {
+                        return target[key].bind(target);
+                    }
+
                     if (typeof target[key] === 'object' && target[key] !== null && !target[key].__proxy) {
                         let handler = Object.assign({}, this);
 
@@ -332,16 +336,16 @@ window.ls.container = function() {
                 if(!document.body.contains(element)) { // Clean DOM
                     element = null;
                     document.removeEventListener(event, printer, false);
-                    
+
                     return false;
                 }
-    
+
                 let oldNamespaces = namespaces;
-    
+
                 namespaces = x;
-                
+
                 callback();
-                
+
                 namespaces = oldNamespaces;
             }
         }(Object.assign({}, namespaces)));

@@ -10,58 +10,23 @@ window.ls.container.set('router', function(window) {
      * @param URL string
      * @returns {*}
      */
-    let getJsonFromUrl = function (URL) {
+    let getJsonFromUrl = function (uri) {
         let query;
 
-        if(URL) {
-            let pos = location.search.indexOf('?');
-            if(pos===-1) return [];
-            query = location.search.substr(pos+1);
+        if(uri) {
+            query = new URL(uri);
+            query = query.searchParams;
         } else {
-            query = location.search.substr(1);
+            query = location.search;
         }
 
-        let result = {};
+        const params = new URLSearchParams(location.search);
 
-        query.split('&').forEach(function(part) {
-            if(!part) {
-                return;
-            }
-
-            part = part.split('+').join(' '); // replace every + with space, regexp-free version
-
-            let eq      = part.indexOf('=');
-            let key     = eq>-1 ? part.substr(0,eq) : part;
-            let val     = eq>-1 ? decodeURIComponent(part.substr(eq+1)) : '';
-            let from    = key.indexOf('[');
-
-            if(from === -1) {
-                result[decodeURIComponent(key)] = val;
-            }
-            else {
-                let to = key.indexOf(']');
-                let index = decodeURIComponent(key.substring(from+1,to));
-
-                key = decodeURIComponent(key.substring(0,from));
-
-                if(!result[key]) {
-                    result[key] = [];
-                }
-
-                if(!index) {
-                    result[key].push(val);
-                }
-                else {
-                    result[key][index] = val;
-                }
-            }
-        });
-
-        return result;
+        return Object.fromEntries(params)
     };
 
     let states      = [];
-    let params      = getJsonFromUrl(window.location.search);
+    let params      = getJsonFromUrl();
     let hash        = window.location.hash;
     let current     = null;
     let previous    = null;
@@ -78,7 +43,7 @@ window.ls.container.set('router', function(window) {
      *
      * @returns {*}
      */
-    let getCurrent= () => current;
+    let getCurrent = () => current;
 
     /**
      * Set previous state scope
@@ -162,7 +127,6 @@ window.ls.container.set('router', function(window) {
      * @returns this
      */
     let add = function(path, view) {
-
         /**
          * Validation
          */
@@ -225,7 +189,7 @@ window.ls.container.set('router', function(window) {
             }
         }
 
-        return null
+        return null;
     };
 
     /**
@@ -242,9 +206,9 @@ window.ls.container.set('router', function(window) {
         else {
             window.history.replaceState({}, '', URL);
         }
-        
+
         window.dispatchEvent(new PopStateEvent('popstate', {}));
-        
+
         return this;
     };
 
@@ -268,7 +232,7 @@ window.ls.container.set('router', function(window) {
         params: params,
         hash: hash,
         reset: function () {
-            this.params = getJsonFromUrl(window.location.search);
+            this.params = getJsonFromUrl();
             this.hash = window.location.hash;
         }
     };

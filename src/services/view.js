@@ -22,7 +22,7 @@ window.ls.container.set('view', function(http, container) {
             return;
         }
 
-        if(node.attributes && skip !== true) {
+        if(node.attributes && !skip) {
             let attrs = [];
             let attrsLen = node.attributes.length;
 
@@ -40,18 +40,18 @@ window.ls.container.set('view', function(http, container) {
 
                 // if(node && node.parentNode && node.parentNode.replaceChild) { // Remove previous refs
                 //     console.info('Clean DOM Node (single)', node);
-        
+
                 //     let new_element = node.cloneNode(true);
-                    
+
                 //     node.parentNode.replaceChild(new_element, node);
                 //     node = new_element;
-                    
+
                 //     console.info('empty node', node);
                 // }
 
                 for (let x = 0; x < attrsLen; x++) {
 
-                    if (node.$lsSkip === true) { // Stop render if comp has set $lsSkip
+                    if (node.$lsSkip) { // Stop render if comp has set $lsSkip
                         break;
                     }
 
@@ -65,7 +65,7 @@ window.ls.container.set('view', function(http, container) {
 
                     let comp = stock[attr];
 
-                    if (typeof comp.template === "function") { // If template is function and not string resolve it first
+                    if (typeof comp.template === 'function') { // If template is function and not string resolve it first
                         comp.template = container.resolve(comp.template);
                     }
 
@@ -121,13 +121,13 @@ window.ls.container.set('view', function(http, container) {
             }
         }
 
-        if(true === node.$lsSkip) { // ELEMENT told not to render child nodes
+        if(node.$lsSkip) { // ELEMENT told not to render child nodes
             return;
         }
 
         let list = (node) ? node.childNodes : [];
 
-        if(node.$lsSkip === true) {
+        if(node.$lsSkip) {
             list = [];
         }
 

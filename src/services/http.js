@@ -3,15 +3,6 @@ window.ls.container.set('http', function(document) {
     let globalParams    = [],
         globalHeaders   = [];
 
-    let addParam = function(url, param, value) {
-        param = encodeURIComponent(param);
-        let a = document.createElement('a');
-        param += (value ? "=" + encodeURIComponent(value) : "");
-        a.href = url;
-        a.search += (a.search ? "&" : "") + param;
-        return a.href;
-    };
-
     /**
      * @param method string
      * @param url string
@@ -21,35 +12,27 @@ window.ls.container.set('http', function(document) {
      * @returns Promise
      */
     let request = function(method, url, headers, payload, progress) {
-        let i;
+        url = new URL(url);
 
-        if(-1 === ['GET', 'POST', 'PUT', 'DELETE', 'TRACE', 'HEAD', 'OPTIONS', 'CONNECT', 'PATCH'].indexOf(method)) {
+        if(!['GET', 'POST', 'PUT', 'DELETE', 'TRACE', 'HEAD', 'OPTIONS', 'CONNECT', 'PATCH'].includes(method)) {
             throw new Error('var method must contain a valid HTTP method name');
-        }
-
-        if(typeof url !== 'string') {
-            throw new Error('var url must be of type string');
         }
 
         if(typeof headers !== 'object') {
             throw new Error('var headers must be of type object');
         }
 
-        if(typeof url !== 'string') {
-            throw new Error('var url must be of type string');
-        }
-
-        for (i = 0; i < globalParams.length; i++) { // Add global params to URL
-            url = addParam(url, globalParams[i].key, globalParams[i].value);
+        for (let i = 0; i < globalParams.length; i++) { // Add global params to URL
+            url.searchParams.append(globalParams[i].key, globalParams[i].value);
         }
 
         return new Promise(
             function(resolve, reject) {
                 let xmlhttp = new XMLHttpRequest();
 
-                xmlhttp.open(method, url, true);
+                xmlhttp.open(method, url.toString(), true);
 
-                for (i = 0; i < globalHeaders.length; i++) { // Add global headers to request
+                for (let i = 0; i < globalHeaders.length; i++) { // Add global headers to request
                     xmlhttp.setRequestHeader(globalHeaders[i].key, globalHeaders[i].value);
                 }
 

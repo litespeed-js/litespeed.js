@@ -23,7 +23,7 @@ window.ls.container.set('filter', function(container) {
         if (typeof $value !== 'string') {
             return $value;
         }
-        
+
         return $value.toLowerCase();
     });
 

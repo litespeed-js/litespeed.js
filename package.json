@@ -21,7 +21,6 @@
     "light",
     "javascript"
   ],
-  "dependencies": {},
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",

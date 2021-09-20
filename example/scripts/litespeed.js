@@ -8,6 +8,7 @@ if(service.instance){return service.instance;}
 let instance=(typeof service.object==='function')?this.resolve(service.object):service.object;let skip=false;if(service.watch&&name!=='window'&&name!=='document'&&name!=='element'&&typeof instance==='object'&&instance!==null){let handler={name:service.name,watch:function(){},get:function(target,key){if(key==="__name"){return this.name;}
 if(key==="__watch"){return this.watch;}
 if(key==="__proxy"){return true;}
+if(key!=='constructor'&&typeof target[key]==='function'){return target[key].bind(target);}
 if(typeof target[key]==='object'&&target[key]!==null&&!target[key].__proxy){let handler=Object.assign({},this);handler.name=handler.name+'.'+key;return new Proxy(target[key],handler)}
 else{return target[key];}},set:function(target,key,value,receiver){if(key==="__name"){return this.name=value;}
 if(key==="__watch"){return this.watch=value;}
@@ -33,12 +34,10 @@ let oldNamespaces=namespaces;namespaces=x;callback();namespaces=oldNamespaces;}}
 let removeNamespace=function(key){delete namespaces[key];return this;}
 let scope=function(path){for(let[key,value]of Object.entries(namespaces)){path=(path.indexOf('.')>-1)?path.replace(key+'.',value+'.'):path.replace(key,value);}
 return path;}
-let container={set:set,get:get,resolve:resolve,path:path,bind:bind,scope:scope,addNamespace:addNamespace,removeNamespace:removeNamespace,stock:stock,listeners:listeners,namespaces:namespaces,};set('container',container,true,false);return container;}();window.ls.container.set('http',function(document){let globalParams=[],globalHeaders=[];let addParam=function(url,param,value){param=encodeURIComponent(param);let a=document.createElement('a');param+=(value?"="+encodeURIComponent(value):"");a.href=url;a.search+=(a.search?"&":"")+param;return a.href;};let request=function(method,url,headers,payload,progress){let i;if(-1===['GET','POST','PUT','DELETE','TRACE','HEAD','OPTIONS','CONNECT','PATCH'].indexOf(method)){throw new Error('var method must contain a valid HTTP method name');}
-if(typeof url!=='string'){throw new Error('var url must be of type string');}
+let container={set:set,get:get,resolve:resolve,path:path,bind:bind,scope:scope,addNamespace:addNamespace,removeNamespace:removeNamespace,stock:stock,listeners:listeners,namespaces:namespaces,};set('container',container,true,false);return container;}();window.ls.container.set('http',function(document){let globalParams=[],globalHeaders=[];let request=function(method,url,headers,payload,progress){url=new URL(url);if(!['GET','POST','PUT','DELETE','TRACE','HEAD','OPTIONS','CONNECT','PATCH'].includes(method)){throw new Error('var method must contain a valid HTTP method name');}
 if(typeof headers!=='object'){throw new Error('var headers must be of type object');}
-if(typeof url!=='string'){throw new Error('var url must be of type string');}
-for(i=0;i<globalParams.length;i++){url=addParam(url,globalParams[i].key,globalParams[i].value);}
-return new Promise(function(resolve,reject){let xmlhttp=new XMLHttpRequest();xmlhttp.open(method,url,true);for(i=0;i<globalHeaders.length;i++){xmlhttp.setRequestHeader(globalHeaders[i].key,globalHeaders[i].value);}
+for(let i=0;i<globalParams.length;i++){url.searchParams.append(globalParams[i].key,globalParams[i].value);}
+return new Promise(function(resolve,reject){let xmlhttp=new XMLHttpRequest();xmlhttp.open(method,url.toString(),true);for(let i=0;i<globalHeaders.length;i++){xmlhttp.setRequestHeader(globalHeaders[i].key,globalHeaders[i].value);}
 for(let key in headers){if(headers.hasOwnProperty(key)){xmlhttp.setRequestHeader(key,headers[key]);}}
 xmlhttp.onload=function(){if(4===xmlhttp.readyState&&200===xmlhttp.status){resolve(xmlhttp.response);}
 else{document.dispatchEvent(new CustomEvent('http-'+method.toLowerCase()+'-'+xmlhttp.status));reject(new Error(xmlhttp.statusText));}};if(progress){xmlhttp.addEventListener('progress',progress);xmlhttp.upload.addEventListener('progress',progress,false);}
@@ -46,35 +45,31 @@ xmlhttp.onerror=function(){reject(new Error("Network Error"));};xmlhttp.send(pay
 return null;}
 function set(name,value,days){let date=new Date();date.setTime(date.getTime()+(days*24*60*60*1000));let expires=(0<days)?'expires='+date.toUTCString():'expires=0';document.cookie=name+"="+value+";"+expires+";path=/";return this;}
 return{'get':get,'set':set}},true,false);window.ls.container.set('view',function(http,container){let stock={};let execute=function(view,node,container){container.set('element',node,true,false);container.resolve(view.controller);if(true!==view.repeat){node.removeAttribute(view.selector);}};let parse=function(node,skip,callback){if(node.tagName==='SCRIPT'){return;}
-if(node.attributes&&skip!==true){let attrs=[];let attrsLen=node.attributes.length;for(let x=0;x<attrsLen;x++){attrs.push(node.attributes[x].nodeName);}
+if(node.attributes&&!skip){let attrs=[];let attrsLen=node.attributes.length;for(let x=0;x<attrsLen;x++){attrs.push(node.attributes[x].nodeName);}
 if(1!==node.nodeType){return;}
-if(attrs&&attrsLen){for(let x=0;x<attrsLen;x++){if(node.$lsSkip===true){break;}
+if(attrs&&attrsLen){for(let x=0;x<attrsLen;x++){if(node.$lsSkip){break;}
 let pointer=(!/Edge/.test(navigator.userAgent))?x:(attrsLen-1)-x;let length=attrsLen;let attr=attrs[pointer];if(!stock[attr]){continue;}
-let comp=stock[attr];if(typeof comp.template==="function"){comp.template=container.resolve(comp.template);}
+let comp=stock[attr];if(typeof comp.template==='function'){comp.template=container.resolve(comp.template);}
 if(!comp.template){(function(comp,node,container){execute(comp,node,container);})(comp,node,container);if(length!==attrsLen){x--;}
 if(callback){callback();}
 continue;}
 node.classList.remove('load-end');node.classList.add('load-start');node.$lsSkip=true;http.get(comp.template).then(function(node,comp){return function(data){node.$lsSkip=false;node.innerHTML=data;node.classList.remove('load-start');node.classList.add('load-end');(function(comp,node,container){execute(comp,node,container);})(comp,node,container);parse(node,true);if(callback){callback();}}}(node,comp),function(error){throw new Error('Failed to load comp template: '+error.message);});}}}
-if(true===node.$lsSkip){return;}
-let list=(node)?node.childNodes:[];if(node.$lsSkip===true){list=[];}
+if(node.$lsSkip){return;}
+let list=(node)?node.childNodes:[];if(node.$lsSkip){list=[];}
 for(let i=0;i<list.length;i++){let child=list[i];parse(child);}};return{stock:stock,add:function(object){if(typeof object!=='object'){throw new Error('object must be of type object');}
 let defaults={'selector':'','controller':function(){},'template':'','repeat':false,'protected':false};for(let prop in defaults){if(!defaults.hasOwnProperty(prop)){continue;}
 if(prop in object){continue;}
 object[prop]=defaults[prop];}
 if(!object.selector){throw new Error('View component is missing a selector attribute');}
-stock[object.selector]=object;return this;},render:function(element,callback){parse(element,false,callback);element.dispatchEvent(new window.Event('rendered',{bubbles:false}));}}},true,false);window.ls.container.set('router',function(window){let getJsonFromUrl=function(URL){let query;if(URL){let pos=location.search.indexOf('?');if(pos===-1)return[];query=location.search.substr(pos+1);}else{query=location.search.substr(1);}
-let result={};query.split('&').forEach(function(part){if(!part){return;}
-part=part.split('+').join(' ');let eq=part.indexOf('=');let key=eq>-1?part.substr(0,eq):part;let val=eq>-1?decodeURIComponent(part.substr(eq+1)):'';let from=key.indexOf('[');if(from===-1){result[decodeURIComponent(key)]=val;}
-else{let to=key.indexOf(']');let index=decodeURIComponent(key.substring(from+1,to));key=decodeURIComponent(key.substring(0,from));if(!result[key]){result[key]=[];}
-if(!index){result[key].push(val);}
-else{result[key][index]=val;}}});return result;};let states=[];let params=getJsonFromUrl(window.location.search);let hash=window.location.hash;let current=null;let previous=null;let getPrevious=()=>previous;let getCurrent=()=>current;let setPrevious=(value)=>{previous=value;return this;};let setCurrent=(value)=>{current=value;return this;};let setParam=function(key,value){params[key]=value;return this;};let getParam=function(key,def){if(key in params){return params[key];}
+stock[object.selector]=object;return this;},render:function(element,callback){parse(element,false,callback);element.dispatchEvent(new window.Event('rendered',{bubbles:false}));}}},true,false);window.ls.container.set('router',function(window){let getJsonFromUrl=function(uri){let query;if(uri){query=new URL(uri);query=query.searchParams;}else{query=location.search;}
+const params=new URLSearchParams(location.search);return Object.fromEntries(params)};let states=[];let params=getJsonFromUrl();let hash=window.location.hash;let current=null;let previous=null;let getPrevious=()=>previous;let getCurrent=()=>current;let setPrevious=(value)=>{previous=value;return this;};let setCurrent=(value)=>{current=value;return this;};let setParam=function(key,value){params[key]=value;return this;};let getParam=function(key,def){if(key in params){return params[key];}
 return def;};let getParams=function(){return params;};let getURL=function(){return window.location.href;};let add=function(path,view){if(typeof path!=='string'){throw new Error('path must be of type string');}
 if(typeof view!=='object'){throw new Error('view must be of type object');}
 states[states.length++]={path:path,view:view};return this;};let match=function(location){let url=location.pathname;states.sort(function(a,b){return b.path.length-a.path.length;});states.sort(function(a,b){let n=b.path.split('/').length-a.path.split('/').length;if(n!==0){return n;}
 return b.path.length-a.path.length;});for(let i=0;i<states.length;i++){let value=states[i];value.path=(value.path.substring(0,1)!=='/')?location.pathname+value.path:value.path;let match=new RegExp("^"+value.path.replace(/:[^\s/]+/g,'([\\w-]+)')+"$");let found=url.match(match);if(found){previous=current;current=value;return value;}}
-return null};let change=function(URL,replace){if(!replace){window.history.pushState({},'',URL);}
+return null;};let change=function(URL,replace){if(!replace){window.history.pushState({},'',URL);}
 else{window.history.replaceState({},'',URL);}
-window.dispatchEvent(new PopStateEvent('popstate',{}));return this;};let reload=function(){return change(window.location.href);};return{setParam:setParam,getParam:getParam,getParams:getParams,getURL:getURL,add:add,change:change,reload:reload,match:match,getCurrent:getCurrent,setCurrent:setCurrent,getPrevious:getPrevious,setPrevious:setPrevious,params:params,hash:hash,reset:function(){this.params=getJsonFromUrl(window.location.search);this.hash=window.location.hash;}};},true,true);window.ls.container.set('expression',function(container,filter){let paths=[];return{regex:/(\{{.*?\}})/gi,parse:function(string,def,cast=false){def=def||'';paths=[];return string.replace(this.regex,match=>{let reference=match.substring(2,match.length-2).replace('[\'','.').replace('\']','').trim();reference=reference.split('|');let path=container.scope((reference[0]||''));let result=container.path(path);path=container.scope(path);if(!paths.includes(path)){paths.push(path);}
+window.dispatchEvent(new PopStateEvent('popstate',{}));return this;};let reload=function(){return change(window.location.href);};return{setParam:setParam,getParam:getParam,getParams:getParams,getURL:getURL,add:add,change:change,reload:reload,match:match,getCurrent:getCurrent,setCurrent:setCurrent,getPrevious:getPrevious,setPrevious:setPrevious,params:params,hash:hash,reset:function(){this.params=getJsonFromUrl();this.hash=window.location.hash;}};},true,true);window.ls.container.set('expression',function(container,filter){let paths=[];return{regex:/(\{{.*?\}})/gi,parse:function(string,def,cast=false){def=def||'';paths=[];return string.replace(this.regex,match=>{let reference=match.substring(2,match.length-2).replace('[\'','.').replace('\']','').trim();reference=reference.split('|');let path=container.scope((reference[0]||''));let result=container.path(path);path=container.scope(path);if(!paths.includes(path)){paths.push(path);}
 if(reference.length>=2){for(let i=1;i<reference.length;i++){result=filter.apply(reference[i],result);}}
 if(null===result||undefined===result){result=def;}
 else if(typeof result==='object'){result=JSON.stringify(result,null,4);}
