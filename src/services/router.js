@@ -14,6 +14,9 @@ window.ls.container.set('router', function(window) {
         let query;
 
         if(uri) {
+            if(url.startsWith('/')) {
+                url = window.location.origin + url;
+            }
             query = new URL(uri);
             query = query.searchParams;
         } else {
