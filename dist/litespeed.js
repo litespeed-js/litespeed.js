@@ -8,7 +8,7 @@ if(service.instance){return service.instance;}
 let instance=(typeof service.object==='function')?this.resolve(service.object):service.object;let skip=false;if(service.watch&&name!=='window'&&name!=='document'&&name!=='element'&&typeof instance==='object'&&instance!==null){let handler={name:service.name,watch:function(){},get:function(target,key){if(key==="__name"){return this.name;}
 if(key==="__watch"){return this.watch;}
 if(key==="__proxy"){return true;}
-if(key!=='constructor'&&typeof target[key]==='function'){return target[key].bind(target);}
+if(key!=='constructor'&&typeof target[key]==='function'&&([Map,Set,WeakMap,WeakSet,Date,Promise].includes(target.constructor))){return target[key].bind(target);}
 if(typeof target[key]==='object'&&target[key]!==null&&!target[key].__proxy){let handler=Object.assign({},this);handler.name=handler.name+'.'+key;return new Proxy(target[key],handler)}
 else{return target[key];}},set:function(target,key,value,receiver){if(key==="__name"){return this.name=value;}
 if(key==="__watch"){return this.watch=value;}
@@ -34,7 +34,8 @@ let oldNamespaces=namespaces;namespaces=x;callback();namespaces=oldNamespaces;}}
 let removeNamespace=function(key){delete namespaces[key];return this;}
 let scope=function(path){for(let[key,value]of Object.entries(namespaces)){path=(path.indexOf('.')>-1)?path.replace(key+'.',value+'.'):path.replace(key,value);}
 return path;}
-let container={set:set,get:get,resolve:resolve,path:path,bind:bind,scope:scope,addNamespace:addNamespace,removeNamespace:removeNamespace,stock:stock,listeners:listeners,namespaces:namespaces,};set('container',container,true,false);return container;}();window.ls.container.set('http',function(document){let globalParams=[],globalHeaders=[];let request=function(method,url,headers,payload,progress){url=new URL(url);if(!['GET','POST','PUT','DELETE','TRACE','HEAD','OPTIONS','CONNECT','PATCH'].includes(method)){throw new Error('var method must contain a valid HTTP method name');}
+let container={set:set,get:get,resolve:resolve,path:path,bind:bind,scope:scope,addNamespace:addNamespace,removeNamespace:removeNamespace,stock:stock,listeners:listeners,namespaces:namespaces,};set('container',container,true,false);return container;}();window.ls.container.set('http',function(document){let globalParams=[],globalHeaders=[];let request=function(method,url,headers,payload,progress){if(url.startsWith('/')){url=window.location.origin+url;}
+url=new URL(url);if(!['GET','POST','PUT','DELETE','TRACE','HEAD','OPTIONS','CONNECT','PATCH'].includes(method)){throw new Error('var method must contain a valid HTTP method name');}
 if(typeof headers!=='object'){throw new Error('var headers must be of type object');}
 for(let i=0;i<globalParams.length;i++){url.searchParams.append(globalParams[i].key,globalParams[i].value);}
 return new Promise(function(resolve,reject){let xmlhttp=new XMLHttpRequest();xmlhttp.open(method,url.toString(),true);for(let i=0;i<globalHeaders.length;i++){xmlhttp.setRequestHeader(globalHeaders[i].key,globalHeaders[i].value);}
@@ -67,8 +68,8 @@ return def;};let getParams=function(){return params;};let getURL=function(){retu
 if(typeof view!=='object'){throw new Error('view must be of type object');}
 states[states.length++]={path:path,view:view};return this;};let match=function(location){let url=location.pathname;states.sort(function(a,b){return b.path.length-a.path.length;});states.sort(function(a,b){let n=b.path.split('/').length-a.path.split('/').length;if(n!==0){return n;}
 return b.path.length-a.path.length;});for(let i=0;i<states.length;i++){let value=states[i];value.path=(value.path.substring(0,1)!=='/')?location.pathname+value.path:value.path;let match=new RegExp("^"+value.path.replace(/:[^\s/]+/g,'([\\w-]+)')+"$");let found=url.match(match);if(found){previous=current;current=value;return value;}}
-return null;};let change=function(URL,replace){if(!replace){window.history.pushState({},'',URL);}
-else{window.history.replaceState({},'',URL);}
+return null;};let change=function(uri,replace){if(!replace){window.history.pushState({},'',uri);}
+else{window.history.replaceState({},'',uri);}
 window.dispatchEvent(new PopStateEvent('popstate',{}));return this;};let reload=function(){return change(window.location.href);};return{setParam:setParam,getParam:getParam,getParams:getParams,getURL:getURL,add:add,change:change,reload:reload,match:match,getCurrent:getCurrent,setCurrent:setCurrent,getPrevious:getPrevious,setPrevious:setPrevious,params:params,hash:hash,reset:function(){this.params=getJsonFromUrl();this.hash=window.location.hash;}};},true,true);window.ls.container.set('expression',function(container,filter){let paths=[];return{regex:/(\{{.*?\}})/gi,parse:function(string,def,cast=false){def=def||'';paths=[];return string.replace(this.regex,match=>{let reference=match.substring(2,match.length-2).replace('[\'','.').replace('\']','').trim();reference=reference.split('|');let path=container.scope((reference[0]||''));let result=container.path(path);path=container.scope(path);if(!paths.includes(path)){paths.push(path);}
 if(reference.length>=2){for(let i=1;i<reference.length;i++){result=filter.apply(reference[i],result);}}
 if(null===result||undefined===result){result=def;}

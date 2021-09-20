@@ -18,11 +18,11 @@ window.ls.container = function() {
      *
      * Adds a new service definition to application services stack.
      *
-     * @param name string
-     * @param object callback|object
-     * @param singleton bool
-     * @param watch bool
-     * @returns container
+     * @param {string} name 
+     * @param {object} object 
+     * @param {bool} singleton 
+     * @param {bool} watch 
+     * @returns 
      */
     let set = function(name, object, singleton, watch = true) {
         if(typeof name !== 'string') {
@@ -61,8 +61,8 @@ window.ls.container = function() {
      *
      * Return service instance
      *
-     * @param name
-     * @returns {*}
+     * @param {string} name
+     * @returns {Proxy}
      */
     let get = function(name) {
         let service = (undefined !== stock[name]) ? stock[name] : null;
@@ -97,7 +97,7 @@ window.ls.container = function() {
                         return true;
                     }
 
-                    if(key !== 'constructor' && typeof target[key] === 'function') {
+                    if(key !== 'constructor' && typeof target[key] === 'function' && ([Map, Set, WeakMap, WeakSet, Date, Promise].includes(target.constructor))) {
                         return target[key].bind(target);
                     }
 
@@ -162,8 +162,8 @@ window.ls.container = function() {
      *
      * Resolves callback dependencies and passes them as arguments to given callback
      *
-     * @returns {*}
-     * @param target callback
+     * @returns {any}
+     * @param {function} target
      */
     let resolve = function(target) {
         if(!target) {
@@ -199,7 +199,7 @@ window.ls.container = function() {
          *                  ( name = "string" + b + "!" )   - is ok
          *                  ( name = "string" + λ )         - is NOT ok
          * @param {function} func
-         * @returns {Array} - An array of the given function's parameter [key, default value] pairs.
+         * @returns {Array<string, string>} - An array of the given function's parameter [key, default value] pairs.
          */
         function getParams(func) {
             let functionAsString = func.toString();
@@ -234,9 +234,9 @@ window.ls.container = function() {
      * Return value from a service by a given path, nesting is supported by using the '.' delimiter.
      * When passing a value parameter the given path will be set with the new value.
      *
-     * @returns {*}
-     * @param path string
-     * @param value mixed
+     * @returns {any}
+     * @param {string} path 
+     * @param {any} value 
      */
     let path = function(path, value, type) {
         type = (type) ? type : 'assign';
@@ -317,10 +317,9 @@ window.ls.container = function() {
      *
      * Binds an element to a path change. Every time a new value is set to given path the callback you passes to the function will be executed.
      *
-     * @returns {*}
-     * @param element
-     * @param path string
-     * @param callback callback
+     * @param {Element} element 
+     * @param {string} path 
+     * @param {function} callback 
      */
     let bind = function(element, path, callback) {
         let event = container.scope(path) + '.changed';

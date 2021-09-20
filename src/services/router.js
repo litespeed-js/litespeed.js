@@ -7,8 +7,8 @@ window.ls.container.set('router', function(window) {
      * As published at StackOverflow:
      * @see http://stackoverflow.com/a/8486188
      *
-     * @param URL string
-     * @returns {*}
+     * @param {string} uri
+     * @return {any}
      */
     let getJsonFromUrl = function (uri) {
         let query;
@@ -34,22 +34,22 @@ window.ls.container.set('router', function(window) {
     /**
      * Get previous state scope
      *
-     * @returns {*}
+     * @return {any}
      */
     let getPrevious = () => previous;
 
     /**
      * Get current state scope
      *
-     * @returns {*}
+     * @return {any}
      */
     let getCurrent = () => current;
 
     /**
      * Set previous state scope
      *
-     * @param value
-     * @returns {*}
+     * @param {any} value
+     * @return {any}
      */
     let setPrevious = (value) => {
         previous = value;
@@ -59,8 +59,8 @@ window.ls.container.set('router', function(window) {
     /**
      * Set current state scope
      *
-     * @param value
-     * @returns {*}
+     * @param {any} value
+     * @return {any}
      */
     let setCurrent = (value) => {
         current = value;
@@ -72,9 +72,9 @@ window.ls.container.set('router', function(window) {
      *
      * Set a new key & value pair to current scope
      *
-     * @param key
-     * @param value
-     * @returns {setParam}
+     * @param {string} key
+     * @param {any} value
+     * @return {function}
      */
     let setParam = function(key, value) {
         params[key] = value;
@@ -86,9 +86,9 @@ window.ls.container.set('router', function(window) {
      *
      * Returns param value or default if not exists
      *
-     * @param key
-     * @param def
-     * @returns {*}
+     * @param {string} key
+     * @param {any} def
+     * @return {any}
      */
     let getParam = function (key, def) {
         if (key in params) {
@@ -103,7 +103,7 @@ window.ls.container.set('router', function(window) {
      *
      * Returns all params
      *
-     * @returns {*}
+     * @return {any}
      */
     let getParams = function () {
         return params;
@@ -111,7 +111,7 @@ window.ls.container.set('router', function(window) {
 
     /**
      * Return current state URL
-     * @returns {string}
+     * @return {string}
      */
     let getURL = function () {
         return window.location.href;
@@ -122,9 +122,9 @@ window.ls.container.set('router', function(window) {
      *
      * Adds a new application state.
      *
-     * @param path string
-     * @param view object
-     * @returns this
+     * @param {string} path
+     * @param {object} view 
+     * @return {object}
      */
     let add = function(path, view) {
         /**
@@ -157,8 +157,8 @@ window.ls.container.set('router', function(window) {
      * New Regex is based on this post:
      * @see https://stackoverflow.com/a/40739605/2299554
      *
-     * @param location object
-     * @return value object|null
+     * @param {object} location 
+     * @return {object|null}
      */
     let match = function(location) {
         let url = location.pathname;
@@ -195,16 +195,17 @@ window.ls.container.set('router', function(window) {
     /**
      * Change current state to given URL
      *
-     * @param URL string
-     * @param replace bool
+     * @param {string} uri 
+     * @param {bool} replace 
+     * @return {object}
      */
-    let change = function(URL, replace) {
+    let change = function(uri, replace) {
 
         if(!replace) {
-            window.history.pushState({}, '', URL);
+            window.history.pushState({}, '', uri);
         }
         else {
-            window.history.replaceState({}, '', URL);
+            window.history.replaceState({}, '', uri);
         }
 
         window.dispatchEvent(new PopStateEvent('popstate', {}));

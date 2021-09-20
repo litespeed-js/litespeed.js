@@ -4,14 +4,18 @@ window.ls.container.set('http', function(document) {
         globalHeaders   = [];
 
     /**
-     * @param method string
-     * @param url string
-     * @param headers string
-     * @param payload string
-     * @param progress callback
-     * @returns Promise
+     * @param {string} method 
+     * @param {string} url 
+     * @param {string} headers 
+     * @param {string} payload 
+     * @param {ProgressEvent<XMLHttpRequestEventTarget>} progress 
+     * @returns {Promise<unknown>}
      */
     let request = function(method, url, headers, payload, progress) {
+        if(url.startsWith('/')) {
+            url = window.location.origin + url;
+        }
+
         url = new URL(url);
 
         if(!['GET', 'POST', 'PUT', 'DELETE', 'TRACE', 'HEAD', 'OPTIONS', 'CONNECT', 'PATCH'].includes(method)) {

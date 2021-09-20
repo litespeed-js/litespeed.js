@@ -147,8 +147,8 @@ window.ls.container.set('view', function(http, container) {
          *
          * Adds a new comp definition to application comp stack.
          *
-         * @param object
-         * @returns {add}
+         * @param {object} object
+         * @returns {function}
          */
         add: function(object) {
 
@@ -190,8 +190,8 @@ window.ls.container.set('view', function(http, container) {
          *
          * Render all view components in a given scope.
          *
-         * @param element
-         * @returns view
+         * @param {Element} element
+         * @returns {void}
          */
         render: function(element, callback) {
             parse(element, false, callback);

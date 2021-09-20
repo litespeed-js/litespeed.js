@@ -5,9 +5,9 @@ window.ls.container.set('expression', function(container, filter) {
         regex: /(\{{.*?\}})/gi,
 
         /**
-         * @param string string
-         * @param def string
-         * @param cast bool
+         * @param {string} string 
+         * @param {string} def 
+         * @param {string} cast 
          * @returns {string}
          */
         parse: function(string, def, cast = false) {
