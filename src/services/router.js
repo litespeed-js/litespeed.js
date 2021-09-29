@@ -167,7 +167,7 @@ window.ls.container.set('router', function(window) {
         let url = location.pathname;
 
         if(url.substr(-1) === '/') {
-            url = str.substr(0, str.length - 1);
+            url = url.substr(0, str.length - 1);
         }
 
         states.sort(function(a, b){ return b.path.length - a.path.length;}); // order by length
