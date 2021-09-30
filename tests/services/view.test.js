@@ -1,4 +1,4 @@
-const app = require('../../dist/litespeed');
+require('../../dist/litespeed');
 
 const comp = {
     'selector': 'data-comp',
