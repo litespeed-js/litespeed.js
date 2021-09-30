@@ -199,6 +199,10 @@ window.ls.container.set('router', function(window) {
     let match = function(location) {
         let url = location.pathname;
 
+        if(url.endsWith('/')) {
+            url = url.slice(0, -1);
+        }
+
         states.sort(function(a, b){ return b.path.length - a.path.length;}); // order by length
 
         states.sort(function(a, b) {

@@ -8,6 +8,7 @@ if(service.instance){return service.instance;}
 let instance=(typeof service.object==='function')?this.resolve(service.object):service.object;let skip=false;if(service.watch&&name!=='window'&&name!=='document'&&name!=='element'&&typeof instance==='object'&&instance!==null){let handler={name:service.name,watch:function(){},get:function(target,key){if(key==="__name"){return this.name;}
 if(key==="__watch"){return this.watch;}
 if(key==="__proxy"){return true;}
+if(key!=='constructor'&&typeof target[key]==='function'&&([Map,Set,WeakMap,WeakSet].includes(target.constructor))){return target[key].bind(target);}
 if(typeof target[key]==='object'&&target[key]!==null&&!target[key].__proxy){let handler=Object.assign({},this);handler.name=handler.name+'.'+key;return new Proxy(target[key],handler)}
 else{return target[key];}},set:function(target,key,value,receiver){if(key==="__name"){return this.name=value;}
 if(key==="__watch"){return this.watch=value;}
@@ -70,7 +71,8 @@ if(!index){result[key].push(val);}
 else{result[key][index]=val;}}});return result;};let states=[];let params=getJsonFromUrl(window.location.search);let hash=window.location.hash;let current=null;let previous=null;let getPrevious=()=>previous;let getCurrent=()=>current;let setPrevious=(value)=>{previous=value;return this;};let setCurrent=(value)=>{current=value;return this;};let setParam=function(key,value){params[key]=value;return this;};let getParam=function(key,def){if(key in params){return params[key];}
 return def;};let getParams=function(){return params;};let getURL=function(){return window.location.href;};let add=function(path,view){if(typeof path!=='string'){throw new Error('path must be of type string');}
 if(typeof view!=='object'){throw new Error('view must be of type object');}
-states[states.length++]={path:path,view:view};return this;};let match=function(location){let url=location.pathname;states.sort(function(a,b){return b.path.length-a.path.length;});states.sort(function(a,b){let n=b.path.split('/').length-a.path.split('/').length;if(n!==0){return n;}
+states[states.length++]={path:path,view:view};return this;};let match=function(location){let url=location.pathname;if(url.endsWith('/')){url=url.slice(0,-1);}
+states.sort(function(a,b){return b.path.length-a.path.length;});states.sort(function(a,b){let n=b.path.split('/').length-a.path.split('/').length;if(n!==0){return n;}
 return b.path.length-a.path.length;});for(let i=0;i<states.length;i++){let value=states[i];value.path=(value.path.substring(0,1)!=='/')?location.pathname+value.path:value.path;let match=new RegExp("^"+value.path.replace(/:[^\s/]+/g,'([\\w-]+)')+"$");let found=url.match(match);if(found){previous=current;current=value;return value;}}
 return null};let change=function(URL,replace){if(!replace){window.history.pushState({},'',URL);}
 else{window.history.replaceState({},'',URL);}
