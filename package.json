@@ -8,6 +8,7 @@
   "bugs": "https://github.com/litespeed-js/litespeed.js/issues",
   "license": "MIT",
   "jsdelivr": "dist/litespeed.js",
+  "types": "src/global.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/litespeed-js/litespeed.js.git"
