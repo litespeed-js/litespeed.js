@@ -1,4 +1,4 @@
-const app = require('../../dist/litespeed');
+require('../../dist/litespeed');
 
 document.body.innerHTML = '<input type="text" id="test1" data-ls-attrs="title={{service.title}},class=new" />' + 
     '<input type="text" id="test2" data-ls-attrs="title={{service.author.name|lowercase}},class={{service.author.color}}" />';

@@ -97,6 +97,10 @@ window.ls.container = function() {
                         return true;
                     }
 
+                    if(key !== 'constructor' && typeof target[key] === 'function' && ([Map, Set, WeakMap, WeakSet].includes(target.constructor))) {
+                        return target[key].bind(target);
+                    }
+
                     if (typeof target[key] === 'object' && target[key] !== null && !target[key].__proxy) {
                         let handler = Object.assign({}, this);
 

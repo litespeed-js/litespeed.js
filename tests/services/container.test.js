@@ -1,4 +1,4 @@
-const app = require('../../dist/litespeed');
+require('../../dist/litespeed');
 
 const tasks = {
     'title': 'Today Tasks',
@@ -12,7 +12,8 @@ const tasks = {
             'background': '#fff',
             'text': '#000',
         }
-    }
+    },
+    'map': new Map()
 };
 
 const container = window.ls.container;
@@ -55,4 +56,12 @@ test('callback resolver method', () => {
             return tasks;
         });
     }()).toEqual(tasks);
+});
+
+test('getting javascript built-in objects with internal slots used', () => {
+    expect(function () {
+        const { map } = container.get('tasks');
+        map.set('key', 'value');
+        return map.get('key');
+    }()).toEqual('value');
 });

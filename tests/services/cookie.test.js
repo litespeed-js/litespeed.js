@@ -1,4 +1,4 @@
-const app = require('../../dist/litespeed');
+require('../../dist/litespeed');
 
 const container = window.ls.container;
 const cookie = container.get('cookie');
