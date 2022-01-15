@@ -5,9 +5,10 @@ window.ls.container.get('view').add({
     controller: function(element, view, container, window, expression) {
         let expr  = expression.parse(element.getAttribute('data-ls-loop'));
         let as    = element.getAttribute('data-ls-as');
-        let key    = element.getAttribute('data-ls-key') || '$index';
+        let key   = element.getAttribute('data-ls-key') || '$index';
         let limit = parseInt(expression.parse(element.getAttribute('data-limit') || '') || -1);
         let debug = element.getAttribute('data-debug') || false;
+        let ignorePathBind = element.getAttribute('data-ls-ignore-path-bind') || false;
         let echo  = function() {
             let array = container.path(expr);
             let counter = 0;
@@ -53,7 +54,7 @@ window.ls.container.get('view').add({
                     let context = expr + '.' + index;
 
                     container.addNamespace(as, context);
-                    
+
                     if(debug) {
                         console.info('debug-ls-loop', 'index', index);
                         console.info('debug-ls-loop', 'context', context);
@@ -79,8 +80,12 @@ window.ls.container.get('view').add({
 
         container.bind(element, expr + '.length', echo);
 
+        if (ignorePathBind) {
+            return;
+        }
+
         let path = (expr + '.length').split('.');
-        
+
         while(path.length) {
             container.bind(element, path.join('.'), echo);
             path.pop();
