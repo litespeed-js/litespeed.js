@@ -8,7 +8,7 @@ window.ls.container.set('router', function(window) {
      * @see http://stackoverflow.com/a/8486188
      *
      * @param URL string
-     * @returns {*}
+     * @returns {Map<string, any>}
      */
     let getJsonFromUrl = function (URL) {
         let query;
@@ -16,12 +16,12 @@ window.ls.container.set('router', function(window) {
         if(URL) {
             let pos = location.search.indexOf('?');
             if(pos===-1) return [];
-            query = location.search.substr(pos+1);
+            query = location.search.substring(pos+1);
         } else {
-            query = location.search.substr(1);
+            query = location.search.substring(1);
         }
 
-        let result = {};
+        const result = new Map();
 
         query.split('&').forEach(function(part) {
             if(!part) {
@@ -31,12 +31,12 @@ window.ls.container.set('router', function(window) {
             part = part.split('+').join(' '); // replace every + with space, regexp-free version
 
             let eq      = part.indexOf('=');
-            let key     = eq>-1 ? part.substr(0,eq) : part;
-            let val     = eq>-1 ? decodeURIComponent(part.substr(eq+1)) : '';
+            let key     = eq >-1 ? part.substr(0,eq) : part;
+            let val     = eq >-1 ? decodeURIComponent(part.substring(eq+1)) : '';
             let from    = key.indexOf('[');
 
             if(from === -1) {
-                result[decodeURIComponent(key)] = val;
+                result.set(decodeURIComponent(key), val);
             }
             else {
                 let to = key.indexOf(']');
@@ -45,14 +45,14 @@ window.ls.container.set('router', function(window) {
                 key = decodeURIComponent(key.substring(0,from));
 
                 if(!result[key]) {
-                    result[key] = [];
+                    result.set(key, []);
                 }
 
                 if(!index) {
-                    result[key].push(val);
+                    result.get(key).push(val);
                 }
                 else {
-                    result[key][index] = val;
+                    result.get(key)[index] = val;
                 }
             }
         });
@@ -112,7 +112,7 @@ window.ls.container.set('router', function(window) {
      * @returns {setParam}
      */
     let setParam = function(key, value) {
-        params[key] = value;
+        params.set(key, value);
         return this;
     };
 
@@ -126,8 +126,8 @@ window.ls.container.set('router', function(window) {
      * @returns {*}
      */
     let getParam = function (key, def) {
-        if (key in params) {
-            return params[key];
+        if (params.has(key)) {
+            return params.get(key);
         }
 
         return def;
@@ -141,7 +141,7 @@ window.ls.container.set('router', function(window) {
      * @returns {*}
      */
     let getParams = function () {
-        return params;
+        return Object.fromEntries(params);
     };
 
     /**

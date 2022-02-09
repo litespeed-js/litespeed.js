@@ -63,13 +63,13 @@ let defaults={'selector':'','controller':function(){},'template':'','repeat':fal
 if(prop in object){continue;}
 object[prop]=defaults[prop];}
 if(!object.selector){throw new Error('View component is missing a selector attribute');}
-stock[object.selector]=object;return this;},render:function(element,callback){parse(element,false,callback);element.dispatchEvent(new window.Event('rendered',{bubbles:false}));}}},true,false);window.ls.container.set('router',function(window){let getJsonFromUrl=function(URL){let query;if(URL){let pos=location.search.indexOf('?');if(pos===-1)return[];query=location.search.substr(pos+1);}else{query=location.search.substr(1);}
-let result={};query.split('&').forEach(function(part){if(!part){return;}
-part=part.split('+').join(' ');let eq=part.indexOf('=');let key=eq>-1?part.substr(0,eq):part;let val=eq>-1?decodeURIComponent(part.substr(eq+1)):'';let from=key.indexOf('[');if(from===-1){result[decodeURIComponent(key)]=val;}
-else{let to=key.indexOf(']');let index=decodeURIComponent(key.substring(from+1,to));key=decodeURIComponent(key.substring(0,from));if(!result[key]){result[key]=[];}
-if(!index){result[key].push(val);}
-else{result[key][index]=val;}}});return result;};let states=[];let params=getJsonFromUrl(window.location.search);let hash=window.location.hash;let current=null;let previous=null;let getPrevious=()=>previous;let getCurrent=()=>current;let setPrevious=(value)=>{previous=value;return this;};let setCurrent=(value)=>{current=value;return this;};let setParam=function(key,value){params[key]=value;return this;};let getParam=function(key,def){if(key in params){return params[key];}
-return def;};let getParams=function(){return params;};let getURL=function(){return window.location.href;};let add=function(path,view){if(typeof path!=='string'){throw new Error('path must be of type string');}
+stock[object.selector]=object;return this;},render:function(element,callback){parse(element,false,callback);element.dispatchEvent(new window.Event('rendered',{bubbles:false}));}}},true,false);window.ls.container.set('router',function(window){let getJsonFromUrl=function(URL){let query;if(URL){let pos=location.search.indexOf('?');if(pos===-1)return[];query=location.search.substring(pos+1);}else{query=location.search.substring(1);}
+const result=new Map();query.split('&').forEach(function(part){if(!part){return;}
+part=part.split('+').join(' ');let eq=part.indexOf('=');let key=eq>-1?part.substr(0,eq):part;let val=eq>-1?decodeURIComponent(part.substring(eq+1)):'';let from=key.indexOf('[');if(from===-1){result.set(decodeURIComponent(key),val);}
+else{let to=key.indexOf(']');let index=decodeURIComponent(key.substring(from+1,to));key=decodeURIComponent(key.substring(0,from));if(!result[key]){result.set(key,[]);}
+if(!index){result.get(key).push(val);}
+else{result.get(key)[index]=val;}}});return result;};let states=[];let params=getJsonFromUrl(window.location.search);let hash=window.location.hash;let current=null;let previous=null;let getPrevious=()=>previous;let getCurrent=()=>current;let setPrevious=(value)=>{previous=value;return this;};let setCurrent=(value)=>{current=value;return this;};let setParam=function(key,value){params.set(key,value);return this;};let getParam=function(key,def){if(params.has(key)){return params.get(key);}
+return def;};let getParams=function(){return Object.fromEntries(params);};let getURL=function(){return window.location.href;};let add=function(path,view){if(typeof path!=='string'){throw new Error('path must be of type string');}
 if(typeof view!=='object'){throw new Error('view must be of type object');}
 states[states.length++]={path:path,view:view};return this;};let match=function(location){let url=location.pathname;if(url.endsWith('/')){url=url.slice(0,-1);}
 states.sort(function(a,b){return b.path.length-a.path.length;});states.sort(function(a,b){let n=b.path.split('/').length-a.path.split('/').length;if(n!==0){return n;}
