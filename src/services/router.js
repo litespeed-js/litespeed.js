@@ -1,4 +1,4 @@
-window.ls.container.set('router', function(window) {
+window.ls.container.set('router', function (window) {
 
     /**
      * Takes a valid URL and return a JSON based object with all params.
@@ -8,51 +8,51 @@ window.ls.container.set('router', function(window) {
      * @see http://stackoverflow.com/a/8486188
      *
      * @param URL string
-     * @returns {Map<string, any>}
+     * @returns {*}
      */
     let getJsonFromUrl = function (URL) {
         let query;
 
-        if(URL) {
+        if (URL) {
             let pos = location.search.indexOf('?');
-            if(pos===-1) return [];
-            query = location.search.substring(pos+1);
+            if (pos === -1) return [];
+            query = location.search.substr(pos + 1);
         } else {
-            query = location.search.substring(1);
+            query = location.search.substr(1);
         }
 
-        const result = new Map();
+        let result = Object.create(null);
 
-        query.split('&').forEach(function(part) {
-            if(!part) {
+        query.split('&').forEach(function (part) {
+            if (!part) {
                 return;
             }
 
             part = part.split('+').join(' '); // replace every + with space, regexp-free version
 
-            let eq      = part.indexOf('=');
-            let key     = eq >-1 ? part.substr(0,eq) : part;
-            let val     = eq >-1 ? decodeURIComponent(part.substring(eq+1)) : '';
-            let from    = key.indexOf('[');
+            let eq = part.indexOf('=');
+            let key = eq > -1 ? part.substr(0, eq) : part;
+            let val = eq > -1 ? decodeURIComponent(part.substr(eq + 1)) : '';
+            let from = key.indexOf('[');
 
-            if(from === -1) {
-                result.set(decodeURIComponent(key), val);
+            if (from === -1) {
+                result[decodeURIComponent(key)] = val;
             }
             else {
                 let to = key.indexOf(']');
-                let index = decodeURIComponent(key.substring(from+1,to));
+                let index = decodeURIComponent(key.substring(from + 1, to));
 
-                key = decodeURIComponent(key.substring(0,from));
+                key = decodeURIComponent(key.substring(0, from));
 
-                if(!result[key]) {
-                    result.set(key, []);
+                if (!result[key]) {
+                    result[key] = [];
                 }
 
-                if(!index) {
-                    result.get(key).push(val);
+                if (!index) {
+                    result[key].push(val);
                 }
                 else {
-                    result.get(key)[index] = val;
+                    result[key][index] = val;
                 }
             }
         });
@@ -60,11 +60,11 @@ window.ls.container.set('router', function(window) {
         return result;
     };
 
-    let states      = [];
-    let params      = getJsonFromUrl(window.location.search);
-    let hash        = window.location.hash;
-    let current     = null;
-    let previous    = null;
+    let states = [];
+    let params = getJsonFromUrl(window.location.search);
+    let hash = window.location.hash;
+    let current = null;
+    let previous = null;
 
     /**
      * Get previous state scope
@@ -78,7 +78,7 @@ window.ls.container.set('router', function(window) {
      *
      * @returns {*}
      */
-    let getCurrent= () => current;
+    let getCurrent = () => current;
 
     /**
      * Set previous state scope
@@ -111,8 +111,8 @@ window.ls.container.set('router', function(window) {
      * @param value
      * @returns {setParam}
      */
-    let setParam = function(key, value) {
-        params.set(key, value);
+    let setParam = function (key, value) {
+        params[key] = value;
         return this;
     };
 
@@ -126,8 +126,8 @@ window.ls.container.set('router', function(window) {
      * @returns {*}
      */
     let getParam = function (key, def) {
-        if (params.has(key)) {
-            return params.get(key);
+        if (key in params) {
+            return params[key];
         }
 
         return def;
@@ -141,7 +141,7 @@ window.ls.container.set('router', function(window) {
      * @returns {*}
      */
     let getParams = function () {
-        return Object.fromEntries(params);
+        return params;
     };
 
     /**
@@ -161,20 +161,20 @@ window.ls.container.set('router', function(window) {
      * @param view object
      * @returns this
      */
-    let add = function(path, view) {
+    let add = function (path, view) {
 
         /**
          * Validation
          */
-        if(typeof path !== 'string') {
+        if (typeof path !== 'string') {
             throw new Error('path must be of type string');
         }
 
-        if(typeof view !== 'object') {
+        if (typeof view !== 'object') {
             throw new Error('view must be of type object');
         }
 
-        states[states.length++] = {/* string */ path: path, /* object */ view: view};
+        states[states.length++] = {/* string */ path: path, /* object */ view: view };
 
         return this;
     };
@@ -196,19 +196,19 @@ window.ls.container.set('router', function(window) {
      * @param location object
      * @return value object|null
      */
-    let match = function(location) {
+    let match = function (location) {
         let url = location.pathname;
 
-        if(url.endsWith('/')) {
+        if (url.endsWith('/')) {
             url = url.slice(0, -1);
         }
 
-        states.sort(function(a, b){ return b.path.length - a.path.length;}); // order by length
+        states.sort(function (a, b) { return b.path.length - a.path.length; }); // order by length
 
-        states.sort(function(a, b) {
+        states.sort(function (a, b) {
             let n = b.path.split('/').length - a.path.split('/').length;
 
-            if(n !== 0) {
+            if (n !== 0) {
                 return n;
             }
 
@@ -216,12 +216,12 @@ window.ls.container.set('router', function(window) {
         }); // order by number of paths parts
 
         for (let i = 0; i < states.length; i++) {
-            let value       = states[i];
-                value.path  = (value.path.substring(0, 1) !== '/') ? location.pathname + value.path : value.path; // Support for relative paths
-            let match       = new RegExp("^" + value.path.replace(/:[^\s/]+/g, '([\\w-]+)') + "$");
-            let found       = url.match(match);
+            let value = states[i];
+            value.path = (value.path.substring(0, 1) !== '/') ? location.pathname + value.path : value.path; // Support for relative paths
+            let match = new RegExp("^" + value.path.replace(/:[^\s/]+/g, '([\\w-]+)') + "$");
+            let found = url.match(match);
 
-            if(found) {
+            if (found) {
                 previous = current;
                 current = value;
 
@@ -238,17 +238,17 @@ window.ls.container.set('router', function(window) {
      * @param URL string
      * @param replace bool
      */
-    let change = function(URL, replace) {
+    let change = function (URL, replace) {
 
-        if(!replace) {
+        if (!replace) {
             window.history.pushState({}, '', URL);
         }
         else {
             window.history.replaceState({}, '', URL);
         }
-        
+
         window.dispatchEvent(new PopStateEvent('popstate', {}));
-        
+
         return this;
     };
 
